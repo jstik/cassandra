@@ -42,8 +42,17 @@ public class UserRepositoryTest extends EmbeddedCassandraEnvironment {
         Assert.assertNotNull(userFromDb);
     }
 
-    public void testFinById(){
+    @Test
+    public void testFinById() throws InterruptedException {
+        Mono<User> saveUserOperation = userRepository.save(testUser);
+        saveUserOperation.block();
+        final User[] userFromDb = {null};
+        userRepository.findById("login").subscribe(user -> {
+            userFromDb[0] = user;
+        });
 
+        Thread.sleep(200);
+        Assert.assertNotNull(userFromDb[0]);
     }
 
 }
