@@ -3,7 +3,8 @@ package com.jstik.fancy.chat.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 @Table("users")
@@ -11,15 +12,22 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @Setter
 public class User {
 
-    @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED)
+    @PrimaryKey
     private String login;
 
-    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
+    @Column("telephone_number")
     private Long telephoneNumber;
 
+
     private String password;
+
+
     private String name;
+
+
     private String email;
+
+    @Column("photo_link")
     private String photoLink;
 
 }
