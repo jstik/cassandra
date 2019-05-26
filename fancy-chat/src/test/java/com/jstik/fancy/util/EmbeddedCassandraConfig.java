@@ -23,9 +23,7 @@ public class EmbeddedCassandraConfig implements DisposableBean {
         Session session = cluster.connect();
         session.execute("CREATE KEYSPACE IF NOT EXISTS " + cassandraConfigProperties.getKeyspace() +" WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '3' };");
         Thread.sleep(5000);
-        return args -> {
-
-        };
+        return args -> {};
     }
 
     @Bean

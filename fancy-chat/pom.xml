@@ -12,12 +12,19 @@
 
     <properties>
         <cassandra-unit.version>2.1.9.2</cassandra-unit.version>
+        <achilles.version>3.2.1</achilles.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+
+     <!--   <dependency>
+            <groupId>info.archinnov</groupId>
+            <artifactId>achilles-core</artifactId>
+            <version>${achilles.version}</version>
+        </dependency>-->
     </dependencies>
 
 </project>
