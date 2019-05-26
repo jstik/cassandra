@@ -3,6 +3,7 @@ package com.jstik.fancy.chat.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 @Setter
 public class Room {
 
-    @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, name = "room_name")
+    @PrimaryKey(value = "room_name")
     private String roomName;
 
     private String banner;

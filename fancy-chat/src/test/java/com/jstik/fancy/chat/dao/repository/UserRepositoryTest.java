@@ -4,6 +4,7 @@ package com.jstik.fancy.chat.dao.repository;
 import com.jstik.fancy.chat.dao.config.CassandraConfig;
 import com.jstik.fancy.chat.model.User;
 import com.jstik.fancy.util.EmbeddedCassandraEnvironment;
+import com.jstik.fancy.util.EmbeddedCassandraConfig;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,14 +12,12 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import javax.inject.Inject;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CassandraConfig.class})
+@ContextConfiguration(classes = {EmbeddedCassandraConfig.class, CassandraConfig.class})
 @TestPropertySource("classpath:test.properties")
 public class UserRepositoryTest extends EmbeddedCassandraEnvironment {
 
