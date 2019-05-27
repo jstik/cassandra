@@ -8,12 +8,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>fancy-cassandra-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
-    <properties>
-        <cassandra-unit.version>2.1.9.2</cassandra-unit.version>
-    </properties>
+    <artifactId>fancy-cassandra-test-utils</artifactId>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -29,7 +25,6 @@
             <groupId>org.cassandraunit</groupId>
             <artifactId>cassandra-unit-spring</artifactId>
             <version>3.1.1.0</version>
-            <scope>test</scope>
             <exclusions>
                 <exclusion>
                     <groupId>org.cassandraunit</groupId>
@@ -42,13 +37,11 @@
             <artifactId>cassandra-unit</artifactId>
             <classifier>shaded</classifier>
             <version>3.1.1.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hectorclient</groupId>
             <artifactId>hector-core</artifactId>
             <version>2.0-0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

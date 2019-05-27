@@ -1,6 +1,8 @@
 package com.jstik.fancy.chat.dao.config;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -15,22 +17,24 @@ import javax.inject.Inject;
 @EnableReactiveCassandraRepositories("com.jstik.fancy.chat.dao.repository")
 public class CassandraConfig extends AbstractReactiveCassandraConfiguration {
 
-    final ICassandraConfigProperties cassandraConfigProperties;
+    private final CassandraProperties cassandraProperties;
 
-    public CassandraConfig(ICassandraConfigProperties cassandraConfigProperties) {
-        this.cassandraConfigProperties = cassandraConfigProperties;
+    public CassandraConfig(CassandraProperties cassandraProperties) {
+        this.cassandraProperties = cassandraProperties;
     }
 
+    @NotNull
     @Override
     protected String getKeyspaceName() {
-        return cassandraConfigProperties.getKeyspace();
+        return cassandraProperties.getKeyspaceName();
     }
 
+    @NotNull
     @Bean
     public CassandraClusterFactoryBean cluster(){
-        CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-        cluster.setContactPoints(cassandraConfigProperties.getPoints());
-        cluster.setPort(cassandraConfigProperties.getPort());
+        CassandraClusterFactoryBean cluster = super.cluster();
+        cluster.setContactPoints(String.join(",", cassandraProperties.getContactPoints()));
+        cluster.setPort(cassandraProperties.getPort());
         return cluster;
     }
 

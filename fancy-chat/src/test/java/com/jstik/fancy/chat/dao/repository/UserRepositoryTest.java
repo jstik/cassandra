@@ -2,11 +2,10 @@ package com.jstik.fancy.chat.dao.repository;
 
 
 import com.jstik.fancy.chat.dao.config.CassandraConfig;
-import com.jstik.fancy.chat.model.User;
-import com.jstik.fancy.util.EmbeddedCassandraEnvironment;
-import com.jstik.fancy.util.EmbeddedCassandraConfig;
+import com.jstik.fancy.chat.model.entity.User;
+import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
+import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraEnvironment;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,21 +20,13 @@ import javax.inject.Inject;
 @TestPropertySource("classpath:test.properties")
 public class UserRepositoryTest extends EmbeddedCassandraEnvironment {
 
-    @Inject UserRepository userRepository;
-
-    User testUser;
-
-    @Before
-    public void initTestUser(){
-        testUser = new User();
-        testUser.setLogin("login");
-        testUser.setName("user Name");
-    }
+    @Inject
+    private UserRepository userRepository;
 
     @Test
     public void  testCreateUser(){
         Mono<User> userByLoginOperation = userRepository.findById("login");
-        Mono<User> saveUserOperation = userRepository.save(testUser);
+        Mono<User> saveUserOperation = userRepository.save(prepareUser());
         saveUserOperation.block();
         User userFromDb = userByLoginOperation.block();
         Assert.assertNotNull(userFromDb);
@@ -43,7 +34,7 @@ public class UserRepositoryTest extends EmbeddedCassandraEnvironment {
 
     @Test
     public void testFinById() throws InterruptedException {
-        Mono<User> saveUserOperation = userRepository.save(testUser);
+        Mono<User> saveUserOperation = userRepository.save(prepareUser());
         saveUserOperation.block();
         final User[] userFromDb = {null};
         userRepository.findById("login").subscribe(user -> {
@@ -52,6 +43,13 @@ public class UserRepositoryTest extends EmbeddedCassandraEnvironment {
 
         Thread.sleep(200);
         Assert.assertNotNull(userFromDb[0]);
+    }
+
+    private User prepareUser(){
+        User testUser = new User();
+        testUser.setLogin("login");
+        testUser.setName("user Name");
+        return  testUser;
     }
 
 }
