@@ -1,4 +1,4 @@
-package com.jstik.fancy.user.entity;
+package com.jstik.site.cassandra.model;
 
 public enum EntityOperation {
 

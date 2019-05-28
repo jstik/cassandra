@@ -1,5 +1,6 @@
 package com.jstik.fancy.user.entity;
 
+import com.jstik.site.cassandra.model.EntityOperation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 import java.time.LocalDateTime;
 
-import static com.jstik.fancy.user.entity.EntityOperation.CREATE;
+import static com.jstik.site.cassandra.model.EntityOperation.CREATE;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class})
