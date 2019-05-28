@@ -28,7 +28,6 @@ public class UserOperationTimestampRepositoryTest extends EmbeddedCassandraEnvir
 
     @Test
     public void findAllByPrimaryKeyOperationAndPrimaryKeyTimestampAfter() throws Exception {
-
         UserOperationTimestamp timestamp = new UserOperationTimestamp(new UserOperationTimestampPrimaryKey(CREATE, LocalDateTime.now(), "login"));
         repository.save(timestamp).block();
         Flux<UserOperationTimestamp> timestampAfter = repository.findAllByPrimaryKeyOperationAndPrimaryKeyTimestampAfter(CREATE, LocalDateTime.now().minusDays(1));

@@ -7,5 +7,5 @@ import java.time.LocalDate;
 
 public interface CustomMessageRepository {
 
-    public Flux<Message> findByMessagesByAddressAndDayCreatedBetween(String address, LocalDate start, LocalDate end);
+  Flux<Message> findByMessagesByAddressAndDayCreatedBetween(String address, LocalDate start, LocalDate end);
 }
