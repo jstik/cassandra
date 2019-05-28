@@ -2,8 +2,11 @@ package com.jstik.fancy.test.util.cassandra;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
+import me.prettyprint.hector.api.exceptions.HectorException;
 import org.apache.thrift.transport.TTransportException;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -17,6 +20,8 @@ import java.io.IOException;
 @Configuration
 @EnableConfigurationProperties({TestCassandraProperties.class})
 public class EmbeddedCassandraConfig implements DisposableBean {
+
+    Logger logger = LoggerFactory.getLogger(EmbeddedCassandraConfig.class);
 
     @Bean
     @Lazy(false)
@@ -38,6 +43,11 @@ public class EmbeddedCassandraConfig implements DisposableBean {
 
     @Override
     public void destroy() {
-        EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
+        try {
+            EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
+        }catch (HectorException e){
+            logger.debug(" Embedded Cassandra Server seems already down ", e);
+        }
+
     }
 }

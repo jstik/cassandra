@@ -19,7 +19,7 @@ import java.time.LocalDate;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {EmbeddedCassandraConfig.class, CassandraConfig.class})
-@TestPropertySource("classpath:test.properties")
+@TestPropertySource("classpath:embedded-test.properties")
 public class MessageRepositoryTest extends EmbeddedCassandraEnvironment {
 
     @Inject

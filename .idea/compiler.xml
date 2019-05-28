@@ -6,17 +6,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="fancy-cassandra-parent" />
+        <module name="fancy-book-store" />
+        <module name="fancy-cassandra-config" />
         <module name="fancy-cassandra-test-utils" />
         <module name="fancy-chat" />
+        <module name="fancy-user-service" />
         <module name="fancyuserservice" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="fancy-book-store" target="1.8" />
+      <module name="fancy-cassandra-config" target="1.8" />
       <module name="fancy-cassandra-parent" target="1.8" />
       <module name="fancy-cassandra-test-utils" target="1.8" />
       <module name="fancy-chat" target="1.8" />
+      <module name="fancy-user-service" target="1.8" />
       <module name="fancyuserservice" target="1.8" />
       <module name="jstik-showcase" target="1.8" />
     </bytecodeTargetLevel>

@@ -14,8 +14,10 @@
 
     <modules>
         <module>fancy-chat</module>
+        <!--<module>fancy-book-store</module>-->
         <module>fancy-user-service</module>
         <module>fancy-cassandra-test-utils</module>
+        <module>fancy-cassandra-config</module>
     </modules>
 
 

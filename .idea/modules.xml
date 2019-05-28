@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/fancy-cassandra-parent/fancy-cassandra-parent.iml" filepath="$PROJECT_DIR$/fancy-cassandra-parent/fancy-cassandra-parent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/fancy-cassandra-parent/fancy-cassandra-parent.iml" filepath="$PROJECT_DIR$/fancy-cassandra-parent/fancy-cassandra-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fancy-book-store/fancy-book-store.iml" filepath="$PROJECT_DIR$/fancy-book-store/fancy-book-store.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fancy-cassandra-config/fancy-cassandra-config.iml" filepath="$PROJECT_DIR$/fancy-cassandra-config/fancy-cassandra-config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fancy-cassandra-test-utils/fancy-cassandra-test-utils.iml" filepath="$PROJECT_DIR$/fancy-cassandra-test-utils/fancy-cassandra-test-utils.iml" />
       <module fileurl="file://$PROJECT_DIR$/fancy-cassandra-test-utils/fancy-cassandra-test-utils.iml" filepath="$PROJECT_DIR$/fancy-cassandra-test-utils/fancy-cassandra-test-utils.iml" />
       <module fileurl="file://$PROJECT_DIR$/fancy-chat/fancy-chat.iml" filepath="$PROJECT_DIR$/fancy-chat/fancy-chat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fancy-user-service/fancy-user-service.iml" filepath="$PROJECT_DIR$/fancy-user-service/fancy-user-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/fancy-user-service/fancyuserservice.iml" filepath="$PROJECT_DIR$/fancy-user-service/fancyuserservice.iml" />
       <module fileurl="file://$PROJECT_DIR$/jstik-showcase.iml" filepath="$PROJECT_DIR$/jstik-showcase.iml" />
     </modules>
