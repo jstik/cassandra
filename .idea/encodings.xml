@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fancy-book-store" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/fancy-cassandra-config" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fancy-cassandra-parent" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fancy-cassandra-test-utils" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/fancy-chat" charset="UTF-8" />
