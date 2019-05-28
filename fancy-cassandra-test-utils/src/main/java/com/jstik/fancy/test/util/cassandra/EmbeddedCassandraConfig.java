@@ -29,7 +29,7 @@ public class EmbeddedCassandraConfig implements DisposableBean {
         EmbeddedCassandraServerHelper.startEmbeddedCassandra(cassandraConfigProperties.getConfigurationFile());
         Cluster cluster = EmbeddedCassandraServerHelper.getCluster();
         Session session = cluster.connect();
-        session.execute("CREATE KEYSPACE IF NOT EXISTS " + cassandraConfigProperties.getKeyspaceName() +" WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '3' };");
+        session.execute("CREATE KEYSPACE IF NOT EXISTS " + cassandraConfigProperties.getKeyspaceName() +" WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };");
         Thread.sleep(5000);
         return args -> {};
     }
