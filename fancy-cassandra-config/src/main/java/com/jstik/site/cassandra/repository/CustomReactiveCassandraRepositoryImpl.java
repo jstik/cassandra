@@ -1,9 +1,12 @@
 package com.jstik.site.cassandra.repository;
 
-import com.datastax.driver.core.querybuilder.Insert;
-import com.datastax.driver.core.querybuilder.Update;
+import com.datastax.driver.core.RegularStatement;
+import com.datastax.driver.core.Statement;
+import com.datastax.driver.core.querybuilder.Batch;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
-import com.jstik.site.cassandra.util.CqlUtil;
+import com.jstik.site.cassandra.statements.DMLStatementProducerBuilder;
+import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import org.springframework.data.cassandra.core.ReactiveCassandraOperations;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
@@ -17,26 +20,40 @@ public class CustomReactiveCassandraRepositoryImpl<T, ID> implements CustomReact
     private ReactiveCassandraOperations operations;
 
     @Override
-    public  Mono<Boolean> insertIfNotExist(T entity) {
-        Insert insert = CqlUtil.createIfNotExistsInsert(operations.getConverter(), entity);
+    public Mono<Boolean> insertIfNotExist(T entity) {
         Assert.notNull(entity, "Entity must not be null");
+        RegularStatement insert = DMLStatementProducerBuilder.insertStatementProducer(true).apply(operations.getConverter(), entity);
         return operations.getReactiveCqlOperations().execute(insert);
     }
 
     @Override
     public <S extends T> Mono<S> insertIfNotExistOrThrow(S entity) throws EntityAlreadyExistsException {
-        Insert insert = CqlUtil.createIfNotExistsInsert(operations.getConverter(), entity);
         Assert.notNull(entity, "Entity must not be null");
-        return operations.getReactiveCqlOperations().execute(insert).doOnNext(it -> {
+        RegularStatement insert = DMLStatementProducerBuilder.insertStatementProducer(true).apply(operations.getConverter(), entity);
+        return executeOrThrow(insert, entity);
+    }
+
+
+    @Override
+    public Mono<Boolean> updateIfExist(T entity) {
+        Assert.notNull(entity, "Entity must not be null");
+        RegularStatement update = DMLStatementProducerBuilder.updateByIdStatementProducer(true).apply(operations.getConverter(), entity);
+        return operations.getReactiveCqlOperations().execute(update);
+    }
+
+    @Override
+    public Mono<Boolean> executeBatch(EntityAwareBatchStatement batchStatement) {
+        Assert.notNull(batchStatement, "Batch must not be null");
+        Batch batch = QueryBuilder.batch();
+        batchStatement.accept(operations.getConverter(), batch);
+        return operations.getReactiveCqlOperations().execute(batch);
+    }
+
+    private <S extends T> Mono<S> executeOrThrow(Statement statement, S entity) throws EntityAlreadyExistsException {
+        return operations.getReactiveCqlOperations().execute(statement).doOnNext(it -> {
             if (!it)
                 throw new EntityAlreadyExistsException(MessageFormat.format("Entity {0} already exists ", entity.getClass().getCanonicalName()));
         }).map(it -> entity);
     }
 
-    @Override
-    public Mono<Boolean> updateIfExist(T entity) {
-        Update update = CqlUtil.createIfExistsUpdate(operations.getConverter(), entity);
-        Assert.notNull(entity, "Entity must not be null");
-        return operations.getReactiveCqlOperations().execute(update);
-    }
 }

@@ -1,9 +1,11 @@
 package com.jstik.site.cassandra.repository;
 
-import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
-import reactor.core.publisher.Mono;
 
-public interface CustomReactiveCassandraRepository  <T, ID> {
+import com.datastax.driver.core.querybuilder.Batch;
+import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
+import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
+import reactor.core.publisher.Mono;
+public interface CustomReactiveCassandraRepository<T, ID> {
 
     Mono<Boolean> insertIfNotExist(T entity);
 
@@ -12,5 +14,5 @@ public interface CustomReactiveCassandraRepository  <T, ID> {
 
     Mono<Boolean> updateIfExist(T entity);
 
-
+    Mono<Boolean> executeBatch(EntityAwareBatchStatement batch);
 }
