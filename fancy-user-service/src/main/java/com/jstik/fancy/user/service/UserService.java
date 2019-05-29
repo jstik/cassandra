@@ -38,7 +38,7 @@ public class UserService {
 
        return userRepository.insertIfNotExistOrThrow(user)
                 .doOnSuccess(createdUser->{
-                    afterUserCreate(user, regKey).block();
+                    afterUserCreate(user, regKey).subscribe();
                 });
 
     }

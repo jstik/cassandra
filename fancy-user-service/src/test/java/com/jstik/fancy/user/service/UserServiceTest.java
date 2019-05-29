@@ -5,6 +5,7 @@ import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraEnvironment;
 import com.jstik.fancy.user.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.user.entity.User;
 import com.jstik.fancy.user.model.CreateAccountRequest;
+import com.jstik.fancy.user.util.UserUtil;
 import com.jstik.fancy.user.web.UserServiceWebConfig;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import reactor.core.publisher.Mono;
 
 import javax.inject.Inject;
 
@@ -39,7 +41,8 @@ public class UserServiceTest extends EmbeddedCassandraEnvironment {
         accountRequest.setLastName("last name");
         accountRequest.setEmail("email");
 
-        User user = userService.createUser(accountRequest, "ajsdiajsdjajsdldjsl");
+        String regKey = UserUtil.generateRegKey();
+        Mono<User> user = userService.createUser(accountRequest, regKey);
         System.out.println("--------------- regKey " + "ajsdiajsdjajsdldjsl");
         Assert.assertNotNull(userService);
     }
