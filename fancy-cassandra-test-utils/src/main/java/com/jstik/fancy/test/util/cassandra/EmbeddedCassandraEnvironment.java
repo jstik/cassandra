@@ -11,9 +11,9 @@ import javax.inject.Inject;
 
 public class EmbeddedCassandraEnvironment {
 
-    @Inject
+
     private CassandraAdminOperations adminTemplate;
-    @Inject
+
     private CassandraMappingContext cassandraMapping;
 
     @Before
@@ -30,5 +30,16 @@ public class EmbeddedCassandraEnvironment {
         CassandraPersistentEntitySchemaDropper dropper = new CassandraPersistentEntitySchemaDropper(cassandraMapping, adminTemplate);
         dropper.dropTables(false);
         dropper.dropUserTypes(false);
+    }
+
+    @Inject
+    public void setAdminTemplate(CassandraAdminOperations adminTemplate) {
+        this.adminTemplate = adminTemplate;
+    }
+
+    @Inject
+    public void setCassandraMapping(CassandraMappingContext cassandraMapping) {
+        this.cassandraMapping = cassandraMapping;
+
     }
 }

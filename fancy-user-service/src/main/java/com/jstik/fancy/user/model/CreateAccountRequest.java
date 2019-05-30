@@ -13,8 +13,6 @@ public class CreateAccountRequest {
 
     @NotBlank
     private String login;
-
-
     @NotBlank
     private String firstName;
     @NotBlank

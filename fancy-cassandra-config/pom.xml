@@ -21,6 +21,13 @@
             <artifactId>cassandra-driver-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.jstik.site</groupId>
+            <artifactId>fancy-cassandra-test-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 

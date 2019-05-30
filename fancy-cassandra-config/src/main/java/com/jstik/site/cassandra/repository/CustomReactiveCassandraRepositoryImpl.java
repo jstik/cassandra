@@ -16,20 +16,24 @@ import java.text.MessageFormat;
 
 public class CustomReactiveCassandraRepositoryImpl<T, ID> implements CustomReactiveCassandraRepository<T, ID> {
 
+    private final ReactiveCassandraOperations operations;
+
     @Inject
-    private ReactiveCassandraOperations operations;
+    public CustomReactiveCassandraRepositoryImpl(ReactiveCassandraOperations operations) {
+        this.operations = operations;
+    }
 
     @Override
     public Mono<Boolean> insertIfNotExist(T entity) {
         Assert.notNull(entity, "Entity must not be null");
-        RegularStatement insert = DMLStatementProducerBuilder.insertStatementProducer(true).apply(operations.getConverter(), entity);
+        RegularStatement insert = DMLStatementProducerBuilder.insertIfNotExistsProducer().apply(operations.getConverter(), entity);
         return operations.getReactiveCqlOperations().execute(insert);
     }
 
     @Override
     public <S extends T> Mono<S> insertIfNotExistOrThrow(S entity) throws EntityAlreadyExistsException {
         Assert.notNull(entity, "Entity must not be null");
-        RegularStatement insert = DMLStatementProducerBuilder.insertStatementProducer(true).apply(operations.getConverter(), entity);
+        RegularStatement insert = DMLStatementProducerBuilder.insertIfNotExistsProducer().apply(operations.getConverter(), entity);
         return executeOrThrow(insert, entity);
     }
 
@@ -37,7 +41,7 @@ public class CustomReactiveCassandraRepositoryImpl<T, ID> implements CustomReact
     @Override
     public Mono<Boolean> updateIfExist(T entity) {
         Assert.notNull(entity, "Entity must not be null");
-        RegularStatement update = DMLStatementProducerBuilder.updateByIdStatementProducer(true).apply(operations.getConverter(), entity);
+        RegularStatement update = DMLStatementProducerBuilder.updateByIdProducer(true).apply(operations.getConverter(), entity);
         return operations.getReactiveCqlOperations().execute(update);
     }
 
