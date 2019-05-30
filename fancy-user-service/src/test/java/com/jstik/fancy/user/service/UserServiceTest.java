@@ -58,28 +58,27 @@ public class UserServiceTest extends EmbeddedCassandraEnvironment {
 
         Mono<User> firstUserPublisher = userService.createUser(accountRequest, regKey).doOnError(error -> {
             startLatch.countDown();
-            if(error instanceof EntityAlreadyExistsException)
-                throw (EntityAlreadyExistsException)error;
+            if (error instanceof EntityAlreadyExistsException)
+                throw (EntityAlreadyExistsException) error;
             throw new RuntimeException(error);
-        }).doOnSuccess(user ->{
+        }).doOnSuccess(user -> {
             startLatch.countDown();
             System.out.println("first");
         });
 
 
-
         Mono<User> secondUserPublisher = userService.createUser(accountRequest, regKey).doOnError(error -> {
             startLatch.countDown();
-            if(error instanceof EntityAlreadyExistsException)
-                throw (EntityAlreadyExistsException)error;
+            if (error instanceof EntityAlreadyExistsException)
+                throw (EntityAlreadyExistsException) error;
             throw new RuntimeException(error);
-        }).doOnSuccess(user ->{
+        }).doOnSuccess(user -> {
             startLatch.countDown();
             System.out.println("second");
         });
         Mono<User> composite = firstUserPublisher.delayUntil(user -> secondUserPublisher);
-       // StepVerifier.create(composite).expectComplete();
-        composite.subscribe();
+        // StepVerifier.create(composite).expectComplete();
+        composite.block();
         startLatch.await();
     }
 

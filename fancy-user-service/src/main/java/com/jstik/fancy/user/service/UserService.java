@@ -46,9 +46,6 @@ public class UserService {
 
         Mono<User> findUserOperation = userRepository.findById(registerAccount.getLogin());
 
-        /*findUserOperation.delayUntil(user -> {
-           return findUserRegistrationOperation;
-        });*/
 
         findUserRegistrationOperation.subscribe();
 
