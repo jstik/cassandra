@@ -9,13 +9,12 @@ import com.jstik.fancy.user.exception.UserNotFound;
 import com.jstik.fancy.user.exception.UserRegistrationNoFound;
 import com.jstik.fancy.user.model.account.CreateAccountRequest;
 import com.jstik.fancy.user.model.account.RegisterAccountRequest;
-import com.jstik.fancy.user.model.account.RegisterAccountRequiredInfo;
+import com.jstik.fancy.user.model.account.ActivateAccountRequiredInfo;
 import com.jstik.site.cassandra.model.EntityOperation;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import javax.inject.Inject;
 
@@ -47,14 +46,14 @@ public class UserService {
         });
     }
 
-    public Mono<RegisterAccountRequiredInfo>  registerAccount(RegisterAccountRequest registerAccount){
-        Mono<RegisterAccountRequiredInfo> registrationInformation = findRequiredRegistrationInformation(registerAccount);
+    public Mono<ActivateAccountRequiredInfo> activateAccount(RegisterAccountRequest registerAccount){
+        Mono<ActivateAccountRequiredInfo> registrationInformation = findRequiredRegistrationInformation(registerAccount);
         registrationInformation.doOnSuccess((info-> doRegisterUser(info.getUserRegistration(), info.getUser()).subscribe()));
         return registrationInformation;
     }
 
 
-    private Mono<RegisterAccountRequiredInfo> findRequiredRegistrationInformation(RegisterAccountRequest registerAccount){
+    private Mono<ActivateAccountRequiredInfo> findRequiredRegistrationInformation(RegisterAccountRequest registerAccount){
         UserRegistrationPrimaryKey registrationId = new UserRegistrationPrimaryKey(registerAccount.getLogin(), registerAccount.getRegKey());
         Mono<UserRegistration> findRegistrationOperation = userRegistrationRepository.findById(registrationId)
                 .doOnSuccess(registration -> {
@@ -69,11 +68,11 @@ public class UserService {
                     user.setActive(true);
                     user.setPassword(passwordEncoder.encode(registerAccount.getPassword()));
                 });
-       return Mono.zip(findRegistrationOperation, findUserOperation , (reg, user) -> new RegisterAccountRequiredInfo(user, reg));
+       return Mono.zip(findRegistrationOperation, findUserOperation , (reg, user) -> new ActivateAccountRequiredInfo(user, reg));
     }
 
 
-    private Mono<User>  doRegisterUser(UserRegistration userRegistration, User user){
+    private Mono<User> doRegisterUser(UserRegistration userRegistration, User user){
        return userRepository.save(user).delayUntil(savedUser->  userRegistrationRepository.delete(userRegistration));
     }
 

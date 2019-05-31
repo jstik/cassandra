@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class RegisterAccountRequiredInfo {
+public class ActivateAccountRequiredInfo {
 
     private User user;
 

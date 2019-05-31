@@ -12,7 +12,7 @@ import com.jstik.fancy.user.exception.UserNotFound;
 import com.jstik.fancy.user.exception.UserRegistrationNoFound;
 import com.jstik.fancy.user.model.account.CreateAccountRequest;
 import com.jstik.fancy.user.model.account.RegisterAccountRequest;
-import com.jstik.fancy.user.model.account.RegisterAccountRequiredInfo;
+import com.jstik.fancy.user.model.account.ActivateAccountRequiredInfo;
 import com.jstik.fancy.user.security.UserServiceSecurityConfig;
 import com.jstik.fancy.user.util.UserUtil;
 import com.jstik.fancy.user.web.UserServiceWebConfig;
@@ -28,7 +28,6 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import reactor.util.function.Tuple2;
 
 import javax.inject.Inject;
 import java.util.function.Consumer;
@@ -95,7 +94,7 @@ public class UserServiceTest extends EmbeddedCassandraEnvironment {
     }
 
     @Test
-    public void registerAccount() throws Exception {
+    public void activateAccount() throws Exception {
 
         CreateAccountRequest account = prepareAccount("login");
         String regKey = UserUtil.generateRegKey();
@@ -103,7 +102,7 @@ public class UserServiceTest extends EmbeddedCassandraEnvironment {
         UserRegistration userRegistration = userRegistrationByAccountAndKey(account, regKey);
         RegisterAccountRequest request = registerAccountRequestByUserAndKey(user, userRegistration);
 
-        Mono<RegisterAccountRequiredInfo> registerAccountMono = userService.registerAccount(request);
+        Mono<ActivateAccountRequiredInfo> registerAccountMono = userService.activateAccount(request);
 
         // No user or registration in db yet
         StepVerifier.create(registerAccountMono).expectError(EntityMissingException.class).verify();
