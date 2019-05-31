@@ -12,7 +12,8 @@ import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.web.servlet.support.ServletContextApplicationContextInitializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -21,10 +22,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import javax.inject.Inject;
-
-import java.util.concurrent.CountDownLatch;
-
-import static org.junit.Assert.*;
+import java.util.function.Consumer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringJUnitWebConfig
@@ -37,8 +35,9 @@ import static org.junit.Assert.*;
 @TestPropertySource("classpath:embedded-test.properties")
 public class UserServiceTest extends EmbeddedCassandraEnvironment {
 
-    private @Inject
-    UserService userService;
+    @Inject private UserService userService;
+
+    private  final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     @Test
@@ -51,47 +50,48 @@ public class UserServiceTest extends EmbeddedCassandraEnvironment {
 
 
     @Test(expected = EntityAlreadyExistsException.class)
-    public void createExistingUserTest() throws Exception {
-        CountDownLatch startLatch = new CountDownLatch(2);
-        CreateAccountRequest accountRequest = prepareAccount("login");
+    public void createExistingUserBlockTest() throws Exception {
+        CreateAccountRequest account = prepareAccount("login");
         String regKey = UserUtil.generateRegKey();
-
-        Mono<User> firstUserPublisher = userService.createUser(accountRequest, regKey).doOnError(error -> {
-            startLatch.countDown();
+        Consumer<Throwable> errorHandler = (error) -> {
             if (error instanceof EntityAlreadyExistsException)
                 throw (EntityAlreadyExistsException) error;
             throw new RuntimeException(error);
-        }).doOnSuccess(user -> {
-            startLatch.countDown();
-            System.out.println("first");
-        });
-
-
-        Mono<User> secondUserPublisher = userService.createUser(accountRequest, regKey).doOnError(error -> {
-            startLatch.countDown();
-            if (error instanceof EntityAlreadyExistsException)
-                throw (EntityAlreadyExistsException) error;
-            throw new RuntimeException(error);
-        }).doOnSuccess(user -> {
-            startLatch.countDown();
-            System.out.println("second");
-        });
+        };
+        Mono<User> firstUserPublisher = createUserOperation(account, regKey, user ->  log.debug("First"), errorHandler);
+        Mono<User> secondUserPublisher = createUserOperation(account, regKey, user ->  log.debug("Second") , errorHandler);
         Mono<User> composite = firstUserPublisher.delayUntil(user -> secondUserPublisher);
-        // StepVerifier.create(composite).expectComplete();
         composite.block();
-        startLatch.await();
+    }
+
+    @Test
+    public void createExistingUserTest(){
+        CreateAccountRequest account = prepareAccount("login");
+        String regKey = UserUtil.generateRegKey();
+        Consumer<Throwable> errorHandler = (error) -> {
+            if (error instanceof EntityAlreadyExistsException)
+                throw (EntityAlreadyExistsException) error;
+            throw new RuntimeException(error);
+        };
+        Mono<User> firstUserPublisher = createUserOperation(account, regKey, user ->  log.debug("First"), errorHandler);
+        Mono<User> secondUserPublisher = createUserOperation(account, regKey, user ->  log.debug("Second") , errorHandler);
+        Mono<User> composite = firstUserPublisher.delayUntil(user -> secondUserPublisher);
+        StepVerifier.create(composite).expectError(EntityAlreadyExistsException.class).verify();
     }
 
     @Test
     public void registerAccountTest() {
-
         RegisterAccountRequest registerAccount = new RegisterAccountRequest("login", "passord", "123");
         userService.registerAccount(registerAccount).subscribe(register -> {
             System.out.println("saddfsd");
         });
     }
 
-    public CreateAccountRequest prepareAccount(String login) {
+    private Mono<User> createUserOperation(CreateAccountRequest accountRequest,   String regKey , Consumer<User> onSuccess,Consumer<? super Throwable> onError){
+      return userService.createUser(accountRequest, regKey) .doOnError(onError::accept).doOnSuccess(onSuccess);
+    }
+
+    private CreateAccountRequest prepareAccount(String login) {
         CreateAccountRequest accountRequest = new CreateAccountRequest();
         accountRequest.setLogin(login);
         accountRequest.setFirstName("first name");
