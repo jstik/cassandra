@@ -1,13 +1,10 @@
 package com.jstik.fancy.user.convertors;
 
 import com.jstik.fancy.user.entity.User;
-import com.jstik.fancy.user.model.CreateAccountRequest;
+import com.jstik.fancy.user.model.account.CreateAccountRequest;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.inject.Inject;
 
 public class CreateAccountRequestToUser implements Converter<CreateAccountRequest, User> {
     @Nullable

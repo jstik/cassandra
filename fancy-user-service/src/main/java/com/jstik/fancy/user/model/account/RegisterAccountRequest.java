@@ -1,4 +1,4 @@
-package com.jstik.fancy.user.model;
+package com.jstik.fancy.user.model.account;
 
 import lombok.*;
 

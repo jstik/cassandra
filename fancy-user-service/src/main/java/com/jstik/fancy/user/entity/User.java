@@ -1,7 +1,6 @@
 package com.jstik.fancy.user.entity;
 
 
-import com.jstik.fancy.user.model.CreateAccountRequest;
 import lombok.*;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotBlank;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.function.Function;
 
 @Table
 @Getter
