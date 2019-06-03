@@ -7,6 +7,7 @@ import com.jstik.fancy.user.entity.UserRegistration;
 import com.jstik.fancy.user.exception.UserNotFound;
 import com.jstik.site.cassandra.model.EntityOperation;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import reactor.core.publisher.Mono;
 

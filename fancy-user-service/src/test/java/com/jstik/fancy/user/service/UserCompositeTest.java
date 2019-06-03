@@ -16,6 +16,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.client.loadbalancer.ServiceInstanceChooser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -37,6 +39,7 @@ import java.util.concurrent.CountDownLatch;
         }
 )
 @TestPropertySource("classpath:embedded-test.properties")
+@EnableDiscoveryClient
 public class UserCompositeTest extends EmbeddedCassandraEnvironment {
 
     @Inject
@@ -45,16 +48,14 @@ public class UserCompositeTest extends EmbeddedCassandraEnvironment {
     @Inject
     private UserRegistrationRepository userRegistrationRepository;
 
-    @Inject
-    private ServiceInstanceChooser serviceInstanceChooser;
-
     private  final Logger log = LoggerFactory.getLogger(this.getClass());
 
+    @Inject private ServiceInstanceChooser loadBalancerClient;
 
     @Test
     public void registerAccountTest() throws InterruptedException {
 
-        serviceInstanceChooser.choose("sdsd00");
+        loadBalancerClient.choose("dsasd");
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
         RegisterAccountRequest registerAccount = new RegisterAccountRequest("login", "passord", "123");
