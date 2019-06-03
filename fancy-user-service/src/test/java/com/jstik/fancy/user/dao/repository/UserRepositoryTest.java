@@ -28,7 +28,7 @@ public class UserRepositoryTest extends EmbeddedCassandraEnvironment {
     public void saveUserTest() {
         String userLogin = "login";
         userRepository.save(prepareUser(userLogin)).block();
-        User user = userRepository.findById(userLogin).block();
+        User user = userRepository.findByPrimaryKeyLogin(userLogin).block();
         Assert.assertNotNull(user);
 
     }

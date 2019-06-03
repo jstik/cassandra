@@ -61,7 +61,7 @@ public class UserCompositeTest extends EmbeddedCassandraEnvironment {
 
                 });
 
-        Mono<User> findUserOperation = userRepository.findById(registerAccount.getLogin()).log().doOnSuccess(reg-> {
+        Mono<User> findUserOperation = userRepository.findByPrimaryKeyLogin(registerAccount.getLogin()).log().doOnSuccess(reg-> {
             if(reg == null)
                 throw new RuntimeException("No registration");
             log.debug(" user found");

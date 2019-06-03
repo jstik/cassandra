@@ -2,9 +2,9 @@ package com.jstik.fancy.user.entity;
 
 
 import lombok.*;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.cql.Ordering;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -22,12 +22,7 @@ public class User {
     @PrimaryKey
     @NonNull
     @NotBlank
-    private String login;
-
-    private LocalDateTime created =  LocalDateTime.now(Clock.systemUTC());
-
-    @Column("last_updated")
-    private LocalDateTime lastUpdated = LocalDateTime.now(Clock.systemUTC());
+    private UserPrimaryKey primaryKey;
 
     @NonNull
     private String firstName;
@@ -40,6 +35,34 @@ public class User {
     private String password;
     private boolean active;
     private Set<String> clients;
+
+    public User(String login, String firstName, String lastName, @Email String email) {
+        this.primaryKey = new UserPrimaryKey(login);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
+
+    public String getLogin(){
+        return  getPrimaryKey().getLogin();
+    }
+
+    @PrimaryKeyClass
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class UserPrimaryKey{
+
+        @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
+        private String login;
+
+        @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+        private LocalDateTime timestamp = LocalDateTime.now(Clock.systemUTC());
+
+        public UserPrimaryKey(String login) {
+            this.login = login;
+        }
+    }
 
 
 
