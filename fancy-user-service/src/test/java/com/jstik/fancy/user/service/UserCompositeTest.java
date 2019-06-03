@@ -5,15 +5,18 @@ import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraEnvironment;
 import com.jstik.fancy.user.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.user.dao.repository.UserRegistrationRepository;
 import com.jstik.fancy.user.dao.repository.UserRepository;
+import com.jstik.fancy.user.discovery.ServiceDiscoveryConfig;
 import com.jstik.fancy.user.entity.User;
 import com.jstik.fancy.user.entity.UserRegistration;
 import com.jstik.fancy.user.entity.UserRegistration.UserRegistrationPrimaryKey;
 import com.jstik.fancy.user.model.account.RegisterAccountRequest;
+import com.jstik.fancy.user.security.UserServiceSecurityConfig;
 import com.jstik.fancy.user.web.UserServiceWebConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.client.loadbalancer.ServiceInstanceChooser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -30,7 +33,7 @@ import java.util.concurrent.CountDownLatch;
 @ContextConfiguration(
         classes = {
                 EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class,
-                ServiceConfig.class, UserServiceWebConfig.class
+                ServiceConfig.class, UserServiceWebConfig.class, UserServiceSecurityConfig.class, ServiceDiscoveryConfig.class
         }
 )
 @TestPropertySource("classpath:embedded-test.properties")
@@ -42,11 +45,16 @@ public class UserCompositeTest extends EmbeddedCassandraEnvironment {
     @Inject
     private UserRegistrationRepository userRegistrationRepository;
 
+    @Inject
+    private ServiceInstanceChooser serviceInstanceChooser;
+
     private  final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     @Test
     public void registerAccountTest() throws InterruptedException {
+
+        serviceInstanceChooser.choose("sdsd00");
         CountDownLatch countDownLatch = new CountDownLatch(1);
 
         RegisterAccountRequest registerAccount = new RegisterAccountRequest("login", "passord", "123");
