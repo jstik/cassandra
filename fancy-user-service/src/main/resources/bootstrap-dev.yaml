@@ -1,0 +1,12 @@
+spring:
+  profiles: dev
+  cloud:
+    consul:
+      enabled: false
+   # service-registry:
+     # auto-registration:
+       # enabled: false
+    discovery:
+      enabled: false
+    bus:
+      enabled: false
