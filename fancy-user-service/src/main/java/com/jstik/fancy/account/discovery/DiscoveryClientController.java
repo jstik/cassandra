@@ -1,5 +1,6 @@
 package com.jstik.fancy.account.discovery;
 
+import com.jstik.fancy.account.discovery.stub.StubLoadBalancerProperties;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
@@ -17,6 +18,10 @@ public class DiscoveryClientController {
 
     @Inject
     private LoadBalancerClient loadBalancerClient;
+    @Inject
+    private ConsulCustomTagsProperties customTagsProperties;
+    @Inject
+    StubLoadBalancerProperties stubLoadBalancerProperties;
 
     @Value("${spring.application.name}")
     private String applicationName;

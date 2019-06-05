@@ -2,8 +2,8 @@
 spring:
   application:
     name: account-service
-  #profiles:
-   # active: dev
+  profiles:
+    active: dev
   cloud:
     consul:
       host: localhost
