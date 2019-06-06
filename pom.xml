@@ -18,6 +18,7 @@
         <module>fancy-user-service</module>
         <module>fancy-cassandra-test-utils</module>
         <module>fancy-cassandra-config</module>
+        <module>fancy-discovery-consul-spring-boot-starter</module>
     </modules>
 
 

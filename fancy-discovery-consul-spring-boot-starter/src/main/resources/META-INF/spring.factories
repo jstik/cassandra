@@ -1,0 +1,8 @@
+org.springframework.context.ApplicationListener=com.jstik.site.discovery.stub.DiscoveryConsulPropertyListener
+# Auto Configuration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.jstik.site.discovery.tags.ConsulCustomTagsAutoConfig
+
+# Bootstrap Configuration
+org.springframework.cloud.bootstrap.BootstrapConfiguration=\
+com.jstik.site.discovery.stub.StubLoadBalancerConfig

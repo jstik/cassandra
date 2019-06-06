@@ -10,6 +10,7 @@
         <module name="fancy-cassandra-config" />
         <module name="fancy-cassandra-test-utils" />
         <module name="fancy-chat" />
+        <module name="fancy-discovery-consul-spring-boot-starter" />
         <module name="fancy-user-service" />
         <module name="fancyuserservice" />
       </profile>
@@ -20,6 +21,7 @@
       <module name="fancy-cassandra-parent" target="1.8" />
       <module name="fancy-cassandra-test-utils" target="1.8" />
       <module name="fancy-chat" target="1.8" />
+      <module name="fancy-discovery-consul-spring-boot-starter" target="1.8" />
       <module name="fancy-user-service" target="1.8" />
       <module name="fancyuserservice" target="1.8" />
       <module name="jstik-showcase" target="1.8" />
