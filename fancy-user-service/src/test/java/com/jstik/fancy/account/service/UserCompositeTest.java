@@ -5,7 +5,6 @@ import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraEnvironment;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.account.dao.repository.UserRegistrationRepository;
 import com.jstik.fancy.account.dao.repository.UserRepository;
-import com.jstik.fancy.account.discovery.ServiceDiscoveryConfig;
 import com.jstik.fancy.account.entity.User;
 import com.jstik.fancy.account.entity.UserRegistration;
 import com.jstik.fancy.account.entity.UserRegistration.UserRegistrationPrimaryKey;
@@ -33,7 +32,7 @@ import java.util.concurrent.CountDownLatch;
 @ContextConfiguration(
         classes = {
                 EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class,
-                ServiceConfig.class, UserServiceWebConfig.class, UserServiceSecurityConfig.class, ServiceDiscoveryConfig.class
+                ServiceConfig.class, UserServiceWebConfig.class, UserServiceSecurityConfig.class
         }
 )
 @TestPropertySource("classpath:embedded-test.properties")

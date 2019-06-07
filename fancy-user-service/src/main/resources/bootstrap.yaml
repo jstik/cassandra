@@ -2,10 +2,12 @@
 spring:
   application:
     name: account-service
-  profiles:
-    active: dev
+  #profiles:
+   # active: dev
   cloud:
     consul:
+      stub:
+        enabled: true
       host: localhost
       port: 8500
       discovery:
