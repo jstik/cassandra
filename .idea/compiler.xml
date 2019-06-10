@@ -13,6 +13,7 @@
         <module name="fancy-discovery-consul-spring-boot-starter" />
         <module name="fancy-user-service" />
         <module name="fancyuserservice" />
+        <module name="spring-boot-starter-fancy-consul" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -25,6 +26,7 @@
       <module name="fancy-user-service" target="1.8" />
       <module name="fancyuserservice" target="1.8" />
       <module name="jstik-showcase" target="1.8" />
+      <module name="spring-boot-starter-fancy-consul" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

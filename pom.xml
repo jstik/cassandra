@@ -18,7 +18,7 @@
         <module>fancy-user-service</module>
         <module>fancy-cassandra-test-utils</module>
         <module>fancy-cassandra-config</module>
-        <module>fancy-discovery-consul-spring-boot-starter</module>
+        <module>spring-boot-starter-fancy-consul</module>
     </modules>
 
 
@@ -59,7 +59,7 @@
 
         <dependency>
             <groupId>com.jstik.site</groupId>
-            <artifactId>fancy-discovery-consul-spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-fancy-consul</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

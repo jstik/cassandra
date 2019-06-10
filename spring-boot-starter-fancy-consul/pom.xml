@@ -10,7 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jstik.site</groupId>
-    <artifactId>fancy-discovery-consul-spring-boot-starter</artifactId>
+    <artifactId>spring-boot-starter-fancy-consul</artifactId>
     <version>1.0-SNAPSHOT</version>
 
 
