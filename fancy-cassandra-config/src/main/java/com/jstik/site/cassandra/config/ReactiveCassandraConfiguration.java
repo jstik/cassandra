@@ -1,18 +1,21 @@
 package com.jstik.site.cassandra.config;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration;
 import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
-import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
-import org.springframework.data.cassandra.repository.config.EnableReactiveCassandraRepositories;
+import org.springframework.data.cassandra.config.KeyspaceAction;
 
 @Configuration
 public class ReactiveCassandraConfiguration extends AbstractReactiveCassandraConfiguration {
 
     private final CassandraProperties cassandraProperties;
+
+    @Value("${spring.data.cassandra.keyspace-action}")
+    private String keyspaceAction;
 
     public ReactiveCassandraConfiguration(CassandraProperties cassandraProperties) {
         this.cassandraProperties = cassandraProperties;
