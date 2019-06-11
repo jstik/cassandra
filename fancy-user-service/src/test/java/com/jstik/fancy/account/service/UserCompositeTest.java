@@ -35,7 +35,7 @@ import java.util.concurrent.CountDownLatch;
                 ServiceConfig.class, UserServiceWebConfig.class, UserServiceSecurityConfig.class
         }
 )
-@TestPropertySource("classpath:embedded-test.properties")
+@TestPropertySource("classpath:test.properties")
 @EnableDiscoveryClient
 public class UserCompositeTest extends EmbeddedCassandraEnvironment {
 

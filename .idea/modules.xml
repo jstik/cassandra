@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/fancy-user-service/fancy-user-service.iml" filepath="$PROJECT_DIR$/fancy-user-service/fancy-user-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/jstik-showcase.iml" filepath="$PROJECT_DIR$/jstik-showcase.iml" />
       <module fileurl="file://$PROJECT_DIR$/spring-boot-starter-fancy-consul/spring-boot-starter-fancy-consul.iml" filepath="$PROJECT_DIR$/spring-boot-starter-fancy-consul/spring-boot-starter-fancy-consul.iml" />
+      <module fileurl="file://$PROJECT_DIR$/spring-boot-starter-fancy-consul/spring-boot-starter-fancy-consul.iml" filepath="$PROJECT_DIR$/spring-boot-starter-fancy-consul/spring-boot-starter-fancy-consul.iml" />
     </modules>
   </component>
 </project>
