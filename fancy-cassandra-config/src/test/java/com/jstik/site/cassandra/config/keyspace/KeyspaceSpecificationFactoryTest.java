@@ -1,11 +1,14 @@
 package com.jstik.site.cassandra.config.keyspace;
 
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
+import com.jstik.site.cassandra.config.CassandraPropertiesConfiguration;
+import com.jstik.site.cassandra.test.KeyspacePropertiesTestConfiguration;
 import com.jstik.site.cassandra.test.TestCassandraConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
+import org.springframework.cloud.function.context.test.FunctionalSpringBootTest;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -20,18 +23,18 @@ import static org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOptio
 @SpringJUnitWebConfig
 @ContextConfiguration(
         classes = {
-                EmbeddedCassandraConfig.class, TestCassandraConfiguration.class
+                KeyspacePropertiesTestConfiguration.class
         }
 )
-@TestPropertySource("classpath:test.properties")
+@TestPropertySource("classpath:keyspace-specification-factory-test.properties")
 public class KeyspaceSpecificationFactoryTest {
 
     @Inject private KeyspaceProperties keyspaceProperties;
-    @Inject private CassandraProperties cassandraProperties;
+     private static final String keyspaceName ="testKeyspace";
 
     @Test
     public void create() throws Exception {
-        KeyspaceSpecificationBuilder builder = KeyspaceSpecificationBuilder.from(cassandraProperties.getKeyspaceName());
+        KeyspaceSpecificationBuilder builder = KeyspaceSpecificationBuilder.from(keyspaceName);
         KeyspaceSpecificationFactory factory = builder.build(keyspaceProperties);
         CreateKeyspaceSpecification specification = factory.create();
         Assert.assertNotNull(specification);
@@ -43,14 +46,14 @@ public class KeyspaceSpecificationFactoryTest {
 
     @Test
     public void alter() throws Exception {
-        KeyspaceSpecificationBuilder builder = KeyspaceSpecificationBuilder.from(cassandraProperties.getKeyspaceName());
+        KeyspaceSpecificationBuilder builder = KeyspaceSpecificationBuilder.from(keyspaceName);
         KeyspaceSpecificationFactory factory = builder.build(keyspaceProperties);
         factory.alter();
     }
 
     @Test
     public void drop() throws Exception {
-        KeyspaceSpecificationBuilder builder = KeyspaceSpecificationBuilder.from(cassandraProperties.getKeyspaceName());
+        KeyspaceSpecificationBuilder builder = KeyspaceSpecificationBuilder.from(keyspaceName);
         KeyspaceSpecificationFactory factory = builder.build(keyspaceProperties);
         Assert.assertNotNull(factory.drop());
     }
