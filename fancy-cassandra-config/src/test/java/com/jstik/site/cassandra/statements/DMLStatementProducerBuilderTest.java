@@ -1,11 +1,12 @@
 package com.jstik.site.cassandra.statements;
 
 import com.datastax.driver.core.RegularStatement;
+import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraEnvironment;
 import com.jstik.site.cassandra.test.TestCassandraConfiguration;
 import com.jstik.site.cassandra.test.entity.TestTable;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.data.cassandra.core.ReactiveCassandraOperations;
@@ -24,10 +25,14 @@ import javax.inject.Inject;
         }
 )
 @TestPropertySource("classpath:embedded-test.properties")
-public class DMLStatementProducerBuilderTest extends EmbeddedCassandraEnvironment {
+public class DMLStatementProducerBuilderTest {
 
     @Inject
     private ReactiveCassandraOperations operations;
+
+    @Rule
+    @Inject
+    public CassandraCreateDropSchemaRule createDropSchemaRule;
 
     @Test
     public void insertProducer() throws Exception {
