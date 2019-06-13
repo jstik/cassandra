@@ -1,10 +1,12 @@
 package com.jstik.site.cassandra.config.keyspace;
 
+import org.springframework.data.cassandra.config.KeyspaceAction;
 import org.springframework.data.cassandra.core.cql.keyspace.*;
 import org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOption.ReplicationStrategy;
 import org.springframework.data.cassandra.util.MapBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +20,12 @@ public class KeyspaceSpecificationFactory {
     private boolean durableWrites;
     private boolean ifNotExists;
     private String keyspaceName;
+    private KeyspaceAction keyspaceAction = KeyspaceAction.NONE;
 
     KeyspaceSpecificationFactory(
             List<DataCenterReplication> replications, ReplicationStrategy replicationStrategy,
             long replicationFactor, boolean durableWrites,
-            boolean ifNotExists, String keyspaceName
+            boolean ifNotExists, String keyspaceName,  KeyspaceAction keyspaceAction
     ) {
         this.replications = replications;
         this.replicationStrategy = replicationStrategy;
@@ -30,9 +33,21 @@ public class KeyspaceSpecificationFactory {
         this.durableWrites = durableWrites;
         this.ifNotExists = ifNotExists;
         this.keyspaceName = keyspaceName;
+        this.keyspaceAction = keyspaceAction;
     }
 
-    public CreateKeyspaceSpecification create() {
+    public List<CreateKeyspaceSpecification> createSpecificationsOrEmpty(){
+        if(keyspaceAction ==  KeyspaceAction.NONE || keyspaceAction ==  KeyspaceAction.ALTER )
+            return Collections.emptyList();
+        return Collections.singletonList(this.create());
+    }
+    public List<DropKeyspaceSpecification> dropSpecificationsOrEmpty(){
+        if(keyspaceAction !=  KeyspaceAction.CREATE_DROP )
+            return Collections.emptyList();
+        return Collections.singletonList(this.drop());
+    }
+
+    protected CreateKeyspaceSpecification create() {
         CreateKeyspaceSpecification specification = CreateKeyspaceSpecification.createKeyspace(keyspaceName);
         specification.ifNotExists(ifNotExists);
         specification.with(DURABLE_WRITES, durableWrites);

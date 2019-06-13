@@ -1,10 +1,13 @@
 package com.jstik.site.cassandra.config.keyspace;
 
+import org.springframework.boot.context.properties.PropertyMapper;
+import org.springframework.data.cassandra.config.KeyspaceAction;
 import org.springframework.data.cassandra.core.cql.keyspace.*;
 import org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOption.ReplicationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class KeyspaceSpecificationBuilder {
 
@@ -14,6 +17,7 @@ public class KeyspaceSpecificationBuilder {
     private boolean durableWrites;
     private boolean ifNotExists;
     private String keyspaceName;
+    private KeyspaceAction keyspaceAction;
 
     private KeyspaceSpecificationBuilder(String keyspaceName) {
         this.keyspaceName = keyspaceName;
@@ -27,12 +31,6 @@ public class KeyspaceSpecificationBuilder {
         this.ifNotExists = true;
         return this;
     }
-
-    public KeyspaceSpecificationBuilder ifNotExists(boolean ifNotExists){
-        this.ifNotExists = ifNotExists;
-        return this;
-    }
-
 
     public KeyspaceSpecificationBuilder durableWrites(){
         durableWrites = true;
@@ -51,6 +49,27 @@ public class KeyspaceSpecificationBuilder {
     }
 
     public KeyspaceSpecificationFactory build(){
-        return new KeyspaceSpecificationFactory(replications, replicationStrategy, replicationFactor, durableWrites, ifNotExists, keyspaceName );
+        return new KeyspaceSpecificationFactory(replications, replicationStrategy, replicationFactor, durableWrites, ifNotExists, keyspaceName, keyspaceAction );
+    }
+
+    public KeyspaceSpecificationBuilder keyspaceAction(KeyspaceAction keyspaceAction){
+        this.keyspaceAction = keyspaceAction;
+        return this;
+    }
+
+    public KeyspaceSpecificationFactory build(KeyspaceProperties properties){
+        PropertyMapper mapper = PropertyMapper.get();
+        mapper.from(properties.getKeyspaceAction()).whenNonNull().to(this::keyspaceAction);
+        mapper.from(properties.isIfNotExists()).whenTrue().to(val->ifNotExists());
+        mapper.from(properties.isDurableWrites()).whenTrue().to(val->durableWrites());
+        mapper.from(properties.getReplicationStrategy())
+                .whenEqualTo(ReplicationStrategy.NETWORK_TOPOLOGY_STRATEGY)
+                .to(val->{
+                    List<DataCenterReplication> replications = properties.dataCenterReplication().stream()
+                            .map(pr -> DataCenterReplication.of(pr.getDataCenter(), pr.getReplicationFactor()))
+                            .collect(Collectors.toList());
+                    withNetworkReplication(replications);
+                });
+        return build();
     }
 }
