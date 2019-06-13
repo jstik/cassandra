@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.cassandra.core.CassandraAdminOperations;
+import org.springframework.data.cassandra.core.mapping.CassandraMappingContext;
 
 import java.io.IOException;
 
@@ -49,5 +51,10 @@ public class EmbeddedCassandraConfig implements DisposableBean {
             logger.debug(" Embedded Cassandra Server seems already down ", e);
         }
 
+    }
+
+    @Bean
+    public CassandraCreateDropSchemaRule createDropSchemaRule(CassandraAdminOperations adminTemplate, CassandraMappingContext cassandraMapping){
+       return  new  CassandraCreateDropSchemaRule(adminTemplate, cassandraMapping);
     }
 }
