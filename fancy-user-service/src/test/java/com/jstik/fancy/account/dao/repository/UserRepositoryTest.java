@@ -1,11 +1,12 @@
 package com.jstik.fancy.account.dao.repository;
 
+import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraEnvironment;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.account.entity.User;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,10 +18,13 @@ import javax.inject.Inject;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class})
 @TestPropertySource("classpath:embedded-test.properties")
-public class UserRepositoryTest extends EmbeddedCassandraEnvironment {
+public class UserRepositoryTest {
 
     @Inject
     private UserRepository userRepository;
+    @Rule
+    @Inject
+    public CassandraCreateDropSchemaRule createDropSchemaRule;
 
     @Test
     public void saveUserTest() {

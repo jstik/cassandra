@@ -4,9 +4,10 @@ package com.jstik.fancy.chat.dao.repository;
 import com.jstik.fancy.chat.dao.config.CassandraConfig;
 import com.jstik.fancy.chat.model.entity.Message;
 import com.jstik.fancy.chat.model.entity.UserBriefInfo;
+import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraEnvironment;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,10 +21,14 @@ import java.time.LocalDate;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {EmbeddedCassandraConfig.class, CassandraConfig.class})
 @TestPropertySource("classpath:embedded-test.properties")
-public class MessageRepositoryTest extends EmbeddedCassandraEnvironment {
+public class MessageRepositoryTest  {
 
     @Inject
     private MessageRepository messageRepository;
+
+    @Rule
+    @Inject
+    public CassandraCreateDropSchemaRule createDropSchemaRule;
 
     @Test
     public void createMessageTest(){

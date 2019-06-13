@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.service;
 
+import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraEnvironment;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.account.dao.repository.UserRegistrationRepository;
 import com.jstik.fancy.account.dao.repository.UserRepository;
@@ -13,6 +13,7 @@ import com.jstik.fancy.account.util.UserUtil;
 import com.jstik.fancy.account.web.UserServiceWebConfig;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,11 +35,15 @@ import javax.inject.Inject;
         }
 )
 @TestPropertySource("classpath:embedded-test.properties")
-public class UserServiceTest extends EmbeddedCassandraEnvironment {
+public class UserServiceTest{
 
     @Inject private UserService userService;
     @Inject private UserRegistrationRepository userRegistrationRepository;
     @Inject private UserRepository userRepository;
+    @Rule
+    @Inject
+    public CassandraCreateDropSchemaRule createDropSchemaRule;
+
 
     @Test
     public void getUserToActivate() throws Exception {

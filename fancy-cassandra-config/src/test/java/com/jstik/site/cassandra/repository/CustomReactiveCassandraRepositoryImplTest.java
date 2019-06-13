@@ -3,6 +3,7 @@ package com.jstik.site.cassandra.repository;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
+import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import com.jstik.site.cassandra.test.TestCassandraConfiguration;
 import com.jstik.site.cassandra.test.entity.TestTable;
 import org.junit.Assert;
@@ -17,6 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.test.StepVerifier;
 
 import javax.inject.Inject;
+
+import static com.jstik.site.cassandra.statements.DMLStatementProducerBuilder.insertProducer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringJUnitWebConfig
@@ -56,11 +59,18 @@ public class CustomReactiveCassandraRepositoryImplTest {
 
     @Test
     public void executeBatch() throws Exception {
+        CustomReactiveCassandraRepositoryImpl<TestTable, String> repo = new CustomReactiveCassandraRepositoryImpl<>(operation);
+        EntityAwareBatchStatement insertStatement = new EntityAwareBatchStatement(insertProducer(), prepareData("key1", "data1"));
+        insertStatement = insertStatement.andThen(new EntityAwareBatchStatement(insertProducer(), prepareData("key1", "data1")));
+        StepVerifier.create(repo.executeBatch(insertStatement)).assertNext(Assert::assertTrue).verifyComplete();
     }
 
-    private TestTable prepareData() {
-        TestTable testTable = new com.jstik.site.cassandra.test.entity.TestTable("key1");
-        testTable.setTestData("Some Test");
+    private TestTable prepareData(){
+        return  prepareData("key1", "Test data");
+    }
+    private TestTable prepareData(String key, String data) {
+        TestTable testTable = new TestTable(key);
+        testTable.setTestData(data);
         return testTable;
     }
 

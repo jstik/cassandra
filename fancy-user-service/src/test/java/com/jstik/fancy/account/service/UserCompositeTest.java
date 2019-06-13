@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.service;
 
+import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraEnvironment;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.account.dao.repository.UserRegistrationRepository;
 import com.jstik.fancy.account.dao.repository.UserRepository;
@@ -11,6 +11,7 @@ import com.jstik.fancy.account.entity.UserRegistration.UserRegistrationPrimaryKe
 import com.jstik.fancy.account.model.account.RegisterAccountRequest;
 import com.jstik.fancy.account.security.UserServiceSecurityConfig;
 import com.jstik.fancy.account.web.UserServiceWebConfig;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -37,13 +38,18 @@ import java.util.concurrent.CountDownLatch;
 )
 @TestPropertySource("classpath:test.properties")
 @EnableDiscoveryClient
-public class UserCompositeTest extends EmbeddedCassandraEnvironment {
+public class UserCompositeTest {
 
     @Inject
     private UserRepository userRepository;
 
     @Inject
     private UserRegistrationRepository userRegistrationRepository;
+
+    @Rule
+    @Inject
+    public CassandraCreateDropSchemaRule createDropSchemaRule;
+
 
     private  final Logger log = LoggerFactory.getLogger(this.getClass());
 
