@@ -21,11 +21,7 @@ import static org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOptio
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringJUnitWebConfig
-@ContextConfiguration(
-        classes = {
-                KeyspacePropertiesTestConfiguration.class
-        }
-)
+@ContextConfiguration(classes = {KeyspacePropertiesTestConfiguration.class})
 @TestPropertySource("classpath:keyspace-specification-factory-test.properties")
 public class KeyspaceSpecificationFactoryTest {
 
