@@ -1,14 +1,10 @@
 package com.jstik.site.cassandra.config.keyspace;
 
-import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.site.cassandra.config.CassandraPropertiesConfiguration;
+
 import com.jstik.site.cassandra.test.KeyspacePropertiesTestConfiguration;
-import com.jstik.site.cassandra.test.TestCassandraConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
-import org.springframework.cloud.function.context.test.FunctionalSpringBootTest;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
