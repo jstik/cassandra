@@ -23,7 +23,7 @@ public class DMLStatementProducerBuilder {
         return insertProducer(false, ttl);
     }
 
-    public static BiFunction<CassandraConverter, Object, RegularStatement> insertProducer(boolean ifNotExists, Integer ttl) {
+    private static BiFunction<CassandraConverter, Object, RegularStatement> insertProducer(boolean ifNotExists, Integer ttl) {
         return (converter, entity) -> {
             CassandraPersistentEntity<?> persistentEntity = converter.getMappingContext().getRequiredPersistentEntity(entity.getClass());
             Insert insert = QueryBuilder.insertInto(persistentEntity.getTableName().toCql());

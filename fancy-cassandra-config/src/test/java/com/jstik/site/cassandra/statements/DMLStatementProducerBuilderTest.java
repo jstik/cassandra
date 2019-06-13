@@ -60,13 +60,15 @@ public class DMLStatementProducerBuilderTest extends EmbeddedCassandraEnvironmen
         Assert.assertTrue(result);
     }
 
-    @Test
-    public void insertProducer1() throws Exception {
-
-    }
 
     @Test
     public void updateByIdProducer() throws Exception {
+        RegularStatement updateIfExist = DMLStatementProducerBuilder.updateByIdProducer(true).apply(operations.getConverter(), prepareData());
+        //There is no such record in db so update should't be execute
+        Assert.assertFalse(operations.getReactiveCqlOperations().execute(updateIfExist).block());
+
+        RegularStatement update = DMLStatementProducerBuilder.updateByIdProducer(false).apply(operations.getConverter(), prepareData());
+        Assert.assertTrue(operations.getReactiveCqlOperations().execute(update).block());
     }
 
     private TestTable prepareData(){
