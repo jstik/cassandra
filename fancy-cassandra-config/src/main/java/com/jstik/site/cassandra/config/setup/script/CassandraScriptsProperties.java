@@ -1,4 +1,4 @@
-package com.jstik.site.cassandra.config.script;
+package com.jstik.site.cassandra.config.setup.script;
 
 import lombok.Getter;
 import lombok.Setter;

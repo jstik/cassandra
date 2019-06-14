@@ -1,4 +1,4 @@
-package com.jstik.site.cassandra.config.keyspace;
+package com.jstik.site.cassandra.config.setup.keyspace;
 
 
 import com.jstik.site.cassandra.test.KeyspacePropertiesTestConfiguration;
@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
-import static com.jstik.site.cassandra.config.keyspace.KeyspaceSpecificationBuilder.from;
+import static com.jstik.site.cassandra.config.setup.keyspace.KeyspaceSpecificationBuilder.from;
 import static org.hamcrest.core.Is.is;
 import static org.springframework.data.cassandra.core.cql.keyspace.KeyspaceOption.DURABLE_WRITES;
 
@@ -45,7 +45,7 @@ public class KeyspaceSpecificationFactoryTest {
     public void alter() throws Exception {
         KeyspaceSpecificationBuilder builder = from(keyspaceName);
         KeyspaceSpecificationFactory factory = builder.build(keyspaceProperties);
-        factory.alter();
+        Assert.assertNotNull(factory.alter());
     }
 
     @Test

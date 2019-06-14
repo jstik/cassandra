@@ -1,4 +1,4 @@
-package com.jstik.site.cassandra.config.keyspace;
+package com.jstik.site.cassandra.config.setup.keyspace;
 
 import org.springframework.data.cassandra.config.KeyspaceAction;
 import org.springframework.data.cassandra.core.cql.keyspace.*;
@@ -55,14 +55,14 @@ public class KeyspaceSpecificationFactory {
         return specification;
     }
 
-    public AlterKeyspaceSpecification alter() {
+    AlterKeyspaceSpecification alter() {
         AlterKeyspaceSpecification specification = AlterKeyspaceSpecification.alterKeyspace(keyspaceName);
         specification.with(DURABLE_WRITES, durableWrites);
         specification.with(KeyspaceOption.REPLICATION, toOptions());
         return specification;
     }
 
-    public DropKeyspaceSpecification drop() {
+    DropKeyspaceSpecification drop() {
         return DropKeyspaceSpecification.dropKeyspace(keyspaceName);
     }
 

@@ -1,6 +1,7 @@
 package com.jstik.site.cassandra.config;
 
-import com.jstik.site.cassandra.config.script.ICassandraSetupService;
+import com.jstik.site.cassandra.config.setup.CassandraSetupConfiguration;
+import com.jstik.site.cassandra.config.setup.ICassandraSetupService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.context.annotation.Bean;

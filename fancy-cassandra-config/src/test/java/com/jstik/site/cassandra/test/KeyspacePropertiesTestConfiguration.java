@@ -1,6 +1,6 @@
 package com.jstik.site.cassandra.test;
 
-import com.jstik.site.cassandra.config.keyspace.KeyspaceProperties;
+import com.jstik.site.cassandra.config.setup.keyspace.KeyspaceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

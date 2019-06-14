@@ -1,8 +1,7 @@
 package com.jstik.site.cassandra.test;
 
 import com.jstik.site.cassandra.config.ReactiveCassandraConfiguration;
-import com.jstik.site.cassandra.config.script.ICassandraSetupService;
-import com.jstik.site.cassandra.test.repository.TestTable;
+import com.jstik.site.cassandra.config.setup.ICassandraSetupService;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

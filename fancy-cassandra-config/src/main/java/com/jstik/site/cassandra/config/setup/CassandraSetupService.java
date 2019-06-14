@@ -1,7 +1,8 @@
-package com.jstik.site.cassandra.config.script;
+package com.jstik.site.cassandra.config.setup;
 
 
-import com.jstik.site.cassandra.config.keyspace.KeyspaceProperties;
+import com.jstik.site.cassandra.config.setup.keyspace.KeyspaceProperties;
+import com.jstik.site.cassandra.config.setup.script.ScriptsUtils;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.Resource;
 
@@ -12,7 +13,7 @@ import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 import org.springframework.data.cassandra.core.cql.keyspace.DropKeyspaceSpecification;
 
-import static com.jstik.site.cassandra.config.keyspace.KeyspaceSpecificationBuilder.from;
+import static com.jstik.site.cassandra.config.setup.keyspace.KeyspaceSpecificationBuilder.from;
 
 public class CassandraSetupService implements ICassandraSetupService {
 
@@ -24,10 +25,10 @@ public class CassandraSetupService implements ICassandraSetupService {
 
     private Resource shutdownScript;
 
-    public CassandraSetupService(KeyspaceProperties keyspaceProperties,
-                                 ConversionService conversionService,
-                                 Resource startupScript,
-                                 Resource shutdownScript) {
+    CassandraSetupService(KeyspaceProperties keyspaceProperties,
+                          ConversionService conversionService,
+                          Resource startupScript,
+                          Resource shutdownScript) {
         this.keyspaceProperties = keyspaceProperties;
         this.conversionService = conversionService;
         this.startupScript = startupScript;

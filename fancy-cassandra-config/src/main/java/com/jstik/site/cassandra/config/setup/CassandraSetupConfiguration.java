@@ -1,9 +1,7 @@
-package com.jstik.site.cassandra.config;
+package com.jstik.site.cassandra.config.setup;
 
-import com.jstik.site.cassandra.config.keyspace.KeyspaceProperties;
-import com.jstik.site.cassandra.config.script.CassandraScriptsProperties;
-import com.jstik.site.cassandra.config.script.CassandraSetupService;
-import com.jstik.site.cassandra.config.script.ICassandraSetupService;
+import com.jstik.site.cassandra.config.setup.keyspace.KeyspaceProperties;
+import com.jstik.site.cassandra.config.setup.script.CassandraScriptsProperties;
 import com.jstik.site.cassandra.convertors.StringToEnumConverterFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;

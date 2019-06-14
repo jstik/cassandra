@@ -1,4 +1,4 @@
-package com.jstik.site.cassandra.config.script;
+package com.jstik.site.cassandra.config.setup.script;
 
 import org.springframework.core.io.Resource;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.codec.Charsets.UTF_8;
 
-class ScriptsUtils {
+public class ScriptsUtils {
 
     public static List<String> readScripts(Resource resource) {
         if (!resource.exists() || !resource.isFile())

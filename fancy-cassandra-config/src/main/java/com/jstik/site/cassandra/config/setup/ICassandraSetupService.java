@@ -1,4 +1,4 @@
-package com.jstik.site.cassandra.config.script;
+package com.jstik.site.cassandra.config.setup;
 
 import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;

@@ -1,4 +1,4 @@
-package com.jstik.site.cassandra.config.keyspace;
+package com.jstik.site.cassandra.config.setup.keyspace;
 
 import org.springframework.boot.context.properties.PropertyMapper;
 import org.springframework.data.cassandra.config.KeyspaceAction;

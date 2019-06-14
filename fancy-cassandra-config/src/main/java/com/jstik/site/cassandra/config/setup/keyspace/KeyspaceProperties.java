@@ -1,4 +1,4 @@
-package com.jstik.site.cassandra.config.keyspace;
+package com.jstik.site.cassandra.config.setup.keyspace;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class KeyspaceProperties {
     private Map<String, Long> dataCenterReplication = new LinkedHashMap<>();
 
 
-    public  List<DataCenterReplicationProperties> dataCenterReplication(){
+    List<DataCenterReplicationProperties> dataCenterReplication(){
        return dataCenterReplication.entrySet().stream().map(entry-> new DataCenterReplicationProperties(entry.getKey(), entry.getValue())).collect(toList());
     }
 
