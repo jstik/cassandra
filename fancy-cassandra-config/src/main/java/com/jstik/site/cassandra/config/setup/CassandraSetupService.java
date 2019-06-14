@@ -2,7 +2,7 @@ package com.jstik.site.cassandra.config.setup;
 
 
 import com.jstik.site.cassandra.config.setup.keyspace.KeyspaceProperties;
-import com.jstik.site.cassandra.config.setup.script.ScriptsUtils;
+import com.jstik.site.cassandra.config.setup.script.ScriptUtils;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.Resource;
 
@@ -39,7 +39,7 @@ public class CassandraSetupService implements ICassandraSetupService {
     public List<String> getStartupScripts() {
         if (startupScript == null)
             return Collections.emptyList();
-        return ScriptsUtils.readScripts(startupScript);
+        return ScriptUtils.readScripts(startupScript, "#");
     }
 
 
@@ -47,7 +47,7 @@ public class CassandraSetupService implements ICassandraSetupService {
     public List<String> getShutdownScripts() {
         if (shutdownScript == null)
             return Collections.emptyList();
-        return ScriptsUtils.readScripts(shutdownScript);
+        return ScriptUtils.readScripts(shutdownScript, "#");
     }
 
     @Override
