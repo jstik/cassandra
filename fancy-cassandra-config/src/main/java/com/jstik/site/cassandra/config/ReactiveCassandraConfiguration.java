@@ -1,28 +1,30 @@
 package com.jstik.site.cassandra.config;
 
-import com.jstik.site.cassandra.config.keyspace.KeyspaceProperties;
+import com.jstik.site.cassandra.config.script.ICassandraSetupService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.cassandra.config.AbstractReactiveCassandraConfiguration;
 import org.springframework.data.cassandra.config.CassandraClusterFactoryBean;
+import org.springframework.data.cassandra.config.SchemaAction;
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 import org.springframework.data.cassandra.core.cql.keyspace.DropKeyspaceSpecification;
 
 import java.util.List;
 
-import static com.jstik.site.cassandra.config.keyspace.KeyspaceSpecificationBuilder.from;
-
 @Configuration
+@Import(CassandraSetupConfiguration.class)
 public class ReactiveCassandraConfiguration extends AbstractReactiveCassandraConfiguration {
 
     private final CassandraProperties cassandraProperties;
+    private ICassandraSetupService setupService;
 
 
-    public ReactiveCassandraConfiguration(CassandraProperties cassandraProperties) {
+    public ReactiveCassandraConfiguration(CassandraProperties cassandraProperties, ICassandraSetupService setupService) {
         this.cassandraProperties = cassandraProperties;
+        this.setupService = setupService;
     }
 
     @NotNull
@@ -43,19 +45,32 @@ public class ReactiveCassandraConfiguration extends AbstractReactiveCassandraCon
     @NotNull
     @Override
     protected List<CreateKeyspaceSpecification> getKeyspaceCreations() {
-        return from(getKeyspaceName()).build(keyspaceProperties()).createSpecificationsOrEmpty();
+        return setupService.getKeyspaceCreations(getKeyspaceName());
     }
 
     @NotNull
     @Override
     protected List<DropKeyspaceSpecification> getKeyspaceDrops() {
-        return from(getKeyspaceName()).build(keyspaceProperties()).dropSpecificationsOrEmpty();
+        return setupService.getKeyspaceDrops(getKeyspaceName());
     }
 
-    @Bean
-    @ConfigurationProperties(prefix = "spring.data.cassandra.custom.keyspace")
-    public KeyspaceProperties keyspaceProperties(){
-        return new KeyspaceProperties();
+
+    @NotNull
+    @Override
+    public SchemaAction getSchemaAction() {
+       return setupService.getSchemaAction(cassandraProperties.getSchemaAction());
     }
 
+
+    @NotNull
+    @Override
+    protected List<String> getStartupScripts() {
+        return setupService.getStartupScripts();
+    }
+
+    @NotNull
+    @Override
+    protected List<String> getShutdownScripts() {
+        return setupService.getShutdownScripts();
+    }
 }

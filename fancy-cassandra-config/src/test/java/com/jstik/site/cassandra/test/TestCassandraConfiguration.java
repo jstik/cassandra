@@ -1,6 +1,7 @@
 package com.jstik.site.cassandra.test;
 
 import com.jstik.site.cassandra.config.ReactiveCassandraConfiguration;
+import com.jstik.site.cassandra.config.script.ICassandraSetupService;
 import com.jstik.site.cassandra.test.repository.TestTable;
 import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,8 +16,8 @@ import java.util.Set;
 public class TestCassandraConfiguration  extends ReactiveCassandraConfiguration{
 
 
-    public TestCassandraConfiguration(CassandraProperties cassandraProperties) {
-        super(cassandraProperties);
+    public TestCassandraConfiguration(CassandraProperties cassandraProperties, ICassandraSetupService setupService) {
+        super(cassandraProperties, setupService);
     }
 
 
