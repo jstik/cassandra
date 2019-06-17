@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.model.account;
 
-import com.jstik.fancy.account.entity.User;
-import com.jstik.fancy.account.entity.UserRegistration;
+import com.jstik.fancy.account.entity.user.User;
+import com.jstik.fancy.account.entity.user.UserRegistration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

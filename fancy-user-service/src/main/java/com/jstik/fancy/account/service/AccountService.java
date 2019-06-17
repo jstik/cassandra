@@ -1,9 +1,9 @@
 package com.jstik.fancy.account.service;
 
 import com.jstik.fancy.account.dao.repository.*;
-import com.jstik.fancy.account.entity.User;
-import com.jstik.fancy.account.entity.UserRegistration;
-import com.jstik.fancy.account.entity.UserRegistration.UserRegistrationPrimaryKey;
+import com.jstik.fancy.account.entity.user.User;
+import com.jstik.fancy.account.entity.user.UserRegistration;
+import com.jstik.fancy.account.entity.user.UserRegistration.UserRegistrationPrimaryKey;
 import com.jstik.fancy.account.exception.UserRegistrationNoFound;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
 import com.jstik.fancy.account.model.account.RegisterAccountRequest;
@@ -12,8 +12,6 @@ import org.springframework.core.convert.ConversionService;
 import reactor.core.publisher.Mono;
 
 import javax.inject.Inject;
-
-import static com.jstik.site.cassandra.statements.DMLStatementProducerBuilder.insertProducer;
 
 
 public class AccountService {

@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.dao.repository;
 
 import com.jstik.site.cassandra.model.EntityOperation;
-import com.jstik.fancy.account.entity.UserOperationTimestamp;
+import com.jstik.fancy.account.entity.user.UserOperationTimestamp;
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
 import reactor.core.publisher.Flux;
 

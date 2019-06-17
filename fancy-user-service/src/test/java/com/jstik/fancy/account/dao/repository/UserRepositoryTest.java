@@ -1,9 +1,9 @@
 package com.jstik.fancy.account.dao.repository;
 
+import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
-import com.jstik.fancy.account.entity.User;
+import com.jstik.fancy.account.entity.user.User;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -45,8 +45,8 @@ public class UserRepositoryTest {
 
     @Test(expected = EntityAlreadyExistsException.class)
     public void insertIfNotExistOrThrowTest() {
-        User existingUser = userRepository.save(prepareUser("login")).block();
-        userRepository.insertIfNotExistOrThrow(existingUser).block();
+        userRepository.save(prepareUser("login")).block();
+        userRepository.insertIfNotExistOrThrow(prepareUser("login")).block();
     }
 
 

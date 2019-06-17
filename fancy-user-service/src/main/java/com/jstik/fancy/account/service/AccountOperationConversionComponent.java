@@ -1,6 +1,6 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.entity.User;
+import com.jstik.fancy.account.entity.user.User;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;

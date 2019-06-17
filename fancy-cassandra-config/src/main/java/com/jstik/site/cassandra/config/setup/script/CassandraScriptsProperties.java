@@ -10,4 +10,6 @@ public class CassandraScriptsProperties {
     private String startupScript;
 
     private String shutdownScript;
+
+    private boolean enabled;
 }

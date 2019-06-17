@@ -1,4 +1,4 @@
-package com.jstik.fancy.account.entity;
+package com.jstik.fancy.account.entity.user;
 
 import lombok.*;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;

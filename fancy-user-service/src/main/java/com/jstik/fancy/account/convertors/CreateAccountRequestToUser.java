@@ -1,6 +1,6 @@
 package com.jstik.fancy.account.convertors;
 
-import com.jstik.fancy.account.entity.User;
+import com.jstik.fancy.account.entity.user.User;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;

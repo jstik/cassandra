@@ -1,4 +1,4 @@
-package com.jstik.fancy.account.entity;
+package com.jstik.fancy.account.entity.user;
 
 import com.jstik.site.cassandra.model.EntityOperation;
 import lombok.AllArgsConstructor;

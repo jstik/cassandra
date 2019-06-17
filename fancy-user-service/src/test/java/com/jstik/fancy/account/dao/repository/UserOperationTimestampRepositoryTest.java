@@ -1,10 +1,10 @@
 package com.jstik.fancy.account.dao.repository;
 
+import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
-import com.jstik.fancy.account.entity.UserOperationTimestamp;
-import com.jstik.fancy.account.entity.UserOperationTimestamp.UserOperationTimestampPrimaryKey;
+import com.jstik.fancy.account.entity.user.UserOperationTimestamp;
+import com.jstik.fancy.account.entity.user.UserOperationTimestamp.UserOperationTimestampPrimaryKey;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
