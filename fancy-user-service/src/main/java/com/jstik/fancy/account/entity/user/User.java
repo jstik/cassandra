@@ -43,6 +43,8 @@ public class User {
 
     private Set<String> clients;
 
+    private Set<String> tags;
+
     private LocalDateTime created = LocalDateTime.now(Clock.systemUTC());
 
     public User(String login, String firstName, String lastName, @Email String email) {

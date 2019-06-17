@@ -9,6 +9,8 @@ import org.springframework.data.cassandra.core.mapping.*;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter

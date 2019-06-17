@@ -1,5 +1,6 @@
 package com.jstik.fancy.account.dao.repository;
 
+import com.google.common.collect.Sets;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.account.entity.user.User;
 import com.jstik.fancy.account.entity.user.UserOperations;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class})
@@ -53,7 +55,9 @@ public class UserOperationsRepositoryTest {
     }
 
     private User prepareUser(String login) {
-        return new User(login, "firstName", "lastName", "user@user.com");
+        User user = new User(login, "firstName", "lastName", "user@user.com");
+        user.setClients(Sets.newHashSet("client1", "client2"));
+        return user;
     }
 
 
