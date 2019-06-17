@@ -44,6 +44,7 @@ public class User {
     private Set<String> clients;
 
     private Set<String> tags;
+    private Set<String> groups;
 
     private LocalDateTime created = LocalDateTime.now(Clock.systemUTC());
 
