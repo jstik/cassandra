@@ -24,6 +24,8 @@ public class CreateAccountRequest {
     private String email;
 
     private Set<String> clients;
+    private Set<String> tags;
+    private Set<String> groups;
 
     private List<AuthorityDTO> authorities = new ArrayList<>();
 }

@@ -12,6 +12,8 @@ public class CreateAccountRequestToUser implements Converter<CreateAccountReques
     public User convert(@NotNull CreateAccountRequest account) {
         User user = new User(account.getLogin(), account.getFirstName(), account.getLastName(), account.getEmail());
         user.setClients(account.getClients());
+        user.setGroups(account.getGroups());
+        user.setTags(account.getTags());
         return user;
     }
 }
