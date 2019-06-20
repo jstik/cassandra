@@ -16,5 +16,7 @@ public class NewUserInfo {
 
     private Collection<String> rejectedClients;
 
+    private boolean linkedInserted;
+
 
 }

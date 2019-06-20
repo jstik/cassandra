@@ -72,7 +72,7 @@ public class UserService {
         return result
                 .doOnSuccess(info -> {
 
-                    insertBrandNewUserLinkedInBatch(info.getUser()).subscribe();
+                    insertBrandNewUserLinkedInBatch(info.getUser()).doOnSuccess(info::setLinkedInserted).subscribe();
                     if (info.getUser().getTags() != null && !info.getUser().getTags().isEmpty())
                         tagRepository.saveTags(info.getUser().getTags()).subscribe();
                 });

@@ -108,7 +108,9 @@ public class UserServiceTest {
         User userWithTags = prepareUser("login1");
         userWithTags.setTags(Sets.newHashSet("tag1", "tag2"));
         log.debug("test create user with  tags userService.createUser ");
-        StepVerifier.create(userService.createUser(userWithTags, regKey)).assertNext(Assert::assertNotNull).thenAwait(Duration.ofSeconds(2)).verifyComplete();
+        StepVerifier.create(userService.createUser(userWithTags, regKey)).assertNext(info-> {
+            Assert.assertNotNull(info);
+        }).thenAwait(Duration.ofSeconds(2)).verifyComplete();
         log.debug("test create user with  tags userRepository.findByPrimaryKeyLogin ");
         StepVerifier.create(userRepository.findByPrimaryKeyLogin(userWithTags.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with  tags tagRepository.findAll()");
