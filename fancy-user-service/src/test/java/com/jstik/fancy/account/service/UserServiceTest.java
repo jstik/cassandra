@@ -18,6 +18,8 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -26,6 +28,8 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import javax.inject.Inject;
+
+import java.time.Duration;
 
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
@@ -66,6 +70,8 @@ public class UserServiceTest {
     @Inject
     public CassandraCreateDropSchemaRule createDropSchemaRule;
 
+    private  final Logger log = LoggerFactory.getLogger(this.getClass());
+
 
     @Test
     public void getUserToActivate() throws Exception {
@@ -88,31 +94,45 @@ public class UserServiceTest {
         //test create user with no tags, clients,
         User user = prepareUser("login");
         String regKey = UserUtil.generateRegKey();
+        log.debug("test create user with no tags, clients  userService.createUser ");
         StepVerifier.create(userService.createUser(user, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
+        log.debug("test create user with no tags, clients userRepository.findByPrimaryKeyLogin ");
         StepVerifier.create(userRepository.findByPrimaryKeyLogin(user.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
+        log.debug("test create user with no tags, clients userRegistrationRepository.findById ");
         StepVerifier.create(userRegistrationRepository.findById(userRegistration(user, regKey).getPrimaryKey())).assertNext(Assert::assertNotNull).verifyComplete();
+        log.debug("test create user with no tags, clients userService.createUser ");
         StepVerifier.create(userService.createUser(user, regKey)).expectError(EntityAlreadyExistsException.class).verify();
 
         //test create user with  tags
 
         User userWithTags = prepareUser("login1");
         userWithTags.setTags(Sets.newHashSet("tag1", "tag2"));
-        StepVerifier.create(userService.createUser(userWithTags, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
+        log.debug("test create user with  tags userService.createUser ");
+        StepVerifier.create(userService.createUser(userWithTags, regKey)).assertNext(Assert::assertNotNull).thenAwait(Duration.ofSeconds(2)).verifyComplete();
+        log.debug("test create user with  tags userRepository.findByPrimaryKeyLogin ");
         StepVerifier.create(userRepository.findByPrimaryKeyLogin(userWithTags.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
+        log.debug("test create user with  tags tagRepository.findAll()");
         StepVerifier.create(tagRepository.findAll()).assertNext(tag -> {
+            log.debug("test create user with  tags assertNext for tagRepository.findAll(");
             Assert.assertThat(tag.getName(), anyOf(is("tag2"),  is("tag1")));
         }).assertNext(tag -> {
             Assert.assertThat(tag.getName(), anyOf(is("tag2"),  is("tag1")));
         }).verifyComplete();
+
+        log.debug("test create user with  tags userByTagRepository.findAllByPrimaryKeyTag");
         StepVerifier.create(userByTagRepository.findAllByPrimaryKeyTag("tag1")).assertNext(userByTag -> {
+            log.debug("test create user with  tags assertNext for userByTagRepository.findAllByPrimaryKeyTag");
             Assert.assertThat(userByTag.getPrimaryKey().getLogin(), is("login1"));
         }).verifyComplete();
 
         //test create user with  clients
         User userWithClients = prepareUser("userWithClients");
         userWithClients.setClients(Sets.newHashSet("client1", "client2"));
+        log.debug("test create user with  clients  tags userService.createUser");
         StepVerifier.create(userService.createUser(userWithClients, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
+        log.debug("test create user with  clients  tags userRepository.findByPrimaryKeyLogin");
         StepVerifier.create(userRepository.findByPrimaryKeyLogin(userWithClients.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
+        log.debug("test create user with  clients  tags usersByClientRepository.findAll()");
         StepVerifier.create(usersByClientRepository.findAll()).assertNext(usersByClient -> {
             Assert.assertThat(usersByClient.getPrimaryKey().getLogin(), is("userWithClients"));
             Assert.assertThat(usersByClient.getPrimaryKey().getClient(), anyOf(is("client1"),  is("client2")));

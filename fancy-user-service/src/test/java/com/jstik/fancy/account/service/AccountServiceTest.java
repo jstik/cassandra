@@ -1,5 +1,6 @@
 package com.jstik.fancy.account.service;
 
+import com.jstik.fancy.account.model.account.NewUserInfo;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
@@ -64,7 +65,7 @@ public class AccountServiceTest{
     public void createAccountTest() throws Exception {
         CreateAccountRequest accountRequest = prepareAccount("login");
         String regKey = UserUtil.generateRegKey();
-        Mono<User> createUserPublisher = accountService.createAccount(accountRequest, regKey);
+        Mono<NewUserInfo> createUserPublisher = accountService.createAccount(accountRequest, regKey);
         createUserPublisher.log("UserServiceTest.createUserTest").subscribe(Assert::assertNotNull);
     }
 
@@ -78,9 +79,9 @@ public class AccountServiceTest{
                 throw (EntityAlreadyExistsException) error;
             throw new RuntimeException(error);
         };
-        Mono<User> firstUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("First"), errorHandler);
-        Mono<User> secondUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("Second") , errorHandler);
-        Mono<User> composite = firstUserPublisher.delayUntil(user -> secondUserPublisher);
+        Mono<NewUserInfo> firstUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("First"), errorHandler);
+        Mono<NewUserInfo> secondUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("Second") , errorHandler);
+        Mono<NewUserInfo> composite = firstUserPublisher.delayUntil(user -> secondUserPublisher);
         composite.block();
     }
 
@@ -93,9 +94,9 @@ public class AccountServiceTest{
                 throw (EntityAlreadyExistsException) error;
             throw new RuntimeException(error);
         };
-        Mono<User> firstUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("First"), errorHandler);
-        Mono<User> secondUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("Second") , errorHandler);
-        Mono<User> composite = firstUserPublisher.delayUntil(user -> secondUserPublisher);
+        Mono<NewUserInfo> firstUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("First"), errorHandler);
+        Mono<NewUserInfo> secondUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("Second") , errorHandler);
+        Mono<NewUserInfo> composite = firstUserPublisher.delayUntil(user -> secondUserPublisher);
         StepVerifier.create(composite).expectError(EntityAlreadyExistsException.class).verify();
     }
 
@@ -135,7 +136,7 @@ public class AccountServiceTest{
 
 
 
-    private Mono<User> createAccountOperation(CreateAccountRequest accountRequest, String regKey , Consumer<User> onSuccess, Consumer<? super Throwable> onError){
+    private Mono<NewUserInfo> createAccountOperation(CreateAccountRequest accountRequest, String regKey , Consumer<NewUserInfo> onSuccess, Consumer<? super Throwable> onError){
       return accountService.createAccount(accountRequest, regKey) .doOnError(onError::accept).doOnSuccess(onSuccess);
     }
 

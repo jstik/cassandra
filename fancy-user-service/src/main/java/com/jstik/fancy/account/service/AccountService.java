@@ -6,6 +6,7 @@ import com.jstik.fancy.account.entity.user.UserRegistration;
 import com.jstik.fancy.account.entity.user.UserRegistration.UserRegistrationPrimaryKey;
 import com.jstik.fancy.account.exception.UserRegistrationNoFound;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
+import com.jstik.fancy.account.model.account.NewUserInfo;
 import com.jstik.fancy.account.model.account.RegisterAccountRequest;
 import com.jstik.fancy.account.model.account.ActivateAccountRequiredInfo;
 import org.springframework.core.convert.ConversionService;
@@ -30,7 +31,7 @@ public class AccountService {
         this.userRegistrationRepository = userRegistrationRepository;
     }
 
-    public Mono<User> createAccount(CreateAccountRequest account, String regKey) {
+    public Mono<NewUserInfo> createAccount(CreateAccountRequest account, String regKey) {
         User user = conversionService.convert(account, User.class);
         return userService.createUser(user, regKey);
     }

@@ -57,16 +57,24 @@ public class UserService {
         this.loadBalancerClient = loadBalancerClient;
     }
 
-    public Mono<User> createUser(User user, String regKey) {
-        Mono<NewUserInfo> result = Mono.just(new NewUserInfo());
+    public Mono<NewUserInfo> createUser(User user, String regKey) {
         UserRegistration registration = new UserRegistration(user.getLogin(), regKey);
-        return userRepository.insertIfNotExistOrThrow(user)
-                .delayUntil(inserted -> userRegistrationRepository.save(registration))
-                .doOnSuccess(inserted -> {
+        Mono<NewUserInfo> result = Mono.just(new NewUserInfo());
 
-                    insertBrandNewUserLinkedInBatch(inserted).subscribe();
-                    if (user.getTags() != null && !user.getTags().isEmpty())
-                        tagRepository.saveTags(user.getTags()).subscribe();
+        result = result.delayUntil(
+                info -> userRepository.insertIfNotExistOrThrow(user)
+                        .doOnSuccess(inserted -> info.setUser(user))
+        )
+                .delayUntil(
+                        info -> userRegistrationRepository.save(registration)
+                                .doOnSuccess(reg -> info.setRegKey(reg.getPrimaryKey().getRegistrationKey()))
+                );
+        return result
+                .doOnSuccess(info -> {
+
+                    insertBrandNewUserLinkedInBatch(info.getUser()).subscribe();
+                    if (info.getUser().getTags() != null && !info.getUser().getTags().isEmpty())
+                        tagRepository.saveTags(info.getUser().getTags()).subscribe();
                 });
     }
 
