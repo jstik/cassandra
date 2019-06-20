@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -27,5 +28,5 @@ public class CreateAccountRequest {
     private Set<String> tags;
     private Set<String> groups;
 
-    private List<AuthorityDTO> authorities = new ArrayList<>();
+    private Collection<AuthorityDTO> authorities = new ArrayList<>();
 }

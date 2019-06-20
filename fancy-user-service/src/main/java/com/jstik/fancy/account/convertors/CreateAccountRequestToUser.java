@@ -1,10 +1,15 @@
 package com.jstik.fancy.account.convertors;
 
 import com.jstik.fancy.account.entity.user.User;
+import com.jstik.fancy.account.entity.user.UserAuthority;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
+
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class CreateAccountRequestToUser implements Converter<CreateAccountRequest, User> {
     @Nullable
@@ -14,6 +19,8 @@ public class CreateAccountRequestToUser implements Converter<CreateAccountReques
         user.setClients(account.getClients());
         user.setGroups(account.getGroups());
         user.setTags(account.getTags());
+        if(account.getAuthorities() != null)
+            user.setAuthorities(account.getAuthorities().stream().map(dto-> new UserAuthority(dto, user)).collect(toList()));
         return user;
     }
 }
