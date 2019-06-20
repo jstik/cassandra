@@ -126,7 +126,7 @@ public class UserServiceTest {
     public void regKeyToRegistrationUrl() throws Exception {
         String regKey = UserUtil.generateRegKey();
 
-        userService.regKeyToRegistrationUrl(regKey);
+        userService.regKeyToRegistrationUrl("userLogin", regKey);
     }
 
 

@@ -8,12 +8,14 @@ import com.jstik.fancy.account.entity.tag.UserByTag;
 import com.jstik.fancy.account.entity.user.*;
 import com.jstik.fancy.account.exception.UserNotFound;
 import com.jstik.fancy.account.model.AuthorityDTO;
+import com.jstik.fancy.account.model.account.NewUserInfo;
 import com.jstik.site.cassandra.model.EntityOperation;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import javax.inject.Inject;
@@ -56,6 +58,7 @@ public class UserService {
     }
 
     public Mono<User> createUser(User user, String regKey) {
+        Mono<NewUserInfo> result = Mono.just(new NewUserInfo());
         UserRegistration registration = new UserRegistration(user.getLogin(), regKey);
         return userRepository.insertIfNotExistOrThrow(user)
                 .delayUntil(inserted -> userRegistrationRepository.save(registration))
@@ -68,11 +71,12 @@ public class UserService {
     }
 
 
-    public String regKeyToRegistrationUrl(String regKey){
+    //X-Forwarded-Host
+    public String regKeyToRegistrationUrl(String login, String regKey){
         ServiceInstance serviceInstance = loadBalancerClient.choose(applicationName);
         URI uri = serviceInstance.getUri();
         String accountActivationUrl = serviceInstance.getMetadata().get("account.activation.url");
-        return uri.toString();
+        return UriComponentsBuilder.fromUri(uri).path(accountActivationUrl).buildAndExpand(login, regKey).toUriString();
     }
 
     public <T> Mono<User> saveUserAndDelayUntil(User user, Mono<T> until) {
