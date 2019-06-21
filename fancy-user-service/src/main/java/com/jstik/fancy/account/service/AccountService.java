@@ -21,14 +21,14 @@ public class AccountService {
 
     private final UserService userService;
 
-    private final UserRegistrationRepository userRegistrationRepository;
+    private final UserRegistrationService registrationService;
 
 
     @Inject
-    public AccountService(ConversionService conversionService, UserService userService, UserRegistrationRepository userRegistrationRepository) {
+    public AccountService(ConversionService conversionService, UserService userService, UserRegistrationService registrationService) {
         this.conversionService = conversionService;
         this.userService = userService;
-        this.userRegistrationRepository = userRegistrationRepository;
+        this.registrationService = registrationService;
     }
 
     public Mono<NewUserInfo> createAccount(CreateAccountRequest account, String regKey) {
@@ -38,25 +38,26 @@ public class AccountService {
 
     public Mono<ActivateAccountRequiredInfo> activateAccount(RegisterAccountRequest registerAccount) {
         Mono<ActivateAccountRequiredInfo> registrationInformation = findRequiredRegistrationInformation(registerAccount);
-        registrationInformation.doOnSuccess((info -> doRegisterUser(info.getUserRegistration(), info.getUser()).subscribe()));
+        registrationInformation.doOnSuccess((info -> {
+            userService.activateUser(info.getUser(), info.getPlainPassword())
+                    .delayUntil(user -> {
+                        UserRegistration registration = info.getUserRegistration();
+                        return registrationService.delete(registration.getLogin(), registration.getRegKey());
+                    })
+                    .subscribe();
+        }));
         return registrationInformation;
     }
 
 
-    private Mono<ActivateAccountRequiredInfo> findRequiredRegistrationInformation(RegisterAccountRequest registerAccount) {
-        UserRegistrationPrimaryKey registrationId = new UserRegistrationPrimaryKey(registerAccount.getLogin(), registerAccount.getRegKey());
-        Mono<UserRegistration> findRegistrationOperation = userRegistrationRepository.findById(registrationId)
+    private Mono<ActivateAccountRequiredInfo> findRequiredRegistrationInformation(RegisterAccountRequest request) {
+        Mono<UserRegistration> findRegistrationOperation = registrationService.findRegistration(request.getLogin(), request.getRegKey())
                 .doOnSuccess(registration -> {
                     if (registration == null)
                         throw new UserRegistrationNoFound();
                 });
 
-        Mono<User> findUserOperation = userService.getUserToActivate(registerAccount.getLogin(), registerAccount.getPassword());
-        return Mono.zip(findRegistrationOperation, findUserOperation, (reg, user) -> new ActivateAccountRequiredInfo(user, reg));
-    }
-
-
-    private Mono<User> doRegisterUser(UserRegistration userRegistration, User user) {
-        return userService.saveUserAndDelayUntil(user, userRegistrationRepository.delete(userRegistration));
+        Mono<User> findUserOperation = userService.findUserOrThrow(request.getLogin());
+        return Mono.zip(findRegistrationOperation, findUserOperation, (reg, user) -> new ActivateAccountRequiredInfo(user, reg, request.getPassword()));
     }
 }

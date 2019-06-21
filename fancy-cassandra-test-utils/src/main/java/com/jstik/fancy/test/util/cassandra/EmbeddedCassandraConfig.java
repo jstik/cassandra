@@ -25,7 +25,19 @@ public class EmbeddedCassandraConfig implements DisposableBean {
 
     Logger logger = LoggerFactory.getLogger(EmbeddedCassandraConfig.class);
 
-    @Bean
+    public EmbeddedCassandraConfig(TestCassandraProperties cassandraConfigProperties) {
+        try {
+            EmbeddedCassandraServerHelper.startEmbeddedCassandra(cassandraConfigProperties.getConfigurationFile());
+        } catch (TTransportException | IOException e ) {
+            logger.error("Couldn't startup embedded cassandra", e);
+        }
+        Cluster cluster = EmbeddedCassandraServerHelper.getCluster();
+        Session session = cluster.connect();
+        session.execute("CREATE KEYSPACE IF NOT EXISTS " + cassandraConfigProperties.getKeyspaceName() +" WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };");
+
+    }
+/*
+   // @Bean
     @Lazy(false)
     public CommandLineRunner commandLineRunner(TestCassandraProperties cassandraConfigProperties) throws IOException, TTransportException, InterruptedException {
         EmbeddedCassandraServerHelper.startEmbeddedCassandra(cassandraConfigProperties.getConfigurationFile());
@@ -34,7 +46,7 @@ public class EmbeddedCassandraConfig implements DisposableBean {
         session.execute("CREATE KEYSPACE IF NOT EXISTS " + cassandraConfigProperties.getKeyspaceName() +" WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };");
         Thread.sleep(5000);
         return args -> {};
-    }
+    }*/
 
     @Bean
     @Primary

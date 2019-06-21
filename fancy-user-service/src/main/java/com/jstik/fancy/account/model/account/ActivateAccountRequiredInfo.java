@@ -16,4 +16,6 @@ public class ActivateAccountRequiredInfo {
     private User user;
 
     private UserRegistration userRegistration;
+
+    private String plainPassword;
 }

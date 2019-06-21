@@ -1,11 +1,10 @@
 package com.jstik.fancy.account.dao.repository;
 
 import com.jstik.fancy.account.entity.client.UsersByClient;
-import com.jstik.fancy.account.entity.tag.UserByTag;
+import com.jstik.fancy.account.entity.tag.EntityByTag;
 import com.jstik.fancy.account.entity.user.User;
 import com.jstik.fancy.account.entity.user.UserAuthority;
 import com.jstik.fancy.account.entity.user.UserOperations;
-import com.jstik.fancy.account.model.AuthorityDTO;
 import com.jstik.site.cassandra.model.EntityOperation;
 import com.jstik.site.cassandra.repository.CustomReactiveCassandraRepository;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
@@ -43,7 +42,7 @@ public interface UserRepository extends ReactiveCassandraRepository<User, User.U
         if(tags == null)
             return Optional.empty();
         return tags.stream()
-                .map(tag -> new EntityAwareBatchStatement(insertProducer(), new UserByTag(tag, user.getLogin())))
+                .map(tag -> new EntityAwareBatchStatement(insertProducer(), new EntityByTag(tag, user.getLogin(), user.getClass().getCanonicalName())))
                 .reduce(EntityAwareBatchStatement::andThen);
     }
 

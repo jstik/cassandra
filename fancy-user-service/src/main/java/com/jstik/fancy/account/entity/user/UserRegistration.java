@@ -21,12 +21,24 @@ public class UserRegistration {
         this.primaryKey = new UserRegistrationPrimaryKey(login, key);
     }
 
+    public String getRegKey() {
+        if (primaryKey == null)
+            return null;
+        return primaryKey.getRegistrationKey();
+    }
+
+    public String getLogin(){
+        if (primaryKey == null)
+            return null;
+        return primaryKey.getLogin();
+    }
+
     @Getter
     @Setter
     @PrimaryKeyClass
     @NoArgsConstructor
     @RequiredArgsConstructor
-    public static class UserRegistrationPrimaryKey{
+    public static class UserRegistrationPrimaryKey {
         @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
         @NonNull
         private String login;

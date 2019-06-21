@@ -1,6 +1,7 @@
 package com.jstik.fancy.account.entity.user;
 
 
+import com.jstik.fancy.account.entity.EntityWithDiscriminator;
 import com.jstik.fancy.account.model.AuthorityDTO;
 import lombok.*;
 import org.springframework.data.annotation.Transient;
@@ -22,7 +23,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class User {
+public class User implements EntityWithDiscriminator {
 
     @PrimaryKey
     @NonNull
@@ -61,6 +62,16 @@ public class User {
 
     public String getLogin(){
         return  getPrimaryKey().getLogin();
+    }
+
+    @Override
+    public String getDiscriminator() {
+        return User.class.getCanonicalName();
+    }
+
+    @Override
+    public String getId() {
+        return getPrimaryKey().getLogin();
     }
 
     @PrimaryKeyClass

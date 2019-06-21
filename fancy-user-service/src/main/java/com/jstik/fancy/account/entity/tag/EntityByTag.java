@@ -5,24 +5,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyClass;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.*;
 
-@Table("user_by_tag")
+@Table("entity_by_tag")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserByTag {
+public class EntityByTag {
 
     @PrimaryKey
     private UserByTagPrimaryKey primaryKey;
 
 
-    public UserByTag(String tag, String login) {
-        this.primaryKey = new UserByTagPrimaryKey(tag, login);
+    public EntityByTag(String tag, String entityId, String discriminator) {
+        this.primaryKey = new UserByTagPrimaryKey(tag, entityId, discriminator);
     }
 
     @Getter
@@ -34,7 +31,11 @@ public class UserByTag {
         @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
         private String tag;
 
-        @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED)
-        private String login;
+        @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordinal = 0)
+        private String discriminator;
+
+        @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordinal = 1)
+        @Column(value = "entity_id")
+        private String entityId;
     }
 }
