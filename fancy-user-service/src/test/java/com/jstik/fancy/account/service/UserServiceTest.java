@@ -74,7 +74,6 @@ public class UserServiceTest {
     @Test
     public void findUserOrThrow() throws Exception {
         User user = prepareUser("login");
-
         //No user in db yet
         StepVerifier.create(userService.findUserOrThrow(user.getLogin())).expectError(UserNotFound.class).verify();
 
@@ -100,14 +99,15 @@ public class UserServiceTest {
 
         //test create user with  tags
 
-        User userWithTags = prepareUser("userWithTags");
+        String userWithTagsLogin = "userWithTags";
+        User userWithTags = prepareUser(userWithTagsLogin);
         userWithTags.setTags(Sets.newHashSet("tag1", "tag2"));
         StepVerifier.create(userService.createUser(userWithTags, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
 
         Thread.sleep(200);
 
         StepVerifier.create(entityByTagRepository.findAllByPrimaryKeyTag("tag1")).assertNext(userByTag -> {
-            Assert.assertThat(userByTag.getPrimaryKey().getEntityId(), is("userWithTags"));
+            Assert.assertThat(userByTag.getPrimaryKey().getEntityId(), is(userWithTagsLogin));
         }).verifyComplete();
 
         StepVerifier.create(tagRepository.findAll()).assertNext(tag -> {
@@ -119,7 +119,8 @@ public class UserServiceTest {
 
 
         //test create user with  clients
-        User userWithClients = prepareUser("userWithClients");
+        String userWithClientsLogin = "userWithClients";
+        User userWithClients = prepareUser(userWithClientsLogin);
         userWithClients.setClients(Sets.newHashSet("client1", "client2"));
         log.debug("test create user with  clients  tags userService.createUser");
         StepVerifier.create(userService.createUser(userWithClients, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
@@ -127,10 +128,10 @@ public class UserServiceTest {
         StepVerifier.create(userRepository.findByPrimaryKeyLogin(userWithClients.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with  clients  tags usersByClientRepository.findAll()");
         StepVerifier.create(usersByClientRepository.findAll()).assertNext(usersByClient -> {
-            Assert.assertThat(usersByClient.getPrimaryKey().getLogin(), is("userWithClients"));
+            Assert.assertThat(usersByClient.getPrimaryKey().getLogin(), is(userWithClientsLogin));
             Assert.assertThat(usersByClient.getPrimaryKey().getClient(), anyOf(is("client1"),  is("client2")));
         }).assertNext(usersByClient ->{
-            Assert.assertThat(usersByClient.getPrimaryKey().getLogin(), is("userWithClients"));
+            Assert.assertThat(usersByClient.getPrimaryKey().getLogin(), is(userWithClientsLogin));
             Assert.assertThat(usersByClient.getPrimaryKey().getClient(), anyOf(is("client1"),  is("client2")));
         }).verifyComplete();
     }

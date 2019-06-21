@@ -3,6 +3,7 @@ package com.jstik.fancy.account.service;
 import com.jstik.fancy.account.dao.repository.UserRegistrationRepository;
 import com.jstik.fancy.account.entity.user.UserRegistration;
 import com.jstik.fancy.account.entity.user.UserRegistration.UserRegistrationPrimaryKey;
+import com.jstik.fancy.account.exception.UserRegistrationNoFound;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -44,6 +45,11 @@ public class UserRegistrationService {
     public Mono<UserRegistration> findRegistration(String login, String regKey) {
         UserRegistrationPrimaryKey primaryKey = new UserRegistrationPrimaryKey(login, regKey);
         return userRegistrationRepository.findById(primaryKey);
+    }
+
+    public Mono<UserRegistration> findRegistrationOrThrow(String login, String regKey) {
+        UserRegistrationPrimaryKey primaryKey = new UserRegistrationPrimaryKey(login, regKey);
+        return userRegistrationRepository.findById(primaryKey).switchIfEmpty(Mono.error(new UserRegistrationNoFound()));
     }
 
     public Mono<Void> delete(String login, String regKey){

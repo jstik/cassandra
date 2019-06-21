@@ -1,5 +1,6 @@
 package com.jstik.fancy.account.service;
 
+import com.jstik.fancy.account.TestApp;
 import com.jstik.fancy.account.model.account.NewUserInfo;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
@@ -18,6 +19,7 @@ import com.jstik.fancy.account.security.UserServiceSecurityConfig;
 import com.jstik.fancy.account.util.UserUtil;
 import com.jstik.fancy.account.web.UserServiceWebConfig;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
+import com.jstik.site.discovery.stub.StubLoadBalancerConfig;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,27 +40,33 @@ import java.util.function.Consumer;
 @SpringJUnitWebConfig
 @ContextConfiguration(
         classes = {
+                TestApp.class,
                 EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class,
                 ServiceConfig.class, UserServiceWebConfig.class,
-                UserServiceSecurityConfig.class
+                UserServiceSecurityConfig.class,
+                StubLoadBalancerConfig.class
         }
 )
-@TestPropertySource("classpath:embedded-test.properties")
-public class AccountServiceTest{
+
+@TestPropertySource({"classpath:embedded-test.properties", "classpath:consul.properties"})
+public class AccountServiceTest {
 
 
-    @Inject private AccountService accountService;
+    @Inject
+    private AccountService accountService;
 
-    @Inject private UserRepository userRepository;
+    @Inject
+    private UserRepository userRepository;
 
-    @Inject private UserRegistrationRepository userRegistrationRepository;
+    @Inject
+    private UserRegistrationRepository userRegistrationRepository;
 
     @Rule
     @Inject
     public CassandraCreateDropSchemaRule createDropSchemaRule;
 
 
-    private  final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     @Test
@@ -79,8 +87,8 @@ public class AccountServiceTest{
                 throw (EntityAlreadyExistsException) error;
             throw new RuntimeException(error);
         };
-        Mono<NewUserInfo> firstUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("First"), errorHandler);
-        Mono<NewUserInfo> secondUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("Second") , errorHandler);
+        Mono<NewUserInfo> firstUserPublisher = createAccountOperation(account, regKey, user -> log.debug("First"), errorHandler);
+        Mono<NewUserInfo> secondUserPublisher = createAccountOperation(account, regKey, user -> log.debug("Second"), errorHandler);
         Mono<NewUserInfo> composite = firstUserPublisher.delayUntil(user -> secondUserPublisher);
         composite.block();
     }
@@ -94,8 +102,8 @@ public class AccountServiceTest{
                 throw (EntityAlreadyExistsException) error;
             throw new RuntimeException(error);
         };
-        Mono<NewUserInfo> firstUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("First"), errorHandler);
-        Mono<NewUserInfo> secondUserPublisher = createAccountOperation(account, regKey, user ->  log.debug("Second") , errorHandler);
+        Mono<NewUserInfo> firstUserPublisher = createAccountOperation(account, regKey, user -> log.debug("First"), errorHandler);
+        Mono<NewUserInfo> secondUserPublisher = createAccountOperation(account, regKey, user -> log.debug("Second"), errorHandler);
         Mono<NewUserInfo> composite = firstUserPublisher.delayUntil(user -> secondUserPublisher);
         StepVerifier.create(composite).expectError(EntityAlreadyExistsException.class).verify();
     }
@@ -123,7 +131,9 @@ public class AccountServiceTest{
         // Registration created but no  user in db yet
         StepVerifier.create(registerAccountMono).expectError(UserNotFound.class).verify();
 
-        createAccountOperation(account, regKey, user1->{}, error->{}).block();
+        createAccountOperation(account, regKey, user1 -> {
+        }, error -> {
+        }).block();
 
         // We have enough information in db to register account
         StepVerifier.create(registerAccountMono)
@@ -135,9 +145,8 @@ public class AccountServiceTest{
     }
 
 
-
-    private Mono<NewUserInfo> createAccountOperation(CreateAccountRequest accountRequest, String regKey , Consumer<NewUserInfo> onSuccess, Consumer<? super Throwable> onError){
-      return accountService.createAccount(accountRequest, regKey) .doOnError(onError::accept).doOnSuccess(onSuccess);
+    private Mono<NewUserInfo> createAccountOperation(CreateAccountRequest accountRequest, String regKey, Consumer<NewUserInfo> onSuccess, Consumer<? super Throwable> onError) {
+        return accountService.createAccount(accountRequest, regKey).doOnError(onError::accept).doOnSuccess(onSuccess);
     }
 
     private CreateAccountRequest prepareAccount(String login) {
@@ -149,25 +158,26 @@ public class AccountServiceTest{
         return accountRequest;
     }
 
-    private User prepareUser(String login){
-       return new User(login, "firstName", "lastName", "email@email.com" );
+    private User prepareUser(String login) {
+        return new User(login, "firstName", "lastName", "email@email.com");
     }
 
 
-    private User userByAccount(CreateAccountRequest account){
-        return  prepareUser(account.getLogin());
+    private User userByAccount(CreateAccountRequest account) {
+        return prepareUser(account.getLogin());
     }
 
-    private UserRegistration userRegistrationByAccountAndKey(CreateAccountRequest account, String key){
-        return  new UserRegistration(account.getLogin(), key);
-    }
-    private UserRegistration userRegistrationByUser(User user){
-        return  new UserRegistration(user.getLogin(), "123");
+    private UserRegistration userRegistrationByAccountAndKey(CreateAccountRequest account, String key) {
+        return new UserRegistration(account.getLogin(), key);
     }
 
-    private RegisterAccountRequest registerAccountRequestByUserAndKey(User user, UserRegistration registration){
+    private UserRegistration userRegistrationByUser(User user) {
+        return new UserRegistration(user.getLogin(), "123");
+    }
+
+    private RegisterAccountRequest registerAccountRequestByUserAndKey(User user, UserRegistration registration) {
         String regKey = registration.getPrimaryKey().getRegistrationKey();
-        return new RegisterAccountRequest( user.getLogin(), "P@ssw0rd", regKey);
+        return new RegisterAccountRequest(user.getLogin(), "P@ssw0rd", regKey);
     }
 
 }

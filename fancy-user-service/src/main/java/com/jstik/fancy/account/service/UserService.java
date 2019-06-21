@@ -57,13 +57,8 @@ public class UserService {
     }
 
 
-
     public Mono<User> findUserOrThrow(String login) {
-        return userRepository.findByPrimaryKeyLogin(login)
-                .doOnSuccess(user -> {
-                    if (user == null)
-                        throw new UserNotFound();
-                });
+        return userRepository.findByPrimaryKeyLogin(login).switchIfEmpty(Mono.error(new UserNotFound()));
     }
 
     public Mono<User> activateUser(User user, String password) {
@@ -76,11 +71,11 @@ public class UserService {
         return userRepository.save(user).doOnSuccess(updated -> operationsRepository.save(new UserOperations(updated, UPDATE)).subscribe());
     }
 
-    Mono<User> insertUser(User user){
-       return userRepository.insertIfNotExistOrThrow(user).doOnSuccess(created -> {
-           UserOperations operation = new UserOperations(created, CREATE);
-           operationsRepository.save(operation).subscribe();
-       });
+    Mono<User> insertUser(User user) {
+        return userRepository.insertIfNotExistOrThrow(user).doOnSuccess(created -> {
+            UserOperations operation = new UserOperations(created, CREATE);
+            operationsRepository.save(operation).subscribe();
+        });
     }
 
 

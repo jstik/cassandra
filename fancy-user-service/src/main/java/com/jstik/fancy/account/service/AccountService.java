@@ -1,9 +1,7 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.*;
 import com.jstik.fancy.account.entity.user.User;
 import com.jstik.fancy.account.entity.user.UserRegistration;
-import com.jstik.fancy.account.entity.user.UserRegistration.UserRegistrationPrimaryKey;
 import com.jstik.fancy.account.exception.UserRegistrationNoFound;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
 import com.jstik.fancy.account.model.account.NewUserInfo;
@@ -38,25 +36,18 @@ public class AccountService {
 
     public Mono<ActivateAccountRequiredInfo> activateAccount(RegisterAccountRequest registerAccount) {
         Mono<ActivateAccountRequiredInfo> registrationInformation = findRequiredRegistrationInformation(registerAccount);
-        registrationInformation.doOnSuccess((info -> {
+        return registrationInformation.doOnSuccess((info -> {
             userService.activateUser(info.getUser(), info.getPlainPassword())
                     .delayUntil(user -> {
                         UserRegistration registration = info.getUserRegistration();
                         return registrationService.delete(registration.getLogin(), registration.getRegKey());
-                    })
-                    .subscribe();
+                    }).subscribe();
         }));
-        return registrationInformation;
     }
 
 
     private Mono<ActivateAccountRequiredInfo> findRequiredRegistrationInformation(RegisterAccountRequest request) {
-        Mono<UserRegistration> findRegistrationOperation = registrationService.findRegistration(request.getLogin(), request.getRegKey())
-                .doOnSuccess(registration -> {
-                    if (registration == null)
-                        throw new UserRegistrationNoFound();
-                });
-
+        Mono<UserRegistration> findRegistrationOperation = registrationService.findRegistrationOrThrow(request.getLogin(), request.getRegKey());
         Mono<User> findUserOperation = userService.findUserOrThrow(request.getLogin());
         return Mono.zip(findRegistrationOperation, findUserOperation, (reg, user) -> new ActivateAccountRequiredInfo(user, reg, request.getPassword()));
     }

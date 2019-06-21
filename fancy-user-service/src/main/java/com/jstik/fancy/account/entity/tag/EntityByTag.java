@@ -26,7 +26,6 @@ public class EntityByTag {
     @Setter
     @PrimaryKeyClass
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class UserByTagPrimaryKey{
         @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
         private String tag;
@@ -37,5 +36,12 @@ public class EntityByTag {
         @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED, ordinal = 1)
         @Column(value = "entity_id")
         private String entityId;
+
+
+        public UserByTagPrimaryKey(String tag, String entityId, String discriminator) {
+            this.tag = tag;
+            this.entityId = entityId;
+            this.discriminator = discriminator;
+        }
     }
 }
