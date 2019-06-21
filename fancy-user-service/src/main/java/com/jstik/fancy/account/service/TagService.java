@@ -2,9 +2,16 @@ package com.jstik.fancy.account.service;
 
 import com.jstik.fancy.account.dao.repository.TagRepository;
 import com.jstik.fancy.account.entity.EntityWithDiscriminator;
+import com.jstik.fancy.account.entity.tag.EntityByTag;
+import com.jstik.fancy.account.entity.user.User;
+import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import reactor.core.publisher.Mono;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.Optional;
+
+import static com.jstik.site.cassandra.statements.DMLStatementProducerBuilder.insertProducer;
 
 public class TagService {
 
@@ -22,6 +29,16 @@ public class TagService {
         if(entity.getId() == null)
             return Mono.error(new IllegalStateException("Id must be not null!"));
 
-        return Mono.just(true);
+        EntityAwareBatchStatement batch = entityByTagStatement(tags, entity).get();
+        return tagRepository.executeBatch(batch).then(tagRepository.saveTags(tags));
+    }
+
+
+    private Optional<EntityAwareBatchStatement> entityByTagStatement(Collection<String> tags, EntityWithDiscriminator entity) {
+        if(tags == null)
+            return Optional.empty();
+        return tags.stream()
+                .map(tag -> new EntityAwareBatchStatement(insertProducer(), new EntityByTag(tag, entity.getId(), entity.getDiscriminator())))
+                .reduce(EntityAwareBatchStatement::andThen);
     }
 }
