@@ -28,6 +28,8 @@ import reactor.test.StepVerifier;
 
 import javax.inject.Inject;
 
+import java.time.Duration;
+
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
 
@@ -43,7 +45,7 @@ import static org.hamcrest.core.Is.is;
         }
 )
 
-@TestPropertySource({"classpath:embedded-test.properties","classpath:consul.properties"})
+@TestPropertySource({"classpath:test.properties","classpath:consul.properties"})
 
 public class UserServiceTest {
 
@@ -63,6 +65,8 @@ public class UserServiceTest {
     @Inject
     private UsersByClientRepository usersByClientRepository;
 
+    @Inject UserOperationsRepository userOperationsRepository;
+
 
     @Rule
     @Inject
@@ -73,7 +77,7 @@ public class UserServiceTest {
 
     @Test
     public void findUserOrThrow() throws Exception {
-        User user = prepareUser("login");
+        User user = TestUserUtil.prepareUser("login");
         //No user in db yet
         StepVerifier.create(userService.findUserOrThrow(user.getLogin())).expectError(UserNotFound.class).verify();
 
@@ -86,7 +90,7 @@ public class UserServiceTest {
     @Test
     public void createUser() throws Exception {
         //test create user with no tags, clients,
-        User user = prepareUser("login");
+        User user = TestUserUtil.prepareUser("login");
         String regKey = UserUtil.generateRegKey();
         log.debug("test create user with no tags, clients  userService.createUser ");
         StepVerifier.create(userService.createUser(user, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
@@ -100,7 +104,7 @@ public class UserServiceTest {
         //test create user with  tags
 
         String userWithTagsLogin = "userWithTags";
-        User userWithTags = prepareUser(userWithTagsLogin);
+        User userWithTags = TestUserUtil.prepareUser(userWithTagsLogin);
         userWithTags.setTags(Sets.newHashSet("tag1", "tag2"));
         StepVerifier.create(userService.createUser(userWithTags, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
 
@@ -120,7 +124,7 @@ public class UserServiceTest {
 
         //test create user with  clients
         String userWithClientsLogin = "userWithClients";
-        User userWithClients = prepareUser(userWithClientsLogin);
+        User userWithClients = TestUserUtil.prepareUser(userWithClientsLogin);
         userWithClients.setClients(Sets.newHashSet("client1", "client2"));
         log.debug("test create user with  clients  tags userService.createUser");
         StepVerifier.create(userService.createUser(userWithClients, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
@@ -141,26 +145,30 @@ public class UserServiceTest {
 
     @Test
     public void updateUser() throws Exception {
-        User user = prepareUser("login");
-        StepVerifier.create(userService.updateUser(user)).assertNext(Assert::assertNotNull).verifyComplete();
+        User user = TestUserUtil.prepareUser("login");
+        StepVerifier.create(userService.updateUser(user)).assertNext(Assert::assertNotNull)
+                .verifyComplete();
+        Thread.sleep(1000);
+        StepVerifier.create(userOperationsRepository.findAll())
+                .assertNext(userOperations -> {
+            Assert.assertNotNull(userOperations);
+        }).verifyComplete();
     }
 
     @Test
     public void insertBrandNewUserLinkedInBatch() throws Exception {
-        User user = prepareUser("login");
+        User user = TestUserUtil.prepareUser("login");
         StepVerifier.create(userService.insertBrandNewUserLinkedInBatch(user)).assertNext(Assert::assertTrue).verifyComplete();
     }
 
     @Test
     public void activateUser() throws Exception {
-        StepVerifier.create(userService.activateUser(prepareUser("login"), "P@ssword")).assertNext(user -> {
+        StepVerifier.create(userService.activateUser(TestUserUtil.prepareUser("login"), "P@ssword")).assertNext(user -> {
             Assert.assertNotNull(user.getPassword());
         }).verifyComplete();
     }
 
-    private User prepareUser(String login) {
-        return new User(login, "firstName", "lastName", "email@email.com");
-    }
+
 
     private UserRegistration userRegistration(User user, String key) {
         return new UserRegistration(user.getLogin(), key);

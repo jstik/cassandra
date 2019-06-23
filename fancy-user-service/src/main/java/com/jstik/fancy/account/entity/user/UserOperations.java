@@ -15,6 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Table("user_by_change_date")
+@NoArgsConstructor
 public class UserOperations {
 
     @PrimaryKey

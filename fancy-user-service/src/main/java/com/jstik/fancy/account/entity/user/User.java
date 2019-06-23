@@ -74,6 +74,14 @@ public class User implements EntityWithDiscriminator {
         return getPrimaryKey().getLogin();
     }
 
+    public void addTags(Collection<String> tags){
+        this.getTags().addAll(tags);
+    }
+
+    public void deleteTags(Collection<String> tags){
+        this.getTags().removeAll(tags);
+    }
+
     @PrimaryKeyClass
     @NoArgsConstructor
     @Getter

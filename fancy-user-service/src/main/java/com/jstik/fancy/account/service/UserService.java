@@ -3,6 +3,7 @@ package com.jstik.fancy.account.service;
 import com.jstik.fancy.account.dao.repository.TagRepository;
 import com.jstik.fancy.account.dao.repository.UserOperationsRepository;
 import com.jstik.fancy.account.dao.repository.UserRepository;
+import com.jstik.fancy.account.entity.EntityWithDiscriminator;
 import com.jstik.fancy.account.entity.user.*;
 import com.jstik.fancy.account.exception.UserNotFound;
 import com.jstik.fancy.account.model.account.NewUserInfo;
@@ -11,11 +12,15 @@ import reactor.core.publisher.Mono;
 
 import javax.inject.Inject;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.jstik.site.cassandra.model.EntityOperation.CREATE;
 import static com.jstik.site.cassandra.model.EntityOperation.UPDATE;
+import static reactor.core.publisher.Mono.error;
 
 public class UserService {
 
@@ -23,18 +28,18 @@ public class UserService {
 
     private final UserRegistrationService userRegistrationService;
     private UserOperationsRepository operationsRepository;
-    private TagRepository tagRepository;
+    private TagService tagService;
 
 
     @Inject
     public UserService(UserRepository userRepository,
                        UserRegistrationService userRegistrationService,
                        UserOperationsRepository operationsRepository,
-                       TagRepository tagRepository
+                       TagService tagService
     ) {
         this.userRepository = userRepository;
         this.operationsRepository = operationsRepository;
-        this.tagRepository = tagRepository;
+        this.tagService = tagService;
         this.userRegistrationService = userRegistrationService;
     }
 
@@ -51,15 +56,36 @@ public class UserService {
 
         return result.doOnSuccess(info -> {
             insertBrandNewUserLinkedInBatch(info.getUser()).doOnSuccess(info::setLinkedInserted).subscribe();
-            if (info.getUser().getTags() != null && !info.getUser().getTags().isEmpty())
-                tagRepository.saveTags(info.getUser().getTags()).subscribe();
+            if (info.getUser().getTags() != null && !info.getUser().getTags().isEmpty()) {
+                tagService.addTagsForEntity(info.getUser().getTags(), info.getUser()).subscribe();
+            }
         });
     }
 
-
-    public Mono<User> findUserOrThrow(String login) {
-        return userRepository.findByPrimaryKeyLogin(login).switchIfEmpty(Mono.error(new UserNotFound()));
+    public Mono<User> addUserTags(Collection<String> tags, User user) {
+        if (tags == null)
+            return Mono.just(user);
+        Set<String> filtered = tags.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        if (filtered.isEmpty())
+            return Mono.just(user);
+        user.addTags(filtered);
+        return updateUser(user).doOnSuccess(updated -> {
+            tagService.addTagsForEntity(filtered, user).subscribe();
+        });
     }
+
+    public Mono<User> deleteUserTags(Collection<String> tags, User user){
+        if (tags == null)
+            return Mono.just(user);
+        Set<String> filtered = tags.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        if (filtered.isEmpty())
+            return Mono.just(user);
+        user.deleteTags(filtered);
+        return updateUser(user).doOnSuccess(updated -> {
+            tagService.deleteTagsForEntity(filtered, user).subscribe();
+        });
+    }
+
 
     public Mono<User> activateUser(User user, String password) {
         user.setActive(true);
@@ -68,7 +94,10 @@ public class UserService {
     }
 
     Mono<User> updateUser(User user) {
-        return userRepository.save(user).doOnSuccess(updated -> operationsRepository.save(new UserOperations(updated, UPDATE)).subscribe());
+        return userRepository.save(user).doOnSuccess(updated -> {
+            UserOperations operations = new UserOperations(updated, UPDATE);
+            operationsRepository.save(operations).subscribe();
+        });
     }
 
     Mono<User> insertUser(User user) {
@@ -78,11 +107,14 @@ public class UserService {
         });
     }
 
+    public Mono<User> findUserOrThrow(String login) {
+        return userRepository.findByPrimaryKeyLogin(login).switchIfEmpty(error(new UserNotFound()));
+    }
+
 
     Mono<Boolean> insertBrandNewUserLinkedInBatch(User user) {
         EntityAwareBatchStatement batch = Stream.of(
                 userRepository.userAuthority(user.getAuthorities()).orElse(null),
-                userRepository.userByTagStatement(user, user.getTags()).orElse(null),
                 userRepository.usersByClientStatement(user, user.getClients()).orElse(null)
         ).filter(Objects::nonNull).reduce(EntityAwareBatchStatement::andThen).orElse(null);
         return batch != null ? userRepository.executeBatch(batch) : Mono.just(true);

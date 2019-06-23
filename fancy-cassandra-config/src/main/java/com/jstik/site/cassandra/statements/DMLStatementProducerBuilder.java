@@ -1,10 +1,12 @@
 package com.jstik.site.cassandra.statements;
 
 import com.datastax.driver.core.RegularStatement;
-import com.datastax.driver.core.querybuilder.Insert;
-import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.core.querybuilder.Update;
+import com.datastax.driver.core.querybuilder.*;
+import org.apache.catalina.User;
 import org.springframework.data.cassandra.core.convert.CassandraConverter;
+import org.springframework.data.cassandra.core.cql.QueryOptionsUtil;
+import org.springframework.data.cassandra.core.cql.WriteOptions;
+import org.springframework.data.cassandra.core.mapping.CassandraMappingContext;
 import org.springframework.data.cassandra.core.mapping.CassandraPersistentEntity;
 
 import java.util.function.BiFunction;
@@ -46,4 +48,20 @@ public class DMLStatementProducerBuilder {
             return update;
         };
     }
+
+    public static BiFunction<CassandraConverter, Object, RegularStatement>  deleteProducer(boolean ifExists){
+        return (converter, entity) -> {
+            CassandraPersistentEntity<?> persistentEntity = converter.getMappingContext().getRequiredPersistentEntity(entity.getClass());
+            Delete.Selection deleteSelection = QueryBuilder.delete();
+            Delete delete = deleteSelection.from(persistentEntity.getTableName().toCql());
+            converter.write(entity, delete, persistentEntity);
+            if (ifExists)
+                delete.where().ifExists();
+            return delete;
+        };
+    }
+
+
+
+
 }

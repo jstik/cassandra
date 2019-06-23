@@ -1,13 +1,12 @@
 package com.jstik.fancy.account.service;
 
+import com.jstik.fancy.account.dao.repository.EntityByTagRepository;
 import com.jstik.fancy.account.dao.repository.TagRepository;
 import com.jstik.fancy.account.entity.EntityWithDiscriminator;
 import com.jstik.fancy.account.entity.tag.EntityByTag;
-import com.jstik.fancy.account.entity.user.User;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -17,8 +16,11 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
-    public TagService(TagRepository tagRepository) {
+    private final EntityByTagRepository entityByTagRepository;
+
+    public TagService(TagRepository tagRepository, EntityByTagRepository entityByTagRepository) {
         this.tagRepository = tagRepository;
+        this.entityByTagRepository = entityByTagRepository;
     }
 
     public Mono<Boolean> addTagsForEntity(Collection<String> tags, EntityWithDiscriminator entity){
@@ -31,6 +33,15 @@ public class TagService {
 
         EntityAwareBatchStatement batch = entityByTagStatement(tags, entity).get();
         return tagRepository.executeBatch(batch).then(tagRepository.saveTags(tags));
+    }
+
+    public Mono<Boolean> deleteTagsForEntity(Collection<String> tags, EntityWithDiscriminator entity){
+        if(tags == null || tags.isEmpty())
+            return Mono.just(true);
+        if(entity.getId() == null)
+            return Mono.error(new IllegalStateException("Id must be not null!"));
+        return entityByTagRepository.deleteEntityByTags(entity.getId(), entity.getDiscriminator(), tags)
+                .then(tagRepository.decrementTags(tags));
     }
 
 

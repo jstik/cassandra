@@ -1,6 +1,9 @@
 package com.jstik.fancy.account.dao.repository;
 
+import com.google.common.collect.Sets;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
+import com.jstik.fancy.account.entity.user.User;
+import com.jstik.fancy.account.service.TestUserUtil;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import org.junit.Assert;
@@ -47,4 +50,27 @@ public class TagRepositoryTest {
         });
     }
 
+    @Test
+    public void saveTags() {
+        StepVerifier.create(repository.saveTags(Sets.newHashSet("tag1", "tag2"))).verifyComplete();
+
+        StepVerifier.create(repository.findById("tag1")).assertNext(tag -> {
+            Assert.assertNotNull(tag);
+            Assert.assertThat(tag.getCounter(), is(1L));
+        }).verifyComplete();
+        StepVerifier.create(repository.findById("tag2")).assertNext(tag -> {
+            Assert.assertNotNull(tag);
+            Assert.assertThat(tag.getCounter(), is(1L));
+        }).verifyComplete();
+    }
+
+    @Test
+    public void decrementTags() {
+        StepVerifier.create(repository.decrementTags(Sets.newHashSet("tag1"))).verifyComplete();
+
+        StepVerifier.create(repository.findById("tag1")).assertNext(tag -> {
+            Assert.assertNotNull(tag);
+            Assert.assertThat(tag.getCounter(), is(-1L));
+        }).verifyComplete();
+    }
 }

@@ -18,31 +18,34 @@ public class ServiceConfig {
     private final ConversionService conversionService;
     private final PasswordEncoder passwordEncoder;
 
-    private final LoadBalancerClient loadBalancerClient;
-
     public ServiceConfig(@Qualifier("mvcConversionService") ConversionService conversionService,
-                         PasswordEncoder passwordEncoder,
-                         LoadBalancerClient loadBalancerClient) {
+                         PasswordEncoder passwordEncoder) {
         this.conversionService = conversionService;
         this.passwordEncoder = passwordEncoder;
-        this.loadBalancerClient = loadBalancerClient;
     }
 
     @Bean
     public UserService userService(UserRepository userRepository, UserOperationsRepository operationsRepository,
                                    UserRegistrationRepository registrationRepository,
-                                   TagRepository tagRepository) {
-        return new UserService(userRepository, userRegistrationService(registrationRepository), operationsRepository, tagRepository);
+                                   TagRepository tagRepository,
+                                   LoadBalancerClient loadBalancerClient) {
+        return new UserService(userRepository, userRegistrationService(registrationRepository, loadBalancerClient), operationsRepository, tagService(tagRepository));
     }
 
     @Bean
     public AccountService accountService(UserService userService,
-                                         UserRegistrationRepository registrationRepository) {
-        return new AccountService(conversionService, userService, userRegistrationService(registrationRepository));
+                                         UserRegistrationRepository registrationRepository,
+                                         LoadBalancerClient loadBalancerClient) {
+        return new AccountService(conversionService, userService, userRegistrationService(registrationRepository,loadBalancerClient));
     }
 
     @Bean
-    public UserRegistrationService userRegistrationService(UserRegistrationRepository userRegistrationRepository) {
+    public UserRegistrationService userRegistrationService(UserRegistrationRepository userRegistrationRepository, LoadBalancerClient loadBalancerClient) {
         return new UserRegistrationService(userRegistrationRepository, passwordEncoder, loadBalancerClient);
+    }
+
+    @Bean
+    public TagService tagService(TagRepository tagRepository){
+        return new TagService(tagRepository, null);
     }
 }
