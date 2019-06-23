@@ -1,9 +1,6 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.TagRepository;
-import com.jstik.fancy.account.dao.repository.UserOperationsRepository;
-import com.jstik.fancy.account.dao.repository.UserRegistrationRepository;
-import com.jstik.fancy.account.dao.repository.UserRepository;
+import com.jstik.fancy.account.dao.repository.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.context.annotation.Bean;
@@ -28,15 +25,18 @@ public class ServiceConfig {
     public UserService userService(UserRepository userRepository, UserOperationsRepository operationsRepository,
                                    UserRegistrationRepository registrationRepository,
                                    TagRepository tagRepository,
+                                   EntityByTagRepository entityByTagRepository,
                                    LoadBalancerClient loadBalancerClient) {
-        return new UserService(userRepository, userRegistrationService(registrationRepository, loadBalancerClient), operationsRepository, tagService(tagRepository));
+        return new UserService(userRepository, userRegistrationService(registrationRepository,
+                loadBalancerClient), operationsRepository,
+                tagService(tagRepository, entityByTagRepository));
     }
 
     @Bean
     public AccountService accountService(UserService userService,
                                          UserRegistrationRepository registrationRepository,
                                          LoadBalancerClient loadBalancerClient) {
-        return new AccountService(conversionService, userService, userRegistrationService(registrationRepository,loadBalancerClient));
+        return new AccountService(conversionService, userService, userRegistrationService(registrationRepository, loadBalancerClient));
     }
 
     @Bean
@@ -45,7 +45,7 @@ public class ServiceConfig {
     }
 
     @Bean
-    public TagService tagService(TagRepository tagRepository){
-        return new TagService(tagRepository, null);
+    public TagService tagService(TagRepository tagRepository, EntityByTagRepository entityByTagRepository) {
+        return new TagService(tagRepository, entityByTagRepository);
     }
 }

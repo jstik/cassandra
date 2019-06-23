@@ -23,6 +23,7 @@ import reactor.test.StepVerifier;
 
 import javax.inject.Inject;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static org.junit.Assert.*;
 
 
@@ -57,7 +58,7 @@ public class TagServiceTest {
     public void addTagsForEntity() {
 
         User user = TestUserUtil.prepareUser("login");
-        StepVerifier.create(tagService.addTagsForEntity(Sets.newHashSet("tag1", "tag2"), user)).expectComplete().verify();
+        StepVerifier.create(tagService.addTagsForEntity(newHashSet("tag1", "tag2"), user)).expectComplete().verify();
 
         StepVerifier.create(tagRepository.findAll()).assertNext(tag -> {
             Assert.assertNotNull(tag);
@@ -70,5 +71,18 @@ public class TagServiceTest {
         }).assertNext(entityByTag -> {
             Assert.assertNotNull(entityByTag);
         }).verifyComplete();
+    }
+
+    @Test
+    public void deleteTagsForEntity() {
+        User user = TestUserUtil.prepareUser("login");
+        tagService.addTagsForEntity(newHashSet("tag1", "tag2"), user).block();
+        StepVerifier.create(tagService.deleteTagsForEntity(newHashSet("tag1"), user))
+                .verifyComplete();
+
+        StepVerifier.create(entityByTagRepository.findAllByPrimaryKeyTag("tag1")).verifyComplete();
+        StepVerifier.create(entityByTagRepository.findAllByPrimaryKeyTag("tag2"))
+                .assertNext(Assert::assertNotNull)
+                .verifyComplete();
     }
 }

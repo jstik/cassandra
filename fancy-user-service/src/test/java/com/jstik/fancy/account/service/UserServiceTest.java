@@ -30,6 +30,7 @@ import javax.inject.Inject;
 
 import java.time.Duration;
 
+import static com.jstik.fancy.account.service.TestUserUtil.prepareUser;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
 
@@ -77,7 +78,7 @@ public class UserServiceTest {
 
     @Test
     public void findUserOrThrow() throws Exception {
-        User user = TestUserUtil.prepareUser("login");
+        User user = prepareUser("login");
         //No user in db yet
         StepVerifier.create(userService.findUserOrThrow(user.getLogin())).expectError(UserNotFound.class).verify();
 
@@ -90,7 +91,7 @@ public class UserServiceTest {
     @Test
     public void createUser() throws Exception {
         //test create user with no tags, clients,
-        User user = TestUserUtil.prepareUser("login");
+        User user = prepareUser("login");
         String regKey = UserUtil.generateRegKey();
         log.debug("test create user with no tags, clients  userService.createUser ");
         StepVerifier.create(userService.createUser(user, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
@@ -104,7 +105,7 @@ public class UserServiceTest {
         //test create user with  tags
 
         String userWithTagsLogin = "userWithTags";
-        User userWithTags = TestUserUtil.prepareUser(userWithTagsLogin);
+        User userWithTags = prepareUser(userWithTagsLogin);
         userWithTags.setTags(Sets.newHashSet("tag1", "tag2"));
         StepVerifier.create(userService.createUser(userWithTags, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
 
@@ -124,7 +125,7 @@ public class UserServiceTest {
 
         //test create user with  clients
         String userWithClientsLogin = "userWithClients";
-        User userWithClients = TestUserUtil.prepareUser(userWithClientsLogin);
+        User userWithClients = prepareUser(userWithClientsLogin);
         userWithClients.setClients(Sets.newHashSet("client1", "client2"));
         log.debug("test create user with  clients  tags userService.createUser");
         StepVerifier.create(userService.createUser(userWithClients, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
@@ -145,7 +146,7 @@ public class UserServiceTest {
 
     @Test
     public void updateUser() throws Exception {
-        User user = TestUserUtil.prepareUser("login");
+        User user = prepareUser("login");
         StepVerifier.create(userService.updateUser(user)).assertNext(Assert::assertNotNull)
                 .verifyComplete();
         Thread.sleep(1000);
@@ -157,13 +158,13 @@ public class UserServiceTest {
 
     @Test
     public void insertBrandNewUserLinkedInBatch() throws Exception {
-        User user = TestUserUtil.prepareUser("login");
+        User user = prepareUser("login");
         StepVerifier.create(userService.insertBrandNewUserLinkedInBatch(user)).assertNext(Assert::assertTrue).verifyComplete();
     }
 
     @Test
     public void activateUser() throws Exception {
-        StepVerifier.create(userService.activateUser(TestUserUtil.prepareUser("login"), "P@ssword")).assertNext(user -> {
+        StepVerifier.create(userService.activateUser(prepareUser("login"), "P@ssword")).assertNext(user -> {
             Assert.assertNotNull(user.getPassword());
         }).verifyComplete();
     }
@@ -175,4 +176,17 @@ public class UserServiceTest {
     }
 
 
+    @Test
+    public void addUserTags() {
+    }
+
+    @Test
+    public void deleteUserTags() {
+    }
+
+    @Test
+    public void insertUser() {
+        StepVerifier.create(userService.insertUser(prepareUser("login")))
+                .assertNext(Assert::assertNotNull).verifyComplete();
+    }
 }
