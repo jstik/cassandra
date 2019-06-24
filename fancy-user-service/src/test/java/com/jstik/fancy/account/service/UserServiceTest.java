@@ -34,6 +34,7 @@ import java.time.Duration;
 import static com.jstik.fancy.account.service.TestUserUtil.prepareUser;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
+import static reactor.test.StepVerifier.create;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringJUnitWebConfig
@@ -81,12 +82,12 @@ public class UserServiceTest {
     public void findUserOrThrow() throws Exception {
         User user = prepareUser("login");
         //No user in db yet
-        StepVerifier.create(userService.findUserOrThrow(user.getLogin())).expectError(UserNotFound.class).verify();
+        create(userService.findUserOrThrow(user.getLogin())).expectError(UserNotFound.class).verify();
 
         //Save user to db
         userService.updateUser(user).block();
 
-        StepVerifier.create(userService.findUserOrThrow(user.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
+        create(userService.findUserOrThrow(user.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
     }
 
     @Test
@@ -96,28 +97,28 @@ public class UserServiceTest {
         String regKey = UserUtil.generateRegKey();
         log.debug("test create user with no tags, clients  userService.createUser ");
         Mono<UserRegistration> registration = userRegistrationRepository.save(new UserRegistration(user.getLogin(), regKey));
-        StepVerifier.create(userService.createUser(user, registration)).assertNext(Assert::assertNotNull).verifyComplete();
+        create(userService.createUser(user, registration)).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with no tags, clients userRepository.findByPrimaryKeyLogin ");
-        StepVerifier.create(userRepository.findByPrimaryKeyLogin(user.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
+        create(userRepository.findByPrimaryKeyLogin(user.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with no tags, clients userRegistrationRepository.findById ");
-        StepVerifier.create(userRegistrationRepository.findById(userRegistration(user, regKey).getPrimaryKey())).assertNext(Assert::assertNotNull).verifyComplete();
+        create(userRegistrationRepository.findById(userRegistration(user, regKey).getPrimaryKey())).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with no tags, clients userService.createUser ");
-        StepVerifier.create(userService.createUser(user, registration)).expectError(EntityAlreadyExistsException.class).verify();
+        create(userService.createUser(user, registration)).expectError(EntityAlreadyExistsException.class).verify();
 
         //test create user with  tags
 
         String userWithTagsLogin = "userWithTags";
         User userWithTags = prepareUser(userWithTagsLogin);
         userWithTags.setTags(Sets.newHashSet("tag1", "tag2"));
-        StepVerifier.create(userService.createUser(userWithTags, registration)).assertNext(Assert::assertNotNull).verifyComplete();
+        create(userService.createUser(userWithTags, registration)).assertNext(Assert::assertNotNull).verifyComplete();
 
         Thread.sleep(200);
 
-        StepVerifier.create(entityByTagRepository.findAllByPrimaryKeyTag("tag1")).assertNext(userByTag -> {
+        create(entityByTagRepository.findAllByPrimaryKeyTag("tag1")).assertNext(userByTag -> {
             Assert.assertThat(userByTag.getPrimaryKey().getEntityId(), is(userWithTagsLogin));
         }).verifyComplete();
 
-        StepVerifier.create(tagRepository.findAll()).assertNext(tag -> {
+        create(tagRepository.findAll()).assertNext(tag -> {
             Assert.assertThat(tag.getName(), anyOf(is("tag2"),  is("tag1")));
         }).assertNext(tag -> {
             Assert.assertThat(tag.getName(), anyOf(is("tag2"),  is("tag1")));
@@ -130,11 +131,11 @@ public class UserServiceTest {
         User userWithClients = prepareUser(userWithClientsLogin);
         userWithClients.setClients(Sets.newHashSet("client1", "client2"));
         log.debug("test create user with  clients  tags userService.createUser");
-        StepVerifier.create(userService.createUser(userWithClients, registration)).assertNext(Assert::assertNotNull).verifyComplete();
+        create(userService.createUser(userWithClients, registration)).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with  clients  tags userRepository.findByPrimaryKeyLogin");
-        StepVerifier.create(userRepository.findByPrimaryKeyLogin(userWithClients.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
+        create(userRepository.findByPrimaryKeyLogin(userWithClients.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with  clients  tags usersByClientRepository.findAll()");
-        StepVerifier.create(usersByClientRepository.findAll()).assertNext(usersByClient -> {
+        create(usersByClientRepository.findAll()).assertNext(usersByClient -> {
             Assert.assertThat(usersByClient.getPrimaryKey().getLogin(), is(userWithClientsLogin));
             Assert.assertThat(usersByClient.getPrimaryKey().getClient(), anyOf(is("client1"),  is("client2")));
         }).assertNext(usersByClient ->{
@@ -149,10 +150,10 @@ public class UserServiceTest {
     @Test
     public void updateUser() throws Exception {
         User user = prepareUser("login");
-        StepVerifier.create(userService.updateUser(user)).assertNext(Assert::assertNotNull)
+        create(userService.updateUser(user)).assertNext(Assert::assertNotNull)
                 .verifyComplete();
         Thread.sleep(1000);
-        StepVerifier.create(userOperationsRepository.findAll())
+        create(userOperationsRepository.findAll())
                 .assertNext(userOperations -> {
             Assert.assertNotNull(userOperations);
         }).verifyComplete();
@@ -161,12 +162,12 @@ public class UserServiceTest {
     @Test
     public void insertBrandNewUserLinkedInBatch() throws Exception {
         User user = prepareUser("login");
-        StepVerifier.create(userService.insertBrandNewUserLinkedInBatch(user)).assertNext(Assert::assertTrue).verifyComplete();
+        create(userService.insertBrandNewUserLinkedInBatch(user)).assertNext(Assert::assertTrue).verifyComplete();
     }
 
     @Test
     public void activateUser() throws Exception {
-        StepVerifier.create(userService.activateUser(prepareUser("login"), "P@ssword")).assertNext(user -> {
+        create(userService.activateUser(prepareUser("login"), "P@ssword")).assertNext(user -> {
             Assert.assertNotNull(user.getPassword());
         }).verifyComplete();
     }
@@ -180,6 +181,11 @@ public class UserServiceTest {
 
     @Test
     public void addUserTags() {
+        User user = prepareUser("login");
+        userService.createUser(user, Mono.empty()).block();
+        create(userService.addUserTags(Sets.newHashSet("tag1"),user))
+                .assertNext(Assert::assertNotNull).verifyComplete();
+
     }
 
     @Test
@@ -187,8 +193,18 @@ public class UserServiceTest {
     }
 
     @Test
+    public void addUserClients() throws Exception {
+    }
+
+    @Test
+    public void deleteUserClients() throws Exception {
+    }
+
+    @Test
     public void insertUser() {
-        StepVerifier.create(userService.insertUser(prepareUser("login")))
+        create(userService.insertUser(prepareUser("login")))
                 .assertNext(Assert::assertNotNull).verifyComplete();
+
+
     }
 }

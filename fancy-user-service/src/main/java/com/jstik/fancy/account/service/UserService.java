@@ -49,9 +49,10 @@ public class UserService {
 
         result = result.delayUntil(info -> insertUser(user).doOnSuccess(inserted -> info.setUser(user)));
 
-        result = result.delayUntil(info -> {
-            return registration.doOnSuccess(reg -> info.setRegKey(reg.getRegKey()));
-        });
+        result = result.delayUntil(info -> registration.handle((reg, silk) -> {
+            info.setRegKey(reg.getRegKey());
+            silk.next(reg);
+        }));
 
         return result.doOnSuccess(info -> {
             insertBrandNewUserLinkedInBatch(info.getUser()).doOnSuccess(info::setLinkedInserted).subscribe();

@@ -26,8 +26,7 @@ public class ServiceConfig {
                                    TagService tagService,
                                    ClientService clientService,
                                    AuthorityService authorityService) {
-        return new UserService(userRepository,
-                operationsRepository, tagService, clientService,authorityService);
+        return new UserService(userRepository, operationsRepository, tagService, clientService,authorityService);
     }
 
     @Bean

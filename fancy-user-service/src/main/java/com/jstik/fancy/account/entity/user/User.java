@@ -6,13 +6,17 @@ import com.jstik.fancy.account.entity.authority.Authority;
 import lombok.*;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
-import org.springframework.data.cassandra.core.mapping.*;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyClass;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Table
@@ -57,8 +61,8 @@ public class User implements EntityWithDiscriminator {
         this.email = email;
     }
 
-    public String getLogin(){
-        return  getPrimaryKey().getLogin();
+    public String getLogin() {
+        return getPrimaryKey().getLogin();
     }
 
     @Override
@@ -71,21 +75,22 @@ public class User implements EntityWithDiscriminator {
         return getPrimaryKey().getLogin();
     }
 
-    public void addTags(Collection<String> tags){
+    public void addTags(Collection<String> tags) {
+        if (this.getTags() == null)
+            setTags(new HashSet<>());
         this.getTags().addAll(tags);
     }
 
 
-
-    public void deleteTags(Collection<String> tags){
+    public void deleteTags(Collection<String> tags) {
         this.getTags().removeAll(tags);
     }
 
-    public void addClients(Collection<String> clients){
+    public void addClients(Collection<String> clients) {
         this.getClients().addAll(clients);
     }
 
-    public void deleteClients(Collection<String> clients){
+    public void deleteClients(Collection<String> clients) {
         this.getClients().removeAll(clients);
     }
 
@@ -93,7 +98,7 @@ public class User implements EntityWithDiscriminator {
     @NoArgsConstructor
     @Getter
     @Setter
-    public static class UserPrimaryKey{
+    public static class UserPrimaryKey {
 
         @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
         private String login;
@@ -105,7 +110,6 @@ public class User implements EntityWithDiscriminator {
             this.login = login;
         }
     }
-
 
 
 }
