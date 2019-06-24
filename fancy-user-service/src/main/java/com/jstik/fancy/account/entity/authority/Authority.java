@@ -20,13 +20,18 @@ import javax.validation.constraints.NotNull;
 public class Authority {
 
     @PrimaryKey
-    private UserAuthorityPrimaryKey userAuthorityPrimaryKey;
+    private AuthorityPrimaryKey authorityPrimaryKey;
 
     @Column("access_level")
     private AccessLevel accessLevel;
 
     public Authority(@NotNull AuthorityDTO auth, @NotNull User user){
-        this.userAuthorityPrimaryKey = new UserAuthorityPrimaryKey(user.getLogin(), AuthorityType.USER, auth.getClient(), auth.getAuthority());
+        this.authorityPrimaryKey = new AuthorityPrimaryKey(user.getLogin(), AuthorityType.USER, auth.getClient(), auth.getAuthority());
+        this.accessLevel = auth.getAccessLevel();
+    }
+
+    public Authority(@NotNull AuthorityDTO auth, @NotNull String group){
+        this.authorityPrimaryKey = new AuthorityPrimaryKey(group, AuthorityType.GROUP, auth.getClient(), auth.getAuthority());
         this.accessLevel = auth.getAccessLevel();
     }
 
@@ -35,7 +40,7 @@ public class Authority {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class UserAuthorityPrimaryKey{
+    public static class AuthorityPrimaryKey {
 
         @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0)
         private String identifier;
