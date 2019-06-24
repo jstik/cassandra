@@ -1,11 +1,8 @@
 package com.jstik.fancy.account.dao.repository;
 
-import com.jstik.fancy.account.entity.client.UsersByClient;
-import com.jstik.fancy.account.entity.tag.EntityByTag;
 import com.jstik.fancy.account.entity.user.User;
-import com.jstik.fancy.account.entity.user.UserAuthority;
+import com.jstik.fancy.account.entity.authority.Authority;
 import com.jstik.fancy.account.entity.user.UserOperations;
-import com.jstik.fancy.account.exception.UserNotFound;
 import com.jstik.site.cassandra.model.EntityOperation;
 import com.jstik.site.cassandra.repository.CustomReactiveCassandraRepository;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
@@ -23,15 +20,8 @@ public interface UserRepository extends ReactiveCassandraRepository<User, User.U
 
     Mono<User> findByPrimaryKeyLogin(String login);
 
-    default Optional<EntityAwareBatchStatement> usersByClientStatement(@NotNull User user, Collection<String> clients) {
-        if (clients == null)
-            return Optional.empty();
-        return clients.stream()
-                .map(client -> new EntityAwareBatchStatement(insertProducer(), new UsersByClient(client, user.getLogin())))
-                .reduce(EntityAwareBatchStatement::andThen);
-    }
 
-    default Optional<EntityAwareBatchStatement> userAuthority(Collection<UserAuthority> authorities) {
+    default Optional<EntityAwareBatchStatement> userAuthority(Collection<Authority> authorities) {
         if (authorities == null)
             return Optional.empty();
         return authorities.stream()
@@ -39,13 +29,6 @@ public interface UserRepository extends ReactiveCassandraRepository<User, User.U
                 .reduce(EntityAwareBatchStatement::andThen);
     }
 
-    /*default Optional<EntityAwareBatchStatement> userByTagStatement(@NotNull User user, Collection<String> tags) {
-        if(tags == null)
-            return Optional.empty();
-        return tags.stream()
-                .map(tag -> new EntityAwareBatchStatement(insertProducer(), new EntityByTag(tag, user.getLogin(), user.getClass().getCanonicalName())))
-                .reduce(EntityAwareBatchStatement::andThen);
-    }*/
 
     default Optional<EntityAwareBatchStatement> userOperationStatement(@NotNull User user, EntityOperation entityOperation) {
         UserOperations operation = new UserOperations(user, entityOperation);

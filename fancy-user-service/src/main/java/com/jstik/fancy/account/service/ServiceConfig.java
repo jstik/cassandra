@@ -24,12 +24,11 @@ public class ServiceConfig {
     @Bean
     public UserService userService(UserRepository userRepository, UserOperationsRepository operationsRepository,
                                    UserRegistrationRepository registrationRepository,
-                                   TagRepository tagRepository,
-                                   EntityByTagRepository entityByTagRepository,
+                                   TagService tagService,
+                                   ClientService clientService,
                                    LoadBalancerClient loadBalancerClient) {
-        return new UserService(userRepository, userRegistrationService(registrationRepository,
-                loadBalancerClient), operationsRepository,
-                tagService(tagRepository, entityByTagRepository));
+        return new UserService(userRepository, userRegistrationService(registrationRepository,loadBalancerClient),
+                operationsRepository, tagService, clientService);
     }
 
     @Bean
@@ -44,8 +43,5 @@ public class ServiceConfig {
         return new UserRegistrationService(userRegistrationRepository, passwordEncoder, loadBalancerClient);
     }
 
-    @Bean
-    public TagService tagService(TagRepository tagRepository, EntityByTagRepository entityByTagRepository) {
-        return new TagService(tagRepository, entityByTagRepository);
-    }
+
 }

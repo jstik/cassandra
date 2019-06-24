@@ -2,10 +2,9 @@ package com.jstik.fancy.account.entity.user;
 
 
 import com.jstik.fancy.account.entity.EntityWithDiscriminator;
-import com.jstik.fancy.account.model.AuthorityDTO;
+import com.jstik.fancy.account.entity.authority.Authority;
 import lombok.*;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.cassandra.core.cql.Ordering;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.*;
 
@@ -13,9 +12,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Table
@@ -51,7 +48,7 @@ public class User implements EntityWithDiscriminator {
     private LocalDateTime created = LocalDateTime.now(Clock.systemUTC());
 
     @Transient
-    private Collection<UserAuthority> authorities;
+    private Collection<Authority> authorities;
 
     public User(String login, String firstName, String lastName, @Email String email) {
         this.primaryKey = new UserPrimaryKey(login);
@@ -78,8 +75,18 @@ public class User implements EntityWithDiscriminator {
         this.getTags().addAll(tags);
     }
 
+
+
     public void deleteTags(Collection<String> tags){
         this.getTags().removeAll(tags);
+    }
+
+    public void addClients(Collection<String> clients){
+        this.getClients().addAll(clients);
+    }
+
+    public void deleteClients(Collection<String> clients){
+        this.getClients().removeAll(clients);
     }
 
     @PrimaryKeyClass

@@ -1,5 +1,6 @@
-package com.jstik.fancy.account.entity.user;
+package com.jstik.fancy.account.entity.authority;
 
+import com.jstik.fancy.account.entity.user.User;
 import com.jstik.fancy.account.model.AccessLevel;
 import com.jstik.fancy.account.model.AuthorityDTO;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Table("user_authority")
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAuthority {
+public class Authority {
 
     @PrimaryKey
     private UserAuthorityPrimaryKey userAuthorityPrimaryKey;
@@ -24,8 +25,8 @@ public class UserAuthority {
     @Column("access_level")
     private AccessLevel accessLevel;
 
-    public UserAuthority(@NotNull AuthorityDTO auth, @NotNull User user){
-        this.userAuthorityPrimaryKey = new UserAuthorityPrimaryKey(user.getLogin(), auth.getClient(), auth.getAuthority());
+    public Authority(@NotNull AuthorityDTO auth, @NotNull User user){
+        this.userAuthorityPrimaryKey = new UserAuthorityPrimaryKey(user.getLogin(), AuthorityType.USER, auth.getClient(), auth.getAuthority());
         this.accessLevel = auth.getAccessLevel();
     }
 
@@ -36,8 +37,11 @@ public class UserAuthority {
     @AllArgsConstructor
     public static class UserAuthorityPrimaryKey{
 
-        @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
-        private String login;
+        @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0)
+        private String identifier;
+
+        @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 1)
+        private AuthorityType authorityType;
 
         @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED)
         private String client;

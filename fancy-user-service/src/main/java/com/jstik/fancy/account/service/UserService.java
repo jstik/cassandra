@@ -27,6 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final UserRegistrationService userRegistrationService;
+    private ClientService clientService;
     private UserOperationsRepository operationsRepository;
     private TagService tagService;
 
@@ -35,12 +36,14 @@ public class UserService {
     public UserService(UserRepository userRepository,
                        UserRegistrationService userRegistrationService,
                        UserOperationsRepository operationsRepository,
-                       TagService tagService
+                       TagService tagService,
+                       ClientService clientService
     ) {
         this.userRepository = userRepository;
         this.operationsRepository = operationsRepository;
         this.tagService = tagService;
         this.userRegistrationService = userRegistrationService;
+        this.clientService = clientService;
     }
 
     public Mono<NewUserInfo> createUser(User user, String regKey) {
@@ -86,6 +89,30 @@ public class UserService {
         });
     }
 
+    public Mono<User> addUserClients(Collection<String> clients, User user) {
+        if (clients == null)
+            return Mono.just(user);
+        Set<String> filtered = clients.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        if (filtered.isEmpty())
+            return Mono.just(user);
+        user.addClients(filtered);
+        return updateUser(user).doOnSuccess(updated -> {
+            clientService.addUserClients(user, clients).subscribe();
+        });
+    }
+
+    public Mono<User> deleteUserClients(Collection<String> clients, User user){
+        if (clients == null)
+            return Mono.just(user);
+        Set<String> filtered = clients.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        if (filtered.isEmpty())
+            return Mono.just(user);
+        user.deleteClients(filtered);
+        return updateUser(user).doOnSuccess(updated -> {
+            clientService.deleteUserClients(user, filtered).subscribe();
+        });
+    }
+
 
     public Mono<User> activateUser(User user, String password) {
         user.setActive(true);
@@ -115,7 +142,7 @@ public class UserService {
     Mono<Boolean> insertBrandNewUserLinkedInBatch(User user) {
         EntityAwareBatchStatement batch = Stream.of(
                 userRepository.userAuthority(user.getAuthorities()).orElse(null),
-                userRepository.usersByClientStatement(user, user.getClients()).orElse(null)
+                clientService.insertUsersByClientStatement(user, user.getClients()).orElse(null)
         ).filter(Objects::nonNull).reduce(EntityAwareBatchStatement::andThen).orElse(null);
         return batch != null ? userRepository.executeBatch(batch) : Mono.just(true);
     }

@@ -31,15 +31,11 @@ import static org.junit.Assert.*;
 @SpringJUnitWebConfig
 @ContextConfiguration(
         classes = {
-                TestApp.class,
                 EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class,
-                ServiceConfig.class, UserServiceWebConfig.class,
-                UserServiceSecurityConfig.class,
-                StubLoadBalancerConfig.class
+                LinkedServicesConfig.class,
         }
 )
-
-@TestPropertySource({"classpath:embedded-test.properties", "classpath:consul.properties"})
+@TestPropertySource({"classpath:embedded-test.properties"})
 public class TagServiceTest {
 
     @Rule

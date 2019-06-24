@@ -2,11 +2,10 @@ package com.jstik.fancy.account.service;
 
 import com.jstik.fancy.account.entity.user.User;
 import com.jstik.fancy.account.entity.user.UserRegistration;
-import com.jstik.fancy.account.exception.UserRegistrationNoFound;
+import com.jstik.fancy.account.model.account.ActivateAccountRequiredInfo;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
 import com.jstik.fancy.account.model.account.NewUserInfo;
 import com.jstik.fancy.account.model.account.RegisterAccountRequest;
-import com.jstik.fancy.account.model.account.ActivateAccountRequiredInfo;
 import org.springframework.core.convert.ConversionService;
 import reactor.core.publisher.Mono;
 

@@ -6,7 +6,6 @@ import com.jstik.fancy.account.entity.EntityWithDiscriminator;
 import com.jstik.fancy.account.entity.tag.EntityByTag;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import reactor.core.publisher.Mono;
-
 import java.util.Collection;
 import java.util.Optional;
 
@@ -31,7 +30,7 @@ public class TagService {
         if(entity.getId() == null)
             return Mono.error(new IllegalStateException("Id must be not null!"));
 
-        EntityAwareBatchStatement batch = entityByTagStatement(tags, entity).get();
+        EntityAwareBatchStatement batch = insertEntityByTagStatement(tags, entity).get();
         return tagRepository.executeBatch(batch).then(tagRepository.saveTags(tags));
     }
 
@@ -45,7 +44,7 @@ public class TagService {
     }
 
 
-    private Optional<EntityAwareBatchStatement> entityByTagStatement(Collection<String> tags, EntityWithDiscriminator entity) {
+    private Optional<EntityAwareBatchStatement> insertEntityByTagStatement(Collection<String> tags, EntityWithDiscriminator entity) {
         if(tags == null)
             return Optional.empty();
         return tags.stream()
