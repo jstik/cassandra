@@ -1,16 +1,11 @@
 package com.jstik.fancy.account.service;
 
-import com.google.common.collect.Sets;
-import com.jstik.fancy.account.TestApp;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.account.dao.repository.EntityByTagRepository;
 import com.jstik.fancy.account.dao.repository.TagRepository;
 import com.jstik.fancy.account.entity.user.User;
-import com.jstik.fancy.account.security.UserServiceSecurityConfig;
-import com.jstik.fancy.account.web.UserServiceWebConfig;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.site.discovery.stub.StubLoadBalancerConfig;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,7 +19,6 @@ import reactor.test.StepVerifier;
 import javax.inject.Inject;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static org.junit.Assert.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

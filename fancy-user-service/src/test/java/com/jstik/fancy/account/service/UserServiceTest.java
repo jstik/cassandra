@@ -24,6 +24,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import javax.inject.Inject;
@@ -94,20 +95,21 @@ public class UserServiceTest {
         User user = prepareUser("login");
         String regKey = UserUtil.generateRegKey();
         log.debug("test create user with no tags, clients  userService.createUser ");
-        StepVerifier.create(userService.createUser(user, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
+        Mono<UserRegistration> registration = userRegistrationRepository.save(new UserRegistration(user.getLogin(), regKey));
+        StepVerifier.create(userService.createUser(user, registration)).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with no tags, clients userRepository.findByPrimaryKeyLogin ");
         StepVerifier.create(userRepository.findByPrimaryKeyLogin(user.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with no tags, clients userRegistrationRepository.findById ");
         StepVerifier.create(userRegistrationRepository.findById(userRegistration(user, regKey).getPrimaryKey())).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with no tags, clients userService.createUser ");
-        StepVerifier.create(userService.createUser(user, regKey)).expectError(EntityAlreadyExistsException.class).verify();
+        StepVerifier.create(userService.createUser(user, registration)).expectError(EntityAlreadyExistsException.class).verify();
 
         //test create user with  tags
 
         String userWithTagsLogin = "userWithTags";
         User userWithTags = prepareUser(userWithTagsLogin);
         userWithTags.setTags(Sets.newHashSet("tag1", "tag2"));
-        StepVerifier.create(userService.createUser(userWithTags, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
+        StepVerifier.create(userService.createUser(userWithTags, registration)).assertNext(Assert::assertNotNull).verifyComplete();
 
         Thread.sleep(200);
 
@@ -128,7 +130,7 @@ public class UserServiceTest {
         User userWithClients = prepareUser(userWithClientsLogin);
         userWithClients.setClients(Sets.newHashSet("client1", "client2"));
         log.debug("test create user with  clients  tags userService.createUser");
-        StepVerifier.create(userService.createUser(userWithClients, regKey)).assertNext(Assert::assertNotNull).verifyComplete();
+        StepVerifier.create(userService.createUser(userWithClients, registration)).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with  clients  tags userRepository.findByPrimaryKeyLogin");
         StepVerifier.create(userRepository.findByPrimaryKeyLogin(userWithClients.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with  clients  tags usersByClientRepository.findAll()");

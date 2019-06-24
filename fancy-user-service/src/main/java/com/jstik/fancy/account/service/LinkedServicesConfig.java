@@ -1,9 +1,6 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.ClientRepository;
-import com.jstik.fancy.account.dao.repository.EntityByTagRepository;
-import com.jstik.fancy.account.dao.repository.TagRepository;
-import com.jstik.fancy.account.dao.repository.UsersByClientRepository;
+import com.jstik.fancy.account.dao.repository.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,5 +15,10 @@ public class LinkedServicesConfig {
     @Bean
     public ClientService clientService(UsersByClientRepository usersByClientRepository, ClientRepository clientRepository){
         return new ClientService(usersByClientRepository,clientRepository);
+    }
+
+    @Bean
+    public AuthorityService authorityService(AuthorityRepository authorityRepository){
+        return new AuthorityService(authorityRepository);
     }
 }

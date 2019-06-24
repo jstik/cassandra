@@ -23,12 +23,11 @@ public class ServiceConfig {
 
     @Bean
     public UserService userService(UserRepository userRepository, UserOperationsRepository operationsRepository,
-                                   UserRegistrationRepository registrationRepository,
                                    TagService tagService,
                                    ClientService clientService,
-                                   LoadBalancerClient loadBalancerClient) {
-        return new UserService(userRepository, userRegistrationService(registrationRepository,loadBalancerClient),
-                operationsRepository, tagService, clientService);
+                                   AuthorityService authorityService) {
+        return new UserService(userRepository,
+                operationsRepository, tagService, clientService,authorityService);
     }
 
     @Bean

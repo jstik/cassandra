@@ -14,25 +14,42 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@Table("user_authority")
+@Table("authority")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Authority {
 
     @PrimaryKey
-    private AuthorityPrimaryKey authorityPrimaryKey;
+    private AuthorityPrimaryKey key;
 
     @Column("access_level")
     private AccessLevel accessLevel;
 
     public Authority(@NotNull AuthorityDTO auth, @NotNull User user){
-        this.authorityPrimaryKey = new AuthorityPrimaryKey(user.getLogin(), AuthorityType.USER, auth.getClient(), auth.getAuthority());
+        this.key = new AuthorityPrimaryKey(user.getLogin(), AuthorityType.USER, auth.getClient(), auth.getAuthority());
         this.accessLevel = auth.getAccessLevel();
     }
 
     public Authority(@NotNull AuthorityDTO auth, @NotNull String group){
-        this.authorityPrimaryKey = new AuthorityPrimaryKey(group, AuthorityType.GROUP, auth.getClient(), auth.getAuthority());
+        this.key = new AuthorityPrimaryKey(group, AuthorityType.GROUP, auth.getClient(), auth.getAuthority());
         this.accessLevel = auth.getAccessLevel();
+    }
+
+    public Authority(@NotNull AuthorityDTO auth, @NotNull String identifier, AuthorityType authorityType){
+        this.key = new AuthorityPrimaryKey(identifier, authorityType, auth.getClient(), auth.getAuthority());
+        this.accessLevel = auth.getAccessLevel();
+    }
+
+    public String getAuthority(){
+        if(this.key == null)
+            return  null;
+        return key.getAuthority();
+    }
+
+    public String getId(){
+        if(this.key == null)
+            return  null;
+        return key.getId();
     }
 
     @PrimaryKeyClass
@@ -43,10 +60,10 @@ public class Authority {
     public static class AuthorityPrimaryKey {
 
         @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 0)
-        private String identifier;
+        private String id;
 
         @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED, ordinal = 1)
-        private AuthorityType authorityType;
+        private AuthorityType type;
 
         @PrimaryKeyColumn(type = PrimaryKeyType.CLUSTERED)
         private String client;

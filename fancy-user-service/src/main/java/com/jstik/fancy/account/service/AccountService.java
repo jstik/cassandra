@@ -30,13 +30,14 @@ public class AccountService {
 
     public Mono<NewUserInfo> createAccount(CreateAccountRequest account, String regKey) {
         User user = conversionService.convert(account, User.class);
-        return userService.createUser(user, regKey);
+        Mono<UserRegistration> registration = registrationService.createRegistration(user.getLogin(), regKey);
+        return userService.createUser(user, registration);
     }
 
     public Mono<ActivateAccountRequiredInfo> activateAccount(RegisterAccountRequest registerAccount) {
         Mono<ActivateAccountRequiredInfo> registrationInformation = findRequiredRegistrationInformation(registerAccount);
         return registrationInformation.doOnSuccess((info -> {
-            userService.activateUser(info.getUser(), info.getPlainPassword())
+            userService.activateUser(info.getUser(), registrationService.encodePassword(info.getPlainPassword()))
                     .delayUntil(user -> {
                         UserRegistration registration = info.getUserRegistration();
                         return registrationService.delete(registration.getLogin(), registration.getRegKey());
