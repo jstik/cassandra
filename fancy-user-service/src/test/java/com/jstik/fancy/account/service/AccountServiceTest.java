@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.service;
 
 import com.jstik.fancy.account.TestApp;
-import com.jstik.fancy.account.model.account.NewUserInfo;
+import com.jstik.fancy.account.model.user.NewUserInfo;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;

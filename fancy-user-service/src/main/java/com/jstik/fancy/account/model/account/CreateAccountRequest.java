@@ -1,6 +1,6 @@
 package com.jstik.fancy.account.model.account;
 
-import com.jstik.fancy.account.model.AuthorityDTO;
+import com.jstik.fancy.account.model.authority.AuthorityDTO;
 import lombok.Getter;
 import lombok.Setter;
 

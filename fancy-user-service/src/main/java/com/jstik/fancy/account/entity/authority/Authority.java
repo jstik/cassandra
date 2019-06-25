@@ -1,8 +1,8 @@
 package com.jstik.fancy.account.entity.authority;
 
 import com.jstik.fancy.account.entity.user.User;
-import com.jstik.fancy.account.model.AccessLevel;
-import com.jstik.fancy.account.model.AuthorityDTO;
+import com.jstik.fancy.account.model.authority.AccessLevel;
+import com.jstik.fancy.account.model.authority.AuthorityDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

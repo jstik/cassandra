@@ -1,4 +1,4 @@
-package com.jstik.fancy.account.model;
+package com.jstik.fancy.account.model.authority;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

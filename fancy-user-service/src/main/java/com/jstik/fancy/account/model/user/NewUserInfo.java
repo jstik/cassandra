@@ -1,4 +1,4 @@
-package com.jstik.fancy.account.model.account;
+package com.jstik.fancy.account.model.user;
 
 import com.jstik.fancy.account.entity.user.User;
 import lombok.Getter;

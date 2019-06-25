@@ -27,7 +27,7 @@ public class CassandraSetupConfiguration {
     }
 
 
-    @Bean("custom")
+    @Bean("customCassandraConversionService")
     public ConversionService conversionService() {
         DefaultConversionService service = new DefaultConversionService();
         service.addConverterFactory(new StringToEnumConverterFactory());

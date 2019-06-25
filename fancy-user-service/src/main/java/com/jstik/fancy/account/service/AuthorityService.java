@@ -3,7 +3,7 @@ package com.jstik.fancy.account.service;
 import com.jstik.fancy.account.dao.repository.AuthorityRepository;
 import com.jstik.fancy.account.entity.authority.Authority;
 import com.jstik.fancy.account.entity.authority.AuthorityType;
-import com.jstik.fancy.account.model.AuthorityDTO;
+import com.jstik.fancy.account.model.authority.AuthorityDTO;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
