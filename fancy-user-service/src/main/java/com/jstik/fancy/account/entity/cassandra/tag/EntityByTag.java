@@ -1,4 +1,4 @@
-package com.jstik.fancy.account.entity.tag;
+package com.jstik.fancy.account.entity.cassandra.tag;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

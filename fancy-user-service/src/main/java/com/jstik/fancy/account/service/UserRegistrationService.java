@@ -1,8 +1,8 @@
 package com.jstik.fancy.account.service;
 
 import com.jstik.fancy.account.dao.repository.UserRegistrationRepository;
-import com.jstik.fancy.account.entity.user.UserRegistration;
-import com.jstik.fancy.account.entity.user.UserRegistration.UserRegistrationPrimaryKey;
+import com.jstik.fancy.account.entity.cassandra.user.UserRegistration;
+import com.jstik.fancy.account.entity.cassandra.user.UserRegistration.UserRegistrationPrimaryKey;
 import com.jstik.fancy.account.exception.UserRegistrationNoFound;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;

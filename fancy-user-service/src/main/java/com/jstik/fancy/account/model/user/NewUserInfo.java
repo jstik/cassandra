@@ -1,6 +1,6 @@
 package com.jstik.fancy.account.model.user;
 
-import com.jstik.fancy.account.entity.user.User;
+import com.jstik.fancy.account.entity.cassandra.user.User;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -2,9 +2,9 @@ package com.jstik.fancy.account.service;
 
 import com.jstik.fancy.account.dao.repository.UserOperationsRepository;
 import com.jstik.fancy.account.dao.repository.UserRepository;
-import com.jstik.fancy.account.entity.user.User;
-import com.jstik.fancy.account.entity.user.UserOperations;
-import com.jstik.fancy.account.entity.user.UserRegistration;
+import com.jstik.fancy.account.entity.cassandra.user.User;
+import com.jstik.fancy.account.entity.cassandra.user.UserOperations;
+import com.jstik.fancy.account.entity.cassandra.user.UserRegistration;
 import com.jstik.fancy.account.exception.UserNotFound;
 import com.jstik.fancy.account.model.user.NewUserInfo;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;

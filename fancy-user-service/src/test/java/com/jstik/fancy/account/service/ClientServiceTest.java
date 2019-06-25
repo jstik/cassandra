@@ -3,7 +3,7 @@ package com.jstik.fancy.account.service;
 import com.google.common.collect.Sets;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.account.dao.repository.UsersByClientRepository;
-import com.jstik.fancy.account.entity.user.User;
+import com.jstik.fancy.account.entity.cassandra.user.User;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import org.junit.Assert;
@@ -20,7 +20,6 @@ import javax.inject.Inject;
 
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringJUnitWebConfig

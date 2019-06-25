@@ -1,4 +1,4 @@
-package com.jstik.fancy.account.entity.client;
+package com.jstik.fancy.account.entity.cassandra.client;
 
 import lombok.Getter;
 import lombok.Setter;

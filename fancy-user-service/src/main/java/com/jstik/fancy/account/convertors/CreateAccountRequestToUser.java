@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.convertors;
 
-import com.jstik.fancy.account.entity.user.User;
-import com.jstik.fancy.account.entity.authority.Authority;
+import com.jstik.fancy.account.entity.cassandra.user.User;
+import com.jstik.fancy.account.entity.cassandra.authority.Authority;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;

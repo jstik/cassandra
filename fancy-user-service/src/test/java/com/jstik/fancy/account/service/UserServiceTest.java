@@ -6,8 +6,8 @@ import com.jstik.fancy.account.dao.repository.*;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
-import com.jstik.fancy.account.entity.user.User;
-import com.jstik.fancy.account.entity.user.UserRegistration;
+import com.jstik.fancy.account.entity.cassandra.user.User;
+import com.jstik.fancy.account.entity.cassandra.user.UserRegistration;
 import com.jstik.fancy.account.exception.UserNotFound;
 import com.jstik.fancy.account.security.UserServiceSecurityConfig;
 import com.jstik.fancy.account.util.UserUtil;
@@ -25,11 +25,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import javax.inject.Inject;
-
-import java.time.Duration;
 
 import static com.jstik.fancy.account.service.TestUserUtil.prepareUser;
 import static org.hamcrest.core.AnyOf.anyOf;

@@ -1,8 +1,8 @@
-package com.jstik.fancy.account.entity.user;
+package com.jstik.fancy.account.entity.cassandra.user;
 
 
 import com.jstik.fancy.account.entity.EntityWithDiscriminator;
-import com.jstik.fancy.account.entity.authority.Authority;
+import com.jstik.fancy.account.entity.cassandra.authority.Authority;
 import lombok.*;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;

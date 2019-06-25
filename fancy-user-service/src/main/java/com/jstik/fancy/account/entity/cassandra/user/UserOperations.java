@@ -1,4 +1,4 @@
-package com.jstik.fancy.account.entity.user;
+package com.jstik.fancy.account.entity.cassandra.user;
 
 import com.jstik.site.cassandra.model.EntityOperation;
 import lombok.*;
@@ -9,8 +9,6 @@ import org.springframework.data.cassandra.core.mapping.*;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter

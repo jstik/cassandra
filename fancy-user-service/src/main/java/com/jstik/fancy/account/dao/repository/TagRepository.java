@@ -1,8 +1,7 @@
 package com.jstik.fancy.account.dao.repository;
 
-import com.jstik.fancy.account.entity.tag.Tag;
+import com.jstik.fancy.account.entity.cassandra.tag.Tag;
 import com.jstik.site.cassandra.repository.CustomReactiveCassandraRepository;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
 import org.springframework.data.repository.query.Param;

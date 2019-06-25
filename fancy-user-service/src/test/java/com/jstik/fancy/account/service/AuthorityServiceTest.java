@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
-import static com.jstik.fancy.account.entity.authority.AuthorityType.USER;
+import static com.jstik.fancy.account.entity.cassandra.authority.AuthorityType.USER;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

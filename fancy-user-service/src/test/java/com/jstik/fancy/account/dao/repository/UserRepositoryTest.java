@@ -3,7 +3,7 @@ package com.jstik.fancy.account.dao.repository;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.fancy.account.entity.user.User;
+import com.jstik.fancy.account.entity.cassandra.user.User;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
 import org.junit.Assert;
 import org.junit.Rule;

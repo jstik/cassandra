@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.entity.user.User;
-import com.jstik.fancy.account.entity.user.UserRegistration;
+import com.jstik.fancy.account.entity.cassandra.user.User;
+import com.jstik.fancy.account.entity.cassandra.user.UserRegistration;
 import com.jstik.fancy.account.model.account.ActivateAccountRequiredInfo;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
 import com.jstik.fancy.account.model.user.NewUserInfo;

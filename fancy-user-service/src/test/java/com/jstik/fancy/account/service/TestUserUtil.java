@@ -1,6 +1,6 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.entity.user.User;
+import com.jstik.fancy.account.entity.cassandra.user.User;
 
 public class TestUserUtil {
 

@@ -3,7 +3,7 @@ package com.jstik.fancy.account.service;
 import com.jstik.fancy.account.dao.repository.EntityByTagRepository;
 import com.jstik.fancy.account.dao.repository.TagRepository;
 import com.jstik.fancy.account.entity.EntityWithDiscriminator;
-import com.jstik.fancy.account.entity.tag.EntityByTag;
+import com.jstik.fancy.account.entity.cassandra.tag.EntityByTag;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import reactor.core.publisher.Mono;
 import java.util.Collection;

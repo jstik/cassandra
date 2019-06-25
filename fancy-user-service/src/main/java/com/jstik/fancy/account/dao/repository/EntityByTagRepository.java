@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.dao.repository;
 
-import com.jstik.fancy.account.entity.tag.EntityByTag;
-import com.jstik.fancy.account.entity.tag.EntityByTag.UserByTagPrimaryKey;
+import com.jstik.fancy.account.entity.cassandra.tag.EntityByTag;
+import com.jstik.fancy.account.entity.cassandra.tag.EntityByTag.UserByTagPrimaryKey;
 import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
 import org.springframework.data.repository.query.Param;

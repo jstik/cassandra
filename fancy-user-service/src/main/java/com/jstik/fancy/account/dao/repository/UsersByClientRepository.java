@@ -1,6 +1,6 @@
 package com.jstik.fancy.account.dao.repository;
 
-import com.jstik.fancy.account.entity.client.UsersByClient;
+import com.jstik.fancy.account.entity.cassandra.client.UsersByClient;
 import com.jstik.site.cassandra.repository.CustomReactiveCassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;

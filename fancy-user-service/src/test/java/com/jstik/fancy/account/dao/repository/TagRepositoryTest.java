@@ -2,8 +2,7 @@ package com.jstik.fancy.account.dao.repository;
 
 import com.google.common.collect.Sets;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
-import com.jstik.fancy.account.entity.user.User;
-import com.jstik.fancy.account.service.TestUserUtil;
+import com.jstik.fancy.account.entity.cassandra.user.User;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import org.junit.Assert;
@@ -18,7 +17,6 @@ import reactor.test.StepVerifier;
 import javax.inject.Inject;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class})

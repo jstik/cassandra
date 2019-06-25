@@ -1,8 +1,8 @@
 package com.jstik.fancy.account.dao.repository;
 
-import com.jstik.fancy.account.entity.user.User;
-import com.jstik.fancy.account.entity.authority.Authority;
-import com.jstik.fancy.account.entity.user.UserOperations;
+import com.jstik.fancy.account.entity.cassandra.user.User;
+import com.jstik.fancy.account.entity.cassandra.authority.Authority;
+import com.jstik.fancy.account.entity.cassandra.user.UserOperations;
 import com.jstik.site.cassandra.model.EntityOperation;
 import com.jstik.site.cassandra.repository.CustomReactiveCassandraRepository;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;

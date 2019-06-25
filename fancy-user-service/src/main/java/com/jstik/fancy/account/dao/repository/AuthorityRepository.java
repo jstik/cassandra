@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.dao.repository;
 
-import com.jstik.fancy.account.entity.authority.Authority;
-import com.jstik.fancy.account.entity.authority.AuthorityType;
+import com.jstik.fancy.account.entity.cassandra.authority.Authority;
+import com.jstik.fancy.account.entity.cassandra.authority.AuthorityType;
 import com.jstik.site.cassandra.repository.CustomReactiveCassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;

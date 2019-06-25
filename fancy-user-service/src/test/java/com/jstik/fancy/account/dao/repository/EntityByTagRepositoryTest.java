@@ -1,8 +1,7 @@
 package com.jstik.fancy.account.dao.repository;
 
-import com.google.common.collect.Sets;
 import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
-import com.jstik.fancy.account.entity.tag.EntityByTag;
+import com.jstik.fancy.account.entity.cassandra.tag.EntityByTag;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import org.junit.Assert;
@@ -19,7 +18,6 @@ import javax.inject.Inject;
 import java.util.HashSet;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class})
