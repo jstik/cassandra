@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.model.account;
 
-import com.jstik.fancy.account.entity.cassandra.user.User;
-import com.jstik.fancy.account.entity.cassandra.user.UserRegistration;
+import com.jstik.fancy.account.storage.entity.cassandra.user.User;
+import com.jstik.fancy.account.storage.entity.cassandra.user.UserRegistration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
