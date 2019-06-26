@@ -1,20 +1,19 @@
 package com.jstik.fancy.account.storage.service;
 
-import com.jstik.fancy.account.TestApp;
+import com.jstik.fancy.account.model.account.ActivateAccountRequiredInfo;
+import com.jstik.fancy.account.model.account.CreateAccountRequest;
+import com.jstik.fancy.account.model.account.RegisterAccountRequest;
+import com.jstik.fancy.account.model.exception.EntityMissingException;
+import com.jstik.fancy.account.model.exception.UserNotFound;
+import com.jstik.fancy.account.model.exception.UserRegistrationNoFound;
+import com.jstik.fancy.account.model.user.NewUserInfo;
+import com.jstik.fancy.account.security.UserServiceSecurityConfig;
 import com.jstik.fancy.account.storage.StorageTestApp;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.UserServiceCassandraConfig;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRegistrationRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRepository;
 import com.jstik.fancy.account.storage.entity.cassandra.user.User;
 import com.jstik.fancy.account.storage.entity.cassandra.user.UserRegistration;
-import com.jstik.fancy.account.model.exception.EntityMissingException;
-import com.jstik.fancy.account.model.exception.UserNotFound;
-import com.jstik.fancy.account.model.exception.UserRegistrationNoFound;
-import com.jstik.fancy.account.model.account.ActivateAccountRequiredInfo;
-import com.jstik.fancy.account.model.account.CreateAccountRequest;
-import com.jstik.fancy.account.model.account.RegisterAccountRequest;
-import com.jstik.fancy.account.model.user.NewUserInfo;
-import com.jstik.fancy.account.security.UserServiceSecurityConfig;
 import com.jstik.fancy.account.util.UserUtil;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
@@ -42,7 +41,6 @@ import java.util.function.Consumer;
         classes = {
                 StorageTestApp.class,
                 EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class,
-                ServiceConfig.class,
                 UserServiceSecurityConfig.class,
                 StubLoadBalancerConfig.class
         }

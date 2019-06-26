@@ -5,6 +5,8 @@ import com.jstik.fancy.account.storage.dao.repository.cassandra.client.UsersByCl
 import com.jstik.fancy.account.storage.dao.repository.cassandra.tag.EntityByTagRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.tag.TagRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.authority.AuthorityRepository;
+import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserOperationsRepository;
+import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,4 +27,14 @@ public class LinkedServicesConfig {
     public AuthorityService authorityService(AuthorityRepository authorityRepository){
         return new AuthorityService(authorityRepository);
     }
+
+
+    @Bean
+    public UserService userService(UserRepository userRepository, UserOperationsRepository operationsRepository,
+                                   TagService tagService,
+                                   ClientService clientService,
+                                   AuthorityService authorityService) {
+        return new UserService(userRepository, operationsRepository, tagService, clientService, authorityService);
+    }
+
 }

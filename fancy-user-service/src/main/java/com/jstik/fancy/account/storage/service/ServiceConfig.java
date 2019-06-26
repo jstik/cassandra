@@ -1,9 +1,7 @@
 package com.jstik.fancy.account.storage.service;
 
 import com.jstik.fancy.account.convertors.CreateAccountRequestToUser;
-import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserOperationsRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRegistrationRepository;
-import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRepository;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,13 +19,6 @@ public class ServiceConfig {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Bean
-    public UserService userService(UserRepository userRepository, UserOperationsRepository operationsRepository,
-                                   TagService tagService,
-                                   ClientService clientService,
-                                   AuthorityService authorityService) {
-        return new UserService(userRepository, operationsRepository, tagService, clientService, authorityService);
-    }
 
     @Bean
     public AccountService accountService(UserService userService,

@@ -1,21 +1,22 @@
 package com.jstik.fancy.account.storage.service;
 
+import com.jstik.fancy.account.model.account.RegisterAccountRequest;
+import com.jstik.fancy.account.security.UserServiceSecurityConfig;
+import com.jstik.fancy.account.storage.StorageTestApp;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.UserServiceCassandraConfig;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRegistrationRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRepository;
 import com.jstik.fancy.account.storage.entity.cassandra.user.User;
 import com.jstik.fancy.account.storage.entity.cassandra.user.UserRegistration;
 import com.jstik.fancy.account.storage.entity.cassandra.user.UserRegistration.UserRegistrationPrimaryKey;
-import com.jstik.fancy.account.model.account.RegisterAccountRequest;
-import com.jstik.fancy.account.security.UserServiceSecurityConfig;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
+import com.jstik.site.discovery.stub.StubLoadBalancerConfig;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -31,12 +32,13 @@ import java.util.concurrent.CountDownLatch;
 @SpringJUnitWebConfig
 @ContextConfiguration(
         classes = {
+                StorageTestApp.class,
                 EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class,
-                ServiceConfig.class, UserServiceSecurityConfig.class
+                UserServiceSecurityConfig.class,
+                StubLoadBalancerConfig.class
         }
 )
-@TestPropertySource("classpath:test.properties")
-@EnableDiscoveryClient
+@TestPropertySource({"classpath:embedded-test.properties", "classpath:consul.properties"})
 public class UserCompositeTest {
 
     @Inject

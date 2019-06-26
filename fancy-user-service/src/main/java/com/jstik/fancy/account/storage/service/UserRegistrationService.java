@@ -42,11 +42,6 @@ public class UserRegistrationService {
         return userRegistrationRepository.save(registration);
     }
 
-    public Mono<UserRegistration> findRegistration(String login, String regKey) {
-        UserRegistrationPrimaryKey primaryKey = new UserRegistrationPrimaryKey(login, regKey);
-        return userRegistrationRepository.findById(primaryKey);
-    }
-
     public Mono<UserRegistration> findRegistrationOrThrow(String login, String regKey) {
         UserRegistrationPrimaryKey primaryKey = new UserRegistrationPrimaryKey(login, regKey);
         return userRegistrationRepository.findById(primaryKey).switchIfEmpty(Mono.error(new UserRegistrationNoFound()));
