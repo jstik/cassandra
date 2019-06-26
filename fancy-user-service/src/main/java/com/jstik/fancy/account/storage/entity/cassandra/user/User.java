@@ -87,6 +87,8 @@ public class User implements EntityWithDiscriminator {
     }
 
     public void addClients(Collection<String> clients) {
+        if(this.clients == null)
+            setClients(new HashSet<>());
         this.getClients().addAll(clients);
     }
 

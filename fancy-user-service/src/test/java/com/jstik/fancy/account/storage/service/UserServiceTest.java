@@ -15,6 +15,8 @@ import com.jstik.fancy.account.util.UserUtil;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
+import org.hamcrest.collection.IsCollectionWithSize;
+import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,7 +31,10 @@ import reactor.core.publisher.Mono;
 
 import javax.inject.Inject;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static com.jstik.fancy.account.storage.service.TestUserUtil.prepareUser;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
 import static reactor.test.StepVerifier.create;
@@ -104,7 +109,7 @@ public class UserServiceTest {
 
         String userWithTagsLogin = "userWithTags";
         User userWithTags = prepareUser(userWithTagsLogin);
-        userWithTags.setTags(Sets.newHashSet("tag1", "tag2"));
+        userWithTags.setTags(newHashSet("tag1", "tag2"));
         create(userService.createUser(userWithTags, registration)).assertNext(Assert::assertNotNull).verifyComplete();
 
         Thread.sleep(200);
@@ -123,7 +128,7 @@ public class UserServiceTest {
         //test create user with  clients
         String userWithClientsLogin = "userWithClients";
         User userWithClients = prepareUser(userWithClientsLogin);
-        userWithClients.setClients(Sets.newHashSet("client1", "client2"));
+        userWithClients.setClients(newHashSet("client1", "client2"));
         log.debug("test create user with  clients  tags userService.createUser");
         create(userService.createUser(userWithClients, registration)).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with  clients  tags userRepository.findByPrimaryKeyLogin");
@@ -145,10 +150,7 @@ public class UserServiceTest {
         create(userService.updateUser(user)).assertNext(Assert::assertNotNull)
                 .verifyComplete();
         Thread.sleep(1000);
-        create(userOperationsRepository.findAll())
-                .assertNext(userOperations -> {
-                    Assert.assertNotNull(userOperations);
-                }).verifyComplete();
+        create(userOperationsRepository.findAll()).assertNext(Assert::assertNotNull).verifyComplete();
     }
 
     @Test
@@ -174,28 +176,61 @@ public class UserServiceTest {
     public void addUserTags() {
         User user = prepareUser("login");
         userService.createUser(user, Mono.empty()).block();
-        create(userService.addUserTags(Sets.newHashSet("tag1"), user))
+        create(userService.addUserTags(newHashSet("tag1"), user))
                 .assertNext(Assert::assertNotNull).verifyComplete();
 
     }
 
     @Test
     public void deleteUserTags() {
+        User user = prepareUser("login");
+        user.setTags(newHashSet("tag1", "tag2"));
+        userService.createUser(user, Mono.empty()).block();
+
+        create(userService.deleteUserTags(newHashSet("tag1"), user))
+                .assertNext(updated-> {
+                    Assert.assertThat(updated.getTags(), hasSize(1));
+                    Assert.assertThat(updated.getTags(), contains("tag2"));
+                }).verifyComplete();
+
+        create(userService.findUserOrThrow("login")).assertNext(dbUser-> {
+            Assert.assertThat(dbUser.getTags(), hasSize(1));
+            Assert.assertThat(dbUser.getTags(), contains("tag2"));
+        }).verifyComplete();
     }
 
     @Test
     public void addUserClients() throws Exception {
+        User user = prepareUser("login");
+        userService.createUser(user, Mono.empty()).block();
+
+        create(userService.addUserClients(newHashSet("client1"), user))
+                .assertNext(Assert::assertNotNull).verifyComplete();
+
+        create(userService.findUserOrThrow("login")).assertNext(dbUser-> {
+            Assert.assertThat(dbUser.getClients(), hasSize(1));
+            Assert.assertThat(dbUser.getClients(), contains("client1"));
+        }).verifyComplete();
+
     }
 
     @Test
     public void deleteUserClients() throws Exception {
+        User user = prepareUser("login");
+        user.setClients(newHashSet("client1", "client2"));
+        userService.createUser(user, Mono.empty()).block();
+
+        create(userService.deleteUserClients(newHashSet("client1"), user))
+                .assertNext(Assert::assertNotNull).verifyComplete();
+
+        create(userService.findUserOrThrow("login")).assertNext(dbUser-> {
+            Assert.assertThat(dbUser.getClients(), hasSize(1));
+            Assert.assertThat(dbUser.getClients(), contains("client2"));
+        }).verifyComplete();
     }
 
     @Test
     public void insertUser() {
-        create(userService.insertUser(prepareUser("login")))
-                .assertNext(Assert::assertNotNull).verifyComplete();
-
-
+        create(userService.insertUser(prepareUser("login"))) .assertNext(Assert::assertNotNull).verifyComplete();
     }
 }
