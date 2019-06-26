@@ -1,23 +1,24 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.*;
+import com.jstik.fancy.account.convertors.CreateAccountRequestToUser;
+import com.jstik.fancy.account.dao.repository.cassandra.user.UserOperationsRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.user.UserRegistrationRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.user.UserRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class ServiceConfig {
 
 
-    private final ConversionService conversionService;
     private final PasswordEncoder passwordEncoder;
 
-    public ServiceConfig(@Qualifier("mvcConversionService") ConversionService conversionService,
-                         PasswordEncoder passwordEncoder) {
-        this.conversionService = conversionService;
+    public ServiceConfig(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -26,19 +27,26 @@ public class ServiceConfig {
                                    TagService tagService,
                                    ClientService clientService,
                                    AuthorityService authorityService) {
-        return new UserService(userRepository, operationsRepository, tagService, clientService,authorityService);
+        return new UserService(userRepository, operationsRepository, tagService, clientService, authorityService);
     }
 
     @Bean
     public AccountService accountService(UserService userService,
                                          UserRegistrationRepository registrationRepository,
                                          LoadBalancerClient loadBalancerClient) {
-        return new AccountService(conversionService, userService, userRegistrationService(registrationRepository, loadBalancerClient));
+        return new AccountService(conversionService(), userService, userRegistrationService(registrationRepository, loadBalancerClient));
     }
 
     @Bean
     public UserRegistrationService userRegistrationService(UserRegistrationRepository userRegistrationRepository, LoadBalancerClient loadBalancerClient) {
         return new UserRegistrationService(userRegistrationRepository, passwordEncoder, loadBalancerClient);
+    }
+
+    @Bean("accountConversionService")
+    public ConversionService conversionService() {
+        DefaultConversionService service = new DefaultConversionService();
+        service.addConverter(new CreateAccountRequestToUser());
+        return service;
     }
 
 

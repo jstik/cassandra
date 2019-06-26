@@ -1,10 +1,9 @@
 package com.jstik.fancy.account.service;
 
 import com.jstik.fancy.account.TestApp;
-import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
+import com.jstik.fancy.account.dao.repository.cassandra.UserServiceCassandraConfig;
 import com.jstik.fancy.account.security.UserServiceSecurityConfig;
 import com.jstik.fancy.account.util.UserUtil;
-import com.jstik.fancy.account.web.UserServiceWebConfig;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import com.jstik.site.discovery.stub.StubLoadBalancerConfig;
@@ -24,21 +23,20 @@ import javax.inject.Inject;
 @ContextConfiguration(
         classes = {
                 TestApp.class,
-                EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class,
-                ServiceConfig.class, UserServiceWebConfig.class,
-                UserServiceSecurityConfig.class,
+                EmbeddedCassandraConfig.class,
                 StubLoadBalancerConfig.class
         }
 )
 
-@TestPropertySource({"classpath:embedded-test.properties","classpath:consul.properties"})
+@TestPropertySource({"classpath:embedded-test.properties", "classpath:consul.properties"})
 public class UserRegistrationServiceTest {
 
     @Rule
     @Inject
     public CassandraCreateDropSchemaRule createDropSchemaRule;
 
-    @Inject  UserRegistrationService userRegistrationService;
+    @Inject
+    UserRegistrationService userRegistrationService;
 
 
     @Test

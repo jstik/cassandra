@@ -2,16 +2,20 @@ package com.jstik.fancy.account.service;
 
 import com.google.common.collect.Sets;
 import com.jstik.fancy.account.TestApp;
-import com.jstik.fancy.account.dao.repository.*;
-import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
-import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
-import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
+import com.jstik.fancy.account.dao.repository.cassandra.UserServiceCassandraConfig;
+import com.jstik.fancy.account.dao.repository.cassandra.client.UsersByClientRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.tag.EntityByTagRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.tag.TagRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.user.UserOperationsRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.user.UserRegistrationRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.user.UserRepository;
 import com.jstik.fancy.account.entity.cassandra.user.User;
 import com.jstik.fancy.account.entity.cassandra.user.UserRegistration;
 import com.jstik.fancy.account.exception.UserNotFound;
 import com.jstik.fancy.account.security.UserServiceSecurityConfig;
 import com.jstik.fancy.account.util.UserUtil;
-import com.jstik.fancy.account.web.UserServiceWebConfig;
+import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
+import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
 import com.jstik.site.discovery.stub.StubLoadBalancerConfig;
 import org.junit.Assert;
@@ -39,16 +43,15 @@ import static reactor.test.StepVerifier.create;
         classes = {
                 TestApp.class,
                 EmbeddedCassandraConfig.class, UserServiceCassandraConfig.class,
-                ServiceConfig.class, UserServiceWebConfig.class,
+                ServiceConfig.class,
                 UserServiceSecurityConfig.class,
                 StubLoadBalancerConfig.class
         }
 )
 
-@TestPropertySource({"classpath:test.properties","classpath:consul.properties"})
+@TestPropertySource({"classpath:test.properties", "classpath:consul.properties"})
 
 public class UserServiceTest {
-
 
 
     @Inject
@@ -65,14 +68,15 @@ public class UserServiceTest {
     @Inject
     private UsersByClientRepository usersByClientRepository;
 
-    @Inject UserOperationsRepository userOperationsRepository;
+    @Inject
+    UserOperationsRepository userOperationsRepository;
 
 
     @Rule
     @Inject
     public CassandraCreateDropSchemaRule createDropSchemaRule;
 
-    private  final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     @Test
@@ -116,11 +120,10 @@ public class UserServiceTest {
         }).verifyComplete();
 
         create(tagRepository.findAll()).assertNext(tag -> {
-            Assert.assertThat(tag.getName(), anyOf(is("tag2"),  is("tag1")));
+            Assert.assertThat(tag.getName(), anyOf(is("tag2"), is("tag1")));
         }).assertNext(tag -> {
-            Assert.assertThat(tag.getName(), anyOf(is("tag2"),  is("tag1")));
+            Assert.assertThat(tag.getName(), anyOf(is("tag2"), is("tag1")));
         }).verifyComplete();
-
 
 
         //test create user with  clients
@@ -134,14 +137,12 @@ public class UserServiceTest {
         log.debug("test create user with  clients  tags usersByClientRepository.findAll()");
         create(usersByClientRepository.findAll()).assertNext(usersByClient -> {
             Assert.assertThat(usersByClient.getPrimaryKey().getLogin(), is(userWithClientsLogin));
-            Assert.assertThat(usersByClient.getPrimaryKey().getClient(), anyOf(is("client1"),  is("client2")));
-        }).assertNext(usersByClient ->{
+            Assert.assertThat(usersByClient.getPrimaryKey().getClient(), anyOf(is("client1"), is("client2")));
+        }).assertNext(usersByClient -> {
             Assert.assertThat(usersByClient.getPrimaryKey().getLogin(), is(userWithClientsLogin));
-            Assert.assertThat(usersByClient.getPrimaryKey().getClient(), anyOf(is("client1"),  is("client2")));
+            Assert.assertThat(usersByClient.getPrimaryKey().getClient(), anyOf(is("client1"), is("client2")));
         }).verifyComplete();
     }
-
-
 
 
     @Test
@@ -152,8 +153,8 @@ public class UserServiceTest {
         Thread.sleep(1000);
         create(userOperationsRepository.findAll())
                 .assertNext(userOperations -> {
-            Assert.assertNotNull(userOperations);
-        }).verifyComplete();
+                    Assert.assertNotNull(userOperations);
+                }).verifyComplete();
     }
 
     @Test
@@ -170,7 +171,6 @@ public class UserServiceTest {
     }
 
 
-
     private UserRegistration userRegistration(User user, String key) {
         return new UserRegistration(user.getLogin(), key);
     }
@@ -180,7 +180,7 @@ public class UserServiceTest {
     public void addUserTags() {
         User user = prepareUser("login");
         userService.createUser(user, Mono.empty()).block();
-        create(userService.addUserTags(Sets.newHashSet("tag1"),user))
+        create(userService.addUserTags(Sets.newHashSet("tag1"), user))
                 .assertNext(Assert::assertNotNull).verifyComplete();
 
     }

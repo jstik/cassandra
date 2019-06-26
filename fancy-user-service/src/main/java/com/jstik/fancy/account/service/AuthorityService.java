@@ -1,6 +1,6 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.AuthorityRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.authority.AuthorityRepository;
 import com.jstik.fancy.account.entity.cassandra.authority.Authority;
 import com.jstik.fancy.account.entity.cassandra.authority.AuthorityType;
 import com.jstik.fancy.account.model.authority.AuthorityDTO;

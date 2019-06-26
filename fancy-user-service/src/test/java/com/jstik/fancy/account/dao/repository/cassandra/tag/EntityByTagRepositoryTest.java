@@ -1,6 +1,6 @@
-package com.jstik.fancy.account.dao.repository;
+package com.jstik.fancy.account.dao.repository.cassandra.tag;
 
-import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
+import com.jstik.fancy.account.dao.repository.cassandra.UserServiceCassandraConfig;
 import com.jstik.fancy.account.entity.cassandra.tag.EntityByTag;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;

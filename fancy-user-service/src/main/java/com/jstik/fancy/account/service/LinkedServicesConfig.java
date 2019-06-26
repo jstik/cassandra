@@ -1,6 +1,10 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.*;
+import com.jstik.fancy.account.dao.repository.cassandra.client.ClientRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.client.UsersByClientRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.tag.EntityByTagRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.tag.TagRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.authority.AuthorityRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

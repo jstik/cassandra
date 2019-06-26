@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.EntityByTagRepository;
-import com.jstik.fancy.account.dao.repository.TagRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.tag.EntityByTagRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.tag.TagRepository;
 import com.jstik.fancy.account.entity.EntityWithDiscriminator;
 import com.jstik.fancy.account.entity.cassandra.tag.EntityByTag;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;

@@ -29,6 +29,7 @@
         <swagger.version>2.9.2</swagger.version>
         <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
         <metrics-core>3.0.2</metrics-core>
+        <mapstruct.version>1.3.0.Final</mapstruct.version>
     </properties>
 
 
@@ -50,13 +51,6 @@
     </dependencyManagement>
 
     <dependencies>
-<!--        <dependency>
-            <groupId>com.pszymczyk.consul</groupId>
-            <artifactId>embedded-consul</artifactId>
-            <version>2.0.0</version>
-            <scope>test</scope>
-        </dependency>-->
-
         <dependency>
             <groupId>com.jstik.site</groupId>
             <artifactId>spring-boot-starter-fancy-consul</artifactId>
@@ -111,6 +105,11 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-jdk8</artifactId>
+            <version>${mapstruct.version}</version>
         </dependency>
     </dependencies>
 

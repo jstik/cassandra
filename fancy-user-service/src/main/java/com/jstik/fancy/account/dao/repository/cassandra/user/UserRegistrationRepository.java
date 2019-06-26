@@ -1,4 +1,4 @@
-package com.jstik.fancy.account.dao.repository;
+package com.jstik.fancy.account.dao.repository.cassandra.user;
 
 import com.jstik.fancy.account.entity.cassandra.user.UserRegistration;
 import com.jstik.fancy.account.entity.cassandra.user.UserRegistration.UserRegistrationPrimaryKey;

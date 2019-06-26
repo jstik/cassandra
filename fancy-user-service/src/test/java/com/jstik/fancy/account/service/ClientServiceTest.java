@@ -1,8 +1,8 @@
 package com.jstik.fancy.account.service;
 
 import com.google.common.collect.Sets;
-import com.jstik.fancy.account.dao.UserServiceCassandraConfig;
-import com.jstik.fancy.account.dao.repository.UsersByClientRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.UserServiceCassandraConfig;
+import com.jstik.fancy.account.dao.repository.cassandra.client.UsersByClientRepository;
 import com.jstik.fancy.account.entity.cassandra.user.User;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;

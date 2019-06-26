@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.UserOperationsRepository;
-import com.jstik.fancy.account.dao.repository.UserRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.user.UserOperationsRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.user.UserRepository;
 import com.jstik.fancy.account.entity.cassandra.user.User;
 import com.jstik.fancy.account.entity.cassandra.user.UserOperations;
 import com.jstik.fancy.account.entity.cassandra.user.UserRegistration;

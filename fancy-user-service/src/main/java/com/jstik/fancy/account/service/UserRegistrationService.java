@@ -1,6 +1,6 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.UserRegistrationRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.user.UserRegistrationRepository;
 import com.jstik.fancy.account.entity.cassandra.user.UserRegistration;
 import com.jstik.fancy.account.entity.cassandra.user.UserRegistration.UserRegistrationPrimaryKey;
 import com.jstik.fancy.account.exception.UserRegistrationNoFound;

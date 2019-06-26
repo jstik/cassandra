@@ -1,4 +1,4 @@
-package com.jstik.fancy.account.dao.repository;
+package com.jstik.fancy.account.dao.repository.cassandra.authority;
 
 import com.jstik.fancy.account.entity.cassandra.authority.Authority;
 import com.jstik.fancy.account.entity.cassandra.authority.AuthorityType;

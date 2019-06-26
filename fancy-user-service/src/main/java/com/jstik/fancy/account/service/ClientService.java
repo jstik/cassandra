@@ -1,7 +1,7 @@
 package com.jstik.fancy.account.service;
 
-import com.jstik.fancy.account.dao.repository.ClientRepository;
-import com.jstik.fancy.account.dao.repository.UsersByClientRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.client.ClientRepository;
+import com.jstik.fancy.account.dao.repository.cassandra.client.UsersByClientRepository;
 import com.jstik.fancy.account.entity.cassandra.client.UsersByClient;
 import com.jstik.fancy.account.entity.cassandra.user.User;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
