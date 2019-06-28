@@ -1,6 +1,7 @@
 package com.jstik.fancy.account.search.entity.elastic;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
@@ -13,6 +14,7 @@ import static org.springframework.data.elasticsearch.annotations.FieldType.Text;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Document(indexName = "account-service", type = "user")
 public class UserType {
 
@@ -54,4 +56,12 @@ public class UserType {
 
     @Field(type = FieldType.Nested, includeInParent = true)
     private Set<String> groups;
+
+
+    public UserType(String login, String firstName, String lastName, String email) {
+        this.login = login;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
 }
