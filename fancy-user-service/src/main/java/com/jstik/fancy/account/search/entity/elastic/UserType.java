@@ -51,10 +51,10 @@ public class UserType {
     @Field(type = FieldType.Date)
     private LocalDateTime updated;
 
-    @Field(type = FieldType.Nested, includeInParent = true)
+
     private Set<String> tags;
 
-    @Field(type = FieldType.Nested, includeInParent = true)
+
     private Set<String> groups;
 
 
