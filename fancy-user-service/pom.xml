@@ -50,6 +50,12 @@
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
         </dependency>
 
+      <!--needed this for correct representing of data time in json-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
 
     </dependencies>
 
@@ -61,7 +67,6 @@
             </plugin>
         </plugins>
     </build>
-
 
 
 </project>
