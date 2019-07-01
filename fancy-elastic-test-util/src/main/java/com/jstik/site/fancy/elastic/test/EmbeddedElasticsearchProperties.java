@@ -10,9 +10,16 @@ public class EmbeddedElasticsearchProperties extends ElasticsearchProperties {
 
     private String version;
 
-    private String embeddedHttpProxyHost;
+    private EmbeddedProperties embedded;
 
-    private int embeddedHttpProxyPort;
 
-    private String embeddedDownloadDirectory;
+    @Getter
+    @Setter
+    public static class EmbeddedProperties{
+        private String httpProxyHost;
+
+        private int httpProxyPort;
+
+        private String downloadDirectory;
+    }
 }

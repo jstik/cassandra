@@ -9,7 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.jstik.site</groupId>
     <artifactId>fancy-elastic-test-util</artifactId>
     <packaging>jar</packaging>
 

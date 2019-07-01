@@ -1,10 +1,9 @@
 package com.jstik.fancy.account.search.service;
 
 import com.google.common.collect.Sets;
-import com.jstik.fancy.account.elastic.EmbeddedElasticConfig;
-import com.jstik.fancy.account.search.TestElasticConfig;
 import com.jstik.fancy.account.search.dao.repository.elastic.ElasticConfig;
 import com.jstik.fancy.account.search.entity.elastic.UserType;
+import com.jstik.site.fancy.elastic.test.EmbeddedElasticConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -13,24 +12,22 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-
 import java.time.LocalDateTime;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringJUnitWebConfig
 @ContextConfiguration(
         classes = {
                 EmbeddedElasticConfig.class,
-                TestElasticConfig.class,
+                ElasticConfig.class,
                 ElasticServiceConfig.class
         }
 )
-@TestPropertySource({"classpath:testElastic.properties"})
+@TestPropertySource({"classpath:embedded-elasticsearch.properties"})
 public class UserTypeServiceTest {
 
-    @Inject UserTypeService userTypeService;
+    @Inject
+    UserTypeService userTypeService;
 
     @Test
     public void addUserDocument() throws Exception {
