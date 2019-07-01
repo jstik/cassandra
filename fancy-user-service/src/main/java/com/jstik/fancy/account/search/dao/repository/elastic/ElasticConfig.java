@@ -5,10 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.TransportAddress;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +17,6 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.Properties;
 
 @Configuration

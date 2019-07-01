@@ -1,6 +1,7 @@
 package com.jstik.fancy.account.search.service;
 
 import com.google.common.collect.Sets;
+import com.jstik.fancy.account.elastic.EmbeddedElasticConfig;
 import com.jstik.fancy.account.search.TestElasticConfig;
 import com.jstik.fancy.account.search.dao.repository.elastic.ElasticConfig;
 import com.jstik.fancy.account.search.entity.elastic.UserType;
@@ -21,6 +22,7 @@ import static org.junit.Assert.*;
 @SpringJUnitWebConfig
 @ContextConfiguration(
         classes = {
+                EmbeddedElasticConfig.class,
                 TestElasticConfig.class,
                 ElasticServiceConfig.class
         }

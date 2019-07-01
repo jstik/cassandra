@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>jstik-showcase</artifactId>
+        <groupId>com.jstik.site</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.jstik.site</groupId>
+    <artifactId>fancy-elastic-test-util</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+     <allegro.embedded-elasticsearch.version>2.10.0</allegro.embedded-elasticsearch.version>
+
+    </properties>
+
+    <dependencies>
+
+       <!-- <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-elasticsearch</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>pl.allegro.tech</groupId>
+            <artifactId>embedded-elasticsearch</artifactId>
+            <version>${allegro.embedded-elasticsearch.version}</version>
+        </dependency>
+
+    </dependencies>
+
+
+</project>

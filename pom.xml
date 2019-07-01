@@ -19,6 +19,7 @@
         <module>fancy-cassandra-test-utils</module>
         <module>fancy-cassandra-config</module>
         <module>spring-boot-starter-fancy-consul</module>
+        <module>fancy-elastic-test-util</module>
     </modules>
 
 

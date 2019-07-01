@@ -49,7 +49,6 @@ import static reactor.test.StepVerifier.create;
 )
 
 @TestPropertySource({"classpath:test.properties", "classpath:consul.properties"})
-
 public class UserServiceTest {
 
 
