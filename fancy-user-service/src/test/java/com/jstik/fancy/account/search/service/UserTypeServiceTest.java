@@ -3,7 +3,9 @@ package com.jstik.fancy.account.search.service;
 import com.google.common.collect.Sets;
 import com.jstik.fancy.account.search.dao.repository.elastic.ElasticConfig;
 import com.jstik.fancy.account.search.entity.elastic.UserType;
+import com.jstik.site.fancy.elastic.test.ElasticDropIndexesBeforeRule;
 import com.jstik.site.fancy.elastic.test.EmbeddedElasticConfig;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,6 +30,11 @@ public class UserTypeServiceTest {
 
     @Inject
     UserTypeService userTypeService;
+
+
+    @Rule
+    @Inject
+    public ElasticDropIndexesBeforeRule elasticDropIndexesBeforeRule;
 
     @Test
     public void addUserDocument() throws Exception {

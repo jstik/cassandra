@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.web.util.UriComponentsBuilder;
 import pl.allegro.tech.embeddedelasticsearch.EmbeddedElastic;
 import pl.allegro.tech.embeddedelasticsearch.EmbeddedElastic.Builder;
@@ -18,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import static java.net.InetAddress.getByName;
@@ -76,6 +76,11 @@ public class EmbeddedElasticConfig implements DisposableBean {
     private int getElasticPort(ElasticsearchProperties properties) {
         String clusterNodes = properties.getClusterNodes();
         return UriComponentsBuilder.fromUriString("http://" + clusterNodes).build().getPort(); //todo!!!
+    }
+
+    @Bean
+    public ElasticDropIndexesBeforeRule elasticDropSchemaAfterRule(ElasticsearchOperations elasticsearchOperations){
+        return new ElasticDropIndexesBeforeRule(elasticsearchOperations);
     }
 
     @Override
