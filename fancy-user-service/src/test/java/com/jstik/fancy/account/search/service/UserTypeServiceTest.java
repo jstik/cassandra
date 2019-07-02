@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 public class UserTypeServiceTest {
 
     @Inject
-    UserTypeService userTypeService;
+    private UserTypeService userTypeService;
 
 
     @Rule

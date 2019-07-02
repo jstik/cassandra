@@ -20,49 +20,36 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
+       <!--cassandra dependence-->
         <dependency>
             <groupId>com.jstik.site</groupId>
             <artifactId>fancy-cassandra-config</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.jstik.site</groupId>
             <artifactId>fancy-cassandra-test-utils</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
 
+        <!--elastic dependence-->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-elasticsearch</artifactId>
+            <groupId>com.jstik.site</groupId>
+            <artifactId>fancy-elastic-config</artifactId>
         </dependency>
-
-        <!-- Runtime, for Embedded Elasticsearch,
-           comment this if connect to external elastic search server-->
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-        </dependency>
-
-      <!--needed this for correct representing of data time in json-->
-
-
         <dependency>
             <groupId>com.jstik.site</groupId>
             <artifactId>fancy-elastic-test-util</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
+
+        <!--consul dependence-->
         <dependency>
             <groupId>com.jstik.site</groupId>
             <artifactId>spring-boot-starter-fancy-consul</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
 

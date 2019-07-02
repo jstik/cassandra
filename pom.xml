@@ -20,6 +20,7 @@
         <module>fancy-cassandra-config</module>
         <module>spring-boot-starter-fancy-consul</module>
         <module>fancy-elastic-test-util</module>
+        <module>fancy-elastic-config</module>
     </modules>
 
 
@@ -31,6 +32,7 @@
         <spring.cloud.version>Greenwich.RELEASE</spring.cloud.version>
         <metrics-core>3.0.2</metrics-core>
         <mapstruct.version>1.3.0.Final</mapstruct.version>
+        <com.jstik.site.version>1.0-SNAPSHOT</com.jstik.site.version>
     </properties>
 
 
@@ -47,6 +49,36 @@
                 <version>${spring.cloud.version}</version>
                 <type>pom</type>
                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.jstik.site</groupId>
+                <artifactId>fancy-elastic-config</artifactId>
+                <version>${com.jstik.site.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.jstik.site</groupId>
+                <artifactId>fancy-elastic-test-util</artifactId>
+                <version>${com.jstik.site.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.jstik.site</groupId>
+                <artifactId>spring-boot-starter-fancy-consul</artifactId>
+                <version>${com.jstik.site.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jstik.site</groupId>
+                <artifactId>fancy-cassandra-config</artifactId>
+                <version>${com.jstik.site.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.jstik.site</groupId>
+                <artifactId>fancy-cassandra-test-utils</artifactId>
+                <version>${com.jstik.site.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -116,6 +148,10 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
 

@@ -8,24 +8,21 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>fancy-book-store</artifactId>
-    <properties>
-        <cassandra-unit.version>2.1.9.2</cassandra-unit.version>
-    </properties>
+    <artifactId>fancy-elastic-config</artifactId>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-elasticsearch</artifactId>
         </dependency>
 
+        <!-- Runtime, for Embedded Elasticsearch,
+           comment this if connect to external elastic search server-->
         <dependency>
-            <groupId>com.jstik.site</groupId>
-            <artifactId>fancy-cassandra-config</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.jstik.site</groupId>
-            <artifactId>fancy-cassandra-test-utils</artifactId>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
+
+
 </project>
