@@ -70,6 +70,7 @@ public class EmbeddedElasticConfig implements DisposableBean {
         if (downloadDirectory != null) {
             builder = builder.withDownloadDirectory(new File(downloadDirectory));
         }
+        embedded.getPlugins().forEach(builder::withPlugin);
         return builder.build().start();
     }
 
