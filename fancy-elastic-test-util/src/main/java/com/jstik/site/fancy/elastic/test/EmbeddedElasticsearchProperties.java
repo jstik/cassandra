@@ -21,5 +21,7 @@ public class EmbeddedElasticsearchProperties extends ElasticsearchProperties {
         private int httpProxyPort;
 
         private String downloadDirectory;
+
+        private int startTimeoutSeconds = 60;
     }
 }

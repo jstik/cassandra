@@ -53,22 +53,22 @@ public class EmbeddedElasticConfig implements DisposableBean {
     }
 
     private EmbeddedElastic startEmbeddedElastic(EmbeddedElasticsearchProperties properties) throws IOException, InterruptedException {
+        EmbeddedProperties embedded = properties.getEmbedded();
         Builder builder = EmbeddedElastic.builder()
                 .withElasticVersion(properties.getVersion())
                 .withSetting(PopularProperties.TRANSPORT_TCP_PORT, getElasticPort(properties))
                 .withSetting(PopularProperties.CLUSTER_NAME, properties.getClusterName())
-                .withStartTimeout(60, TimeUnit.SECONDS);
-        EmbeddedProperties embedded = properties.getEmbedded();
-        if (embedded != null) {
-            String proxyHost = embedded.getHttpProxyHost();
-            if (proxyHost != null) {
-                int proxyPort = embedded.getHttpProxyPort();
-                builder = builder.withDownloadProxy(new Proxy(HTTP, new InetSocketAddress(getByName(proxyHost), proxyPort)));
-            }
-            String downloadDirectory = embedded.getDownloadDirectory();
-            if (downloadDirectory != null) {
-                builder = builder.withDownloadDirectory(new File(downloadDirectory));
-            }
+                .withStartTimeout(embedded.getStartTimeoutSeconds(), TimeUnit.SECONDS);
+
+
+        String proxyHost = embedded.getHttpProxyHost();
+        if (proxyHost != null) {
+            int proxyPort = embedded.getHttpProxyPort();
+            builder = builder.withDownloadProxy(new Proxy(HTTP, new InetSocketAddress(getByName(proxyHost), proxyPort)));
+        }
+        String downloadDirectory = embedded.getDownloadDirectory();
+        if (downloadDirectory != null) {
+            builder = builder.withDownloadDirectory(new File(downloadDirectory));
         }
         return builder.build().start();
     }

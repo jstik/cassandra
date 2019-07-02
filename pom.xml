@@ -52,11 +52,7 @@
     </dependencyManagement>
 
     <dependencies>
-        <dependency>
-            <groupId>com.jstik.site</groupId>
-            <artifactId>spring-boot-starter-fancy-consul</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -111,6 +107,15 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-jdk8</artifactId>
             <version>${mapstruct.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
         </dependency>
     </dependencies>
 

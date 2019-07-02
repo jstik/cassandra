@@ -19,14 +19,10 @@
 
     <dependencies>
 
-       <!-- <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>-->
-
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-elasticsearch</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -38,6 +34,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <optional>true</optional>
         </dependency>
 
     </dependencies>

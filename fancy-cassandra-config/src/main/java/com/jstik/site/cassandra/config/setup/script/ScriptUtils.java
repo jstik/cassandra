@@ -1,6 +1,7 @@
 package com.jstik.site.cassandra.config.setup.script;
 
-import org.apache.commons.lang.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.lang.Nullable;
 
@@ -12,7 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.apache.commons.codec.Charsets.UTF_8;
+import static org.apache.commons.codec.CharEncoding.UTF_8;
+
 
 public class ScriptUtils {
 

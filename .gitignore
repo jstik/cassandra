@@ -1,6 +1,6 @@
 target
 .idea
-.idea*
+.idea/*
 /*.iml
 npm-debug.log
 .settings
