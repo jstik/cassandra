@@ -1,5 +1,7 @@
 target
 .idea
-/*.iml
+**/*.iml
 npm-debug.log
 .settings
+**/run64.bat
+**/logs
