@@ -1,14 +1,18 @@
 package com.jstik.fancy.account.storage.service;
 
+import com.jstik.fancy.account.handler.operation.DMLOperationHandler;
+import com.jstik.fancy.account.storage.dao.repository.cassandra.authority.AuthorityRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.client.ClientRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.client.UsersByClientRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.tag.EntityByTagRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.tag.TagRepository;
-import com.jstik.fancy.account.storage.dao.repository.cassandra.authority.AuthorityRepository;
-import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserOperationsRepository;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRepository;
+import com.jstik.fancy.account.storage.entity.cassandra.user.User;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Collection;
 
 @Configuration
 public class LinkedServicesConfig {
@@ -19,22 +23,23 @@ public class LinkedServicesConfig {
     }
 
     @Bean
-    public ClientService clientService(UsersByClientRepository usersByClientRepository, ClientRepository clientRepository){
-        return new ClientService(usersByClientRepository,clientRepository);
+    public ClientService clientService(UsersByClientRepository usersByClientRepository, ClientRepository clientRepository) {
+        return new ClientService(usersByClientRepository, clientRepository);
     }
 
     @Bean
-    public AuthorityService authorityService(AuthorityRepository authorityRepository){
+    public AuthorityService authorityService(AuthorityRepository authorityRepository) {
         return new AuthorityService(authorityRepository);
     }
 
 
     @Bean
-    public UserService userService(UserRepository userRepository, UserOperationsRepository operationsRepository,
+    public UserService userService(UserRepository userRepository,
+                                   ObjectProvider<Collection<DMLOperationHandler<User>>> dmlHandlers,
                                    TagService tagService,
                                    ClientService clientService,
                                    AuthorityService authorityService) {
-        return new UserService(userRepository, operationsRepository, tagService, clientService, authorityService);
+        return new UserService(userRepository, tagService, clientService, authorityService, dmlHandlers);
     }
 
 }

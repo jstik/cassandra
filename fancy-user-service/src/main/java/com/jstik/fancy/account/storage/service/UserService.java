@@ -1,24 +1,23 @@
 package com.jstik.fancy.account.storage.service;
 
-import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserOperationsRepository;
-import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRepository;
-import com.jstik.fancy.account.storage.entity.cassandra.user.User;
-import com.jstik.fancy.account.storage.entity.cassandra.user.UserOperations;
-import com.jstik.fancy.account.storage.entity.cassandra.user.UserRegistration;
+import com.jstik.fancy.account.handler.operation.DMLOperationHandler;
 import com.jstik.fancy.account.model.exception.UserNotFound;
 import com.jstik.fancy.account.model.user.NewUserInfo;
+import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRepository;
+import com.jstik.fancy.account.storage.entity.cassandra.user.User;
+import com.jstik.fancy.account.storage.entity.cassandra.user.UserRegistration;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
+import org.springframework.beans.factory.ObjectProvider;
 import reactor.core.publisher.Mono;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.jstik.site.cassandra.model.EntityOperation.CREATE;
-import static com.jstik.site.cassandra.model.EntityOperation.UPDATE;
 import static reactor.core.publisher.Mono.error;
 
 public class UserService {
@@ -26,22 +25,22 @@ public class UserService {
     private final UserRepository userRepository;
     private ClientService clientService;
     private AuthorityService authorityService;
-    private UserOperationsRepository operationsRepository;
+    private ObjectProvider<Collection<DMLOperationHandler<User>>> dmlHandlers;
     private TagService tagService;
 
 
     @Inject
     public UserService(UserRepository userRepository,
-                       UserOperationsRepository operationsRepository,
                        TagService tagService,
                        ClientService clientService,
-                       AuthorityService authorityService
+                       AuthorityService authorityService,
+                       ObjectProvider<Collection<DMLOperationHandler<User>>> dmlHandlers
     ) {
         this.userRepository = userRepository;
-        this.operationsRepository = operationsRepository;
         this.tagService = tagService;
         this.clientService = clientService;
         this.authorityService = authorityService;
+        this.dmlHandlers = dmlHandlers;
     }
 
     public Mono<NewUserInfo> createUser(User user, Mono<UserRegistration> registration) {
@@ -118,16 +117,29 @@ public class UserService {
     }
 
     Mono<User> updateUser(User user) {
-        return userRepository.save(user).doOnSuccess(updated -> {
-            UserOperations operations = new UserOperations(updated, UPDATE);
-            operationsRepository.save(operations).subscribe();
-        });
+        DMLOperationHandler<User> composite = chainHandlers();
+        Mono<User> userMono = userRepository.save(user);
+        return composite.handleUpdate(userMono);
     }
 
     Mono<User> insertUser(User user) {
-        return userRepository.insertIfNotExistOrThrow(user).doOnSuccess(created -> {
-            UserOperations operation = new UserOperations(created, CREATE);
-            operationsRepository.save(operation).subscribe();
+        DMLOperationHandler<User> composite = chainHandlers();
+        Mono<User> userMono = userRepository.insertIfNotExistOrThrow(user);
+        return composite.handleInsert(userMono);
+    }
+
+    private DMLOperationHandler<User> chainHandlers() {
+        Collection<DMLOperationHandler<User>> handlers = this.dmlHandlers.getIfAvailable(ArrayList::new);
+        return handlers.stream().reduce(DMLOperationHandler::andThen).orElse(new DMLOperationHandler<User>() {
+            @Override
+            public Mono<User> handleInsert(Mono<User> userMono) {
+                return userMono;
+            }
+
+            @Override
+            public Mono<User> handleUpdate(Mono<User> userMono) {
+                return userMono;
+            }
         });
     }
 

@@ -14,6 +14,8 @@ import reactor.core.publisher.Mono;
 import javax.inject.Inject;
 import java.text.MessageFormat;
 
+import static java.text.MessageFormat.format;
+
 public class CustomReactiveCassandraRepositoryImpl<T, ID> implements CustomReactiveCassandraRepository<T, ID> {
 
     private final ReactiveCassandraOperations operations;
@@ -34,7 +36,7 @@ public class CustomReactiveCassandraRepositoryImpl<T, ID> implements CustomReact
     public <S extends T> Mono<S> insertIfNotExistOrThrow(S entity) throws EntityAlreadyExistsException {
         Assert.notNull(entity, "Entity must not be null");
         RegularStatement insert = DMLStatementProducerBuilder.insertIfNotExistsProducer().apply(operations.getConverter(), entity);
-        return executeOrThrow(insert, entity);
+        return insertOrThrow(insert, entity);
     }
 
 
@@ -53,10 +55,10 @@ public class CustomReactiveCassandraRepositoryImpl<T, ID> implements CustomReact
         return operations.getReactiveCqlOperations().execute(batch);
     }
 
-    private <S extends T> Mono<S> executeOrThrow(Statement statement, S entity) throws EntityAlreadyExistsException {
+    private <S extends T> Mono<S> insertOrThrow(Statement statement, S entity) throws EntityAlreadyExistsException {
         return operations.getReactiveCqlOperations().execute(statement).doOnNext(it -> {
             if (!it)
-                throw new EntityAlreadyExistsException(MessageFormat.format("Entity {0} already exists ", entity.getClass().getCanonicalName()));
+                throw new EntityAlreadyExistsException(format("Entity {0} already exists ", entity.getClass().getCanonicalName()));
         }).map(it -> entity);
     }
 

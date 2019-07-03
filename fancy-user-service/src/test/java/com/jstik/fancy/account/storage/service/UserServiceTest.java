@@ -1,6 +1,5 @@
 package com.jstik.fancy.account.storage.service;
 
-import com.google.common.collect.Sets;
 import com.jstik.fancy.account.model.exception.UserNotFound;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.UserServiceCassandraConfig;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.client.UsersByClientRepository;
@@ -15,8 +14,6 @@ import com.jstik.fancy.account.util.UserUtil;
 import com.jstik.fancy.test.util.cassandra.CassandraCreateDropSchemaRule;
 import com.jstik.fancy.test.util.cassandra.EmbeddedCassandraConfig;
 import com.jstik.site.cassandra.exception.EntityAlreadyExistsException;
-import org.hamcrest.collection.IsCollectionWithSize;
-import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -67,7 +64,7 @@ public class UserServiceTest {
     private UsersByClientRepository usersByClientRepository;
 
     @Inject
-    UserOperationsRepository userOperationsRepository;
+    UserOperationsRepository userUserOperationsRepository;
 
 
     @Rule
@@ -149,7 +146,7 @@ public class UserServiceTest {
         create(userService.updateUser(user)).assertNext(Assert::assertNotNull)
                 .verifyComplete();
         Thread.sleep(1000);
-        create(userOperationsRepository.findAll()).assertNext(Assert::assertNotNull).verifyComplete();
+        create(userUserOperationsRepository.findAll()).assertNext(Assert::assertNotNull).verifyComplete();
     }
 
     @Test
@@ -229,7 +226,9 @@ public class UserServiceTest {
     }
 
     @Test
-    public void insertUser() {
-        create(userService.insertUser(prepareUser("login"))) .assertNext(Assert::assertNotNull).verifyComplete();
+    public void insertUser() throws InterruptedException {
+        create(userService.insertUser(prepareUser("login"))).assertNext(Assert::assertNotNull).verifyComplete();
+        Thread.sleep(1000L);
+        create(userUserOperationsRepository.findAll()).assertNext(Assert::assertNotNull).verifyComplete();
     }
 }
