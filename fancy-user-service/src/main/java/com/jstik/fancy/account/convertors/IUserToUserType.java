@@ -1,15 +1,15 @@
 package com.jstik.fancy.account.convertors;
 
+import com.jstik.fancy.account.model.user.IUser;
 import com.jstik.fancy.account.search.entity.elastic.UserType;
-import com.jstik.fancy.account.storage.entity.cassandra.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 
-public class UserToUserType implements Converter<User, UserType> {
+public class IUserToUserType implements Converter<IUser, UserType> {
     @Nullable
     @Override
-    public UserType convert(@NotNull User user) {
+    public UserType convert(@NotNull IUser user) {
         UserType userType = new UserType(user.getLogin(), user.getFirstName(), user.getLastName(), user.getEmail());
         userType.setCreated(user.getCreated());
         userType.setTags(user.getTags());

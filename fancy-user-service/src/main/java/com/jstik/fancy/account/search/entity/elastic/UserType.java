@@ -1,5 +1,6 @@
 package com.jstik.fancy.account.search.entity.elastic;
 
+import com.jstik.fancy.account.model.user.IUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import static org.springframework.data.elasticsearch.annotations.FieldType.Text;
 @Setter
 @NoArgsConstructor
 @Document(indexName = "account-service", type = "user")
-public class UserType {
+public class UserType implements IUser {
 
     @Id
     @MultiField(

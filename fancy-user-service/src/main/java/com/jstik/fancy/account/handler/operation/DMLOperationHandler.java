@@ -4,22 +4,22 @@ import reactor.core.publisher.Mono;
 
 public interface DMLOperationHandler<T> {
 
-    Mono<T> handleInsert(Mono<T> userMono);
+    <S extends T> Mono<S> handleInsert(Mono<S> userMono);
 
-    Mono<T> handleUpdate(Mono<T> userMono);
+    <S extends T> Mono<S> handleUpdate(Mono<S> userMono);
 
 
     default DMLOperationHandler<T> andThen(DMLOperationHandler<T> after) {
         return new DMLOperationHandler<T>() {
             @Override
-            public Mono<T> handleInsert(Mono<T> userMono) {
-                Mono<T> mono = DMLOperationHandler.this.handleInsert(userMono);
+            public <S extends T>  Mono<S> handleInsert(Mono<S> userMono) {
+                Mono<S> mono = DMLOperationHandler.this.handleInsert(userMono);
                 return after.handleInsert(mono);
             }
 
             @Override
-            public Mono<T> handleUpdate(Mono<T> userMono) {
-                Mono<T> mono = DMLOperationHandler.this.handleUpdate(userMono);
+            public <S extends T>  Mono<S> handleUpdate(Mono<S> userMono) {
+                Mono<S> mono = DMLOperationHandler.this.handleUpdate(userMono);
                 return after.handleUpdate(mono);
             }
         };

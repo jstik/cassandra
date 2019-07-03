@@ -1,6 +1,7 @@
 package com.jstik.fancy.account.storage.entity.cassandra.user;
 
 
+import com.jstik.fancy.account.model.user.IUser;
 import com.jstik.fancy.account.storage.entity.EntityWithDiscriminator;
 import com.jstik.fancy.account.storage.entity.cassandra.authority.Authority;
 import lombok.*;
@@ -24,7 +25,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class User implements EntityWithDiscriminator {
+public class User implements EntityWithDiscriminator, IUser {
 
     @PrimaryKey
     @NonNull

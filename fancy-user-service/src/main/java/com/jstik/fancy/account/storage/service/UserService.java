@@ -2,6 +2,7 @@ package com.jstik.fancy.account.storage.service;
 
 import com.jstik.fancy.account.handler.operation.DMLOperationHandler;
 import com.jstik.fancy.account.model.exception.UserNotFound;
+import com.jstik.fancy.account.model.user.IUser;
 import com.jstik.fancy.account.model.user.NewUserInfo;
 import com.jstik.fancy.account.storage.dao.repository.cassandra.user.UserRepository;
 import com.jstik.fancy.account.storage.entity.cassandra.user.User;
@@ -25,7 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private ClientService clientService;
     private AuthorityService authorityService;
-    private ObjectProvider<Collection<DMLOperationHandler<User>>> dmlHandlers;
+    private ObjectProvider<Collection<DMLOperationHandler<IUser>>> dmlHandlers;
     private TagService tagService;
 
 
@@ -34,7 +35,7 @@ public class UserService {
                        TagService tagService,
                        ClientService clientService,
                        AuthorityService authorityService,
-                       ObjectProvider<Collection<DMLOperationHandler<User>>> dmlHandlers
+                       ObjectProvider<Collection<DMLOperationHandler<IUser>>> dmlHandlers
     ) {
         this.userRepository = userRepository;
         this.tagService = tagService;
@@ -117,27 +118,27 @@ public class UserService {
     }
 
     Mono<User> updateUser(User user) {
-        DMLOperationHandler<User> composite = chainHandlers();
+        DMLOperationHandler<IUser> composite = chainHandlers();
         Mono<User> userMono = userRepository.save(user);
         return composite.handleUpdate(userMono);
     }
 
     Mono<User> insertUser(User user) {
-        DMLOperationHandler<User> composite = chainHandlers();
+        DMLOperationHandler<IUser> composite = chainHandlers();
         Mono<User> userMono = userRepository.insertIfNotExistOrThrow(user);
         return composite.handleInsert(userMono);
     }
 
-    private DMLOperationHandler<User> chainHandlers() {
-        Collection<DMLOperationHandler<User>> handlers = this.dmlHandlers.getIfAvailable(ArrayList::new);
-        return handlers.stream().reduce(DMLOperationHandler::andThen).orElse(new DMLOperationHandler<User>() {
+    private DMLOperationHandler<IUser> chainHandlers() {
+        Collection<DMLOperationHandler<IUser>> handlers = this.dmlHandlers.getIfAvailable(ArrayList::new);
+        return handlers.stream().reduce(DMLOperationHandler::andThen).orElse(new DMLOperationHandler<IUser>(){
             @Override
-            public Mono<User> handleInsert(Mono<User> userMono) {
+            public <S extends IUser> Mono<S> handleInsert(Mono<S> userMono) {
                 return userMono;
             }
 
             @Override
-            public Mono<User> handleUpdate(Mono<User> userMono) {
+            public <S extends IUser> Mono<S> handleUpdate(Mono<S> userMono) {
                 return userMono;
             }
         });

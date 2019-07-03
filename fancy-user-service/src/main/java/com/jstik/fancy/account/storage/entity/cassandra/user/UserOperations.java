@@ -1,10 +1,17 @@
 package com.jstik.fancy.account.storage.entity.cassandra.user;
 
+import com.jstik.fancy.account.model.user.IUser;
 import com.jstik.site.cassandra.model.EntityOperation;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.cassandra.core.cql.Ordering;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
-import org.springframework.data.cassandra.core.mapping.*;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyClass;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -19,7 +26,7 @@ public class UserOperations {
     @PrimaryKey
     private UserOperationsPrimaryKey primaryKey;
 
-    public UserOperations(User user, EntityOperation operation){
+    public UserOperations(IUser user, EntityOperation operation) {
         this.primaryKey = new UserOperationsPrimaryKey(user.getLogin(), operation);
     }
 
