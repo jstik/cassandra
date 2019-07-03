@@ -44,7 +44,7 @@ public class UserTypeServiceTest {
         userType.setUpdated(LocalDateTime.now());
         userType.setTags(Sets.newHashSet("tag1", "tag2"));
 
-        userTypeService.addUserDocument(userType);
+        userTypeService.saveUserDocument(userType);
     }
 
 }
