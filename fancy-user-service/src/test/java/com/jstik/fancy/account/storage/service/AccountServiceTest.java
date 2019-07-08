@@ -71,7 +71,7 @@ public class AccountServiceTest {
     public void createAccountTest() throws Exception {
         CreateAccountRequest accountRequest = prepareAccount("login");
         String regKey = UserUtil.generateRegKey();
-        Mono<NewUserInfo> createUserPublisher = accountService.createAccount(accountRequest, regKey);
+        Mono<NewUserInfo> createUserPublisher = accountService.createAccount(accountRequest);
         createUserPublisher.log("UserServiceTest.createUserTest").subscribe(Assert::assertNotNull);
     }
 
@@ -144,7 +144,7 @@ public class AccountServiceTest {
 
 
     private Mono<NewUserInfo> createAccountOperation(CreateAccountRequest accountRequest, String regKey, Consumer<NewUserInfo> onSuccess, Consumer<? super Throwable> onError) {
-        return accountService.createAccount(accountRequest, regKey).doOnError(onError::accept).doOnSuccess(onSuccess);
+        return accountService.createAccount(accountRequest).doOnError(onError::accept).doOnSuccess(onSuccess);
     }
 
     private CreateAccountRequest prepareAccount(String login) {

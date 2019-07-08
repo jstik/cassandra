@@ -6,6 +6,7 @@ import com.jstik.fancy.account.model.account.ActivateAccountRequiredInfo;
 import com.jstik.fancy.account.model.account.CreateAccountRequest;
 import com.jstik.fancy.account.model.user.NewUserInfo;
 import com.jstik.fancy.account.model.account.RegisterAccountRequest;
+import com.jstik.fancy.account.util.UserUtil;
 import org.springframework.core.convert.ConversionService;
 import reactor.core.publisher.Mono;
 
@@ -28,8 +29,9 @@ public class AccountService {
         this.registrationService = registrationService;
     }
 
-    public Mono<NewUserInfo> createAccount(CreateAccountRequest account, String regKey) {
+    public Mono<NewUserInfo> createAccount(CreateAccountRequest account) {
         User user = conversionService.convert(account, User.class);
+        String regKey = UserUtil.generateRegKey();
         Mono<UserRegistration> registration = registrationService.createRegistration(user.getLogin(), regKey);
         return userService.createUser(user, registration);
     }

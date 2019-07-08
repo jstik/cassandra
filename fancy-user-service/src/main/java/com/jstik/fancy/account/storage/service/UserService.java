@@ -55,7 +55,7 @@ public class UserService {
         }));
 
         return result.doOnSuccess(info -> {
-            insertBrandNewUserLinkedInBatch(info.getUser()).doOnSuccess(info::setLinkedInserted).subscribe();
+            insertBrandNewUserLinkedInBatch(info.getUser()).subscribe();
             if (info.getUser().getTags() != null && !info.getUser().getTags().isEmpty()) {
                 tagService.addTagsForEntity(info.getUser().getTags(), info.getUser()).subscribe();
             }

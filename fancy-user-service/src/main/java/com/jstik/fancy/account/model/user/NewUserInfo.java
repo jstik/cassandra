@@ -14,9 +14,4 @@ public class NewUserInfo {
 
     private String regKey;
 
-    private Collection<String> rejectedClients;
-
-    private boolean linkedInserted;
-
-
 }
