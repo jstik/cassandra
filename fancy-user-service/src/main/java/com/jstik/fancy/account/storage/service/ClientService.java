@@ -47,6 +47,9 @@ public class ClientService {
         return usersByClientRepository.deleteUsersByClient(user.getLogin(), clients);
     }
 
+
+
+
     public Optional<EntityAwareBatchStatement> insertUsersByClientStatement(@NotNull User user, Collection<String> clients) {
         if (clients == null)
             return Optional.empty();

@@ -27,11 +27,11 @@ public class EmbeddedCassandraConfig implements DisposableBean {
 
     public EmbeddedCassandraConfig(TestCassandraProperties cassandraConfigProperties) {
         try {
-            EmbeddedCassandraServerHelper.startEmbeddedCassandra(cassandraConfigProperties.getConfigurationFile());
+            EmbeddedCassandraServerHelper.startEmbeddedCassandra(cassandraConfigProperties.getConfigurationFile(), cassandraConfigProperties.getTimeout());
             Cluster cluster = EmbeddedCassandraServerHelper.getCluster();
             Session session = cluster.connect();
             session.execute("CREATE KEYSPACE IF NOT EXISTS " + cassandraConfigProperties.getKeyspaceName() +" WITH replication = { 'class': 'SimpleStrategy', 'replication_factor': '1' };");
-        } catch (TTransportException | IOException e ) {
+        } catch (Exception e ) {
             logger.error("Couldn't startup embedded cassandra", e);
         }
 

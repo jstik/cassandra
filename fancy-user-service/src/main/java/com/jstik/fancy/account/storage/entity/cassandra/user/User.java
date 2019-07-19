@@ -97,6 +97,18 @@ public class User implements EntityWithDiscriminator, IUser {
         this.getClients().removeAll(clients);
     }
 
+
+    public void addGroups(Collection<String> groups) {
+        if(this.groups == null)
+            setGroups(new HashSet<>());
+        this.getGroups().addAll(groups);
+    }
+
+    public void deleteGroups(Collection<String> groups) {
+        this.getGroups().removeAll(groups);
+    }
+
+
     @PrimaryKeyClass
     @NoArgsConstructor
     @Getter

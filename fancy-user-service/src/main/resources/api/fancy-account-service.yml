@@ -1,0 +1,349 @@
+swagger: '2.0'
+info:
+  description: |
+    This is a sample Account server.
+  version: 1.0.0
+  title: Fancy Account Service
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: ykrylova.dev@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /jstik-showcase/fancy-account-service/1.0.0
+schemes:
+  - "https"
+  - "http"
+tags:
+  - name: account
+    description: opperation about register new user
+  - name: client
+    description: client represent a service that another service or user can use
+  - name: user
+    description: Operations about user
+paths:
+  /account:
+    post:
+      tags:
+        - account
+      summary: create new account
+      operationId: addAccount
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - text/event-stream
+      parameters:
+        - in: body
+          name: body
+          description:  details  of account that needed to be add
+          required: true
+          schema:
+            $ref: '#/definitions/CreateAccountRequest'
+      responses:
+        405:
+          description: Invalid input
+    put:
+      tags:
+        - account
+      summary: Activate an existing account
+      operationId: activateAccount
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - text/event-stream
+      parameters:
+        - in: body
+          name: body
+          description: Object to transfer user password, login nad regKey properties needed to find created user's account
+          required: true
+          schema:
+            $ref: '#/definitions/RegisterAccountRequest'
+      responses:
+        400:
+          description: Invalid RegisterAccountRequest supplied
+        404:
+          description: account not found
+        405:
+          description: Validation exception
+  /user/tags/{username}:
+    post:
+      tags:
+        - user
+      summary: Adds tags to user
+      operationId: addUserTags
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+        - text/event-stream
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Object to transfer  tags accosiated with the user, if a tag not exists yet it will be added
+          required: true
+          schema:
+            $ref: '#/definitions/UserAssociation'
+      responses:
+        400:
+          description: Invalid UserAssociation supplied
+        404:
+          description: user not found
+        405:
+          description: Validation exception
+    delete:
+      tags:
+        - user
+      summary: delete tags for user
+      operationId: deleteUserTags
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+        - text/event-stream
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Object to transfer  tags that are detached from the user
+          required: true
+          schema:
+            $ref: '#/definitions/UserAssociation'
+      responses:
+        400:
+          description: Invalid UserAssociation supplied
+        404:
+          description: user not found
+        405:
+          description: Validation exception
+  /user/clients/{username}:
+    post:
+      tags:
+        - user
+        - client
+      summary: Adds clients availible for the user
+      operationId: addUserClients
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+        - text/event-stream
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Object to transfer  clients availible for the user
+          required: true
+          schema:
+            $ref: '#/definitions/UserAssociation'
+      responses:
+        400:
+          description: Invalid UserAssociation supplied
+        404:
+          description: user not found
+        405:
+          description: Validation exception
+    delete:
+      tags:
+        - user
+      summary: delete clients for user
+      operationId: deleteUserClients
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+        - text/event-stream
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched. Use user1 for testing.
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Object to transfer  tags detouthed from user
+          required: true
+          schema:
+            $ref: '#/definitions/UserAssociation'
+      responses:
+        400:
+          description: Invalid TagsRequest supplied
+        404:
+          description: user not found
+        405:
+          description: Validation exception
+  /user/groups/{username}:
+    post:
+      tags:
+        - user
+        - client
+      summary: attach user to the groups
+      operationId: addUserGroups
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+        - text/event-stream
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched. Use user1 for testing.
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Object to transfer groups that are  needed to be attached
+          required: true
+          schema:
+            $ref: '#/definitions/UserAssociation'
+      responses:
+        400:
+          description: Invalid TagsRequest supplied
+        404:
+          description: user not found
+        405:
+          description: Validation exception
+    delete:
+      tags:
+        - user
+      summary:  detach user from the groups
+      operationId: deleteUserGroups
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+        - text/event-stream
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be fetched. Use user1 for testing.
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: Object to transfer  tags detouthed from user
+          required: true
+          schema:
+            $ref: '#/definitions/UserAssociation'
+      responses:
+        400:
+          description: Invalid TagsRequest supplied
+        404:
+          description: user not found
+        405:
+          description: Validation exception
+definitions:
+  CreateAccountRequest:
+    type: object
+    required:
+      - login
+      - firstName
+      - lastName
+      - email
+    properties:
+      login:
+        type: string
+        required : true
+        example: login
+        description: unique user name, shouldn't contains whitespaces
+      firstName:
+        type: string
+        example: Jonh Peter
+      lastName:
+        type: string
+        example: Jonh
+      email:
+        type: string
+        required : true
+        example: jonh@example.com
+        description: a valid email address
+      clients:
+        type: array
+        items:
+          type: string
+          example: some-service-name
+      tags:
+        type: array
+        items:
+          type: string
+          example: tag1
+      groups:
+        type: array
+        items:
+          type: string
+          example: admins
+      authorities:
+        type: array
+        items:
+          $ref: '#/definitions/AuthorityDTO'
+  AuthorityDTO:
+    type: object
+    required:
+      - client
+      - authority
+      - accessLevel
+    properties:
+      client:
+        type: string
+        example: some-service-name
+      authority:
+        type: string
+        example: book-store
+      accessLevel:
+        type: string
+        enum:
+          - NOT_DEFINED
+          - NO_ACCESS
+          - ACCESS
+          - READ
+          - WRITE
+  RegisterAccountRequest:
+    type: object
+    required:
+      - login
+      - password
+      - regKey
+    properties:
+      login:
+        type: string
+        example: login
+      password:
+        type: string
+        example: P@ssw0rd
+      regKey:
+        type: string
+  UserAssociation:
+    type: object
+    properties:
+      association:
+        type: array
+        items:
+          type: string

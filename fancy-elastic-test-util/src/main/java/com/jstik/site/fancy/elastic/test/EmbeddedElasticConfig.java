@@ -61,6 +61,7 @@ public class EmbeddedElasticConfig implements DisposableBean {
                 .withStartTimeout(embedded.getStartTimeoutSeconds(), TimeUnit.SECONDS);
 
 
+
         String proxyHost = embedded.getHttpProxyHost();
         if (proxyHost != null) {
             int proxyPort = embedded.getHttpProxyPort();

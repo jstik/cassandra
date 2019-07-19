@@ -21,10 +21,10 @@ public class ServiceConfig {
 
 
     @Bean
-    public AccountService accountService(UserService userService,
-                                         UserRegistrationRepository registrationRepository,
-                                         LoadBalancerClient loadBalancerClient) {
-        return new AccountService(conversionService(), userService, userRegistrationService(registrationRepository, loadBalancerClient));
+    public IAccountService accountService(IUserService IUserService,
+                                          UserRegistrationRepository registrationRepository,
+                                          LoadBalancerClient loadBalancerClient) {
+        return new AccountService(conversionService(), IUserService, userRegistrationService(registrationRepository, loadBalancerClient));
     }
 
     @Bean

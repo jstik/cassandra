@@ -13,7 +13,7 @@ public class EmbeddedElasticsearchProperties extends ElasticsearchProperties {
 
     private String version;
 
-    private EmbeddedProperties embedded;
+    private EmbeddedProperties embedded = new EmbeddedProperties();
 
 
     @Getter
@@ -25,7 +25,7 @@ public class EmbeddedElasticsearchProperties extends ElasticsearchProperties {
 
         private String downloadDirectory;
 
-        private int startTimeoutSeconds = 60;
+        private int startTimeoutSeconds = 120;
 
         private Collection<String> plugins = new ArrayList<>();
     }

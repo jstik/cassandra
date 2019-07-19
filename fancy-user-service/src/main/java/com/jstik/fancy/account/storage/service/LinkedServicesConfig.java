@@ -34,11 +34,11 @@ public class LinkedServicesConfig {
 
 
     @Bean
-    public UserService userService(UserRepository userRepository,
-                                   ObjectProvider<Collection<DMLOperationHandler<IUser>>> dmlHandlers,
-                                   TagService tagService,
-                                   ClientService clientService,
-                                   AuthorityService authorityService) {
+    public IUserService userService(UserRepository userRepository,
+                                    ObjectProvider<Collection<DMLOperationHandler<IUser>>> dmlHandlers,
+                                    TagService tagService,
+                                    ClientService clientService,
+                                    AuthorityService authorityService) {
         return new UserService(userRepository, tagService, clientService, authorityService, dmlHandlers);
     }
 

@@ -10,5 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 @Setter
 public class TestCassandraProperties extends CassandraProperties {
     private String configurationFile;
+    private long timeout = 3000L;
 
 }

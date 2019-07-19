@@ -51,7 +51,7 @@ public class AccountServiceTest {
 
 
     @Inject
-    private AccountService accountService;
+    private IAccountService IAccountService;
 
     @Inject
     private UserRepository userRepository;
@@ -70,9 +70,10 @@ public class AccountServiceTest {
     @Test
     public void createAccountTest() throws Exception {
         CreateAccountRequest accountRequest = prepareAccount("login");
-        String regKey = UserUtil.generateRegKey();
-        Mono<NewUserInfo> createUserPublisher = accountService.createAccount(accountRequest);
-        createUserPublisher.log("UserServiceTest.createUserTest").subscribe(Assert::assertNotNull);
+        StepVerifier.create(IAccountService.createAccount(accountRequest)).assertNext(info->{
+            Assert.assertNotNull(info);
+            Assert.assertNotNull(info.getRegKey());
+        }).verifyComplete();
     }
 
 
@@ -92,7 +93,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void createUser() throws Exception {
+    public void createUser(){
         CreateAccountRequest account = prepareAccount("login");
         String regKey = UserUtil.generateRegKey();
         Consumer<Throwable> errorHandler = (error) -> {
@@ -115,7 +116,7 @@ public class AccountServiceTest {
         UserRegistration userRegistration = userRegistrationByAccountAndKey(account, regKey);
         RegisterAccountRequest request = registerAccountRequestByUserAndKey(user, userRegistration);
 
-        Mono<ActivateAccountRequiredInfo> registerAccountMono = accountService.activateAccount(request);
+        Mono<ActivateAccountRequiredInfo> registerAccountMono = IAccountService.activateAccount(request);
 
         // No user or registration in db yet
         StepVerifier.create(registerAccountMono).expectError(EntityMissingException.class).verify();
@@ -144,7 +145,7 @@ public class AccountServiceTest {
 
 
     private Mono<NewUserInfo> createAccountOperation(CreateAccountRequest accountRequest, String regKey, Consumer<NewUserInfo> onSuccess, Consumer<? super Throwable> onError) {
-        return accountService.createAccount(accountRequest).doOnError(onError::accept).doOnSuccess(onSuccess);
+        return IAccountService.createAccount(accountRequest).doOnError(onError::accept).doOnSuccess(onSuccess);
     }
 
     private CreateAccountRequest prepareAccount(String login) {

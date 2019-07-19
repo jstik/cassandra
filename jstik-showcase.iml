@@ -3,8 +3,8 @@
   <component name="AutoImportedSourceRoots">
     <option name="directories">
       <list>
-        <option value="G:\my_project\jstik-showcase/src/test/java" />
-        <option value="G:\my_project\jstik-showcase/src/test/kotlin" />
+        <option value="$MODULE_DIR$/src/test/java" />
+        <option value="$MODULE_DIR$/src/test/kotlin" />
       </list>
     </option>
   </component>
@@ -23,6 +23,10 @@
           </option>
           <option name="pluginClasspaths">
             <array />
+          </option>
+          <option name="coroutinesState" value="warn" />
+          <option name="errors">
+            <ArgumentParseErrors />
           </option>
         </compilerArguments>
       </configuration>

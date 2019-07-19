@@ -13,33 +13,37 @@ import reactor.core.publisher.Mono;
 import javax.inject.Inject;
 
 
-public class AccountService {
+public class AccountService implements IAccountService {
 
     private final ConversionService conversionService;
 
-    private final UserService userService;
+    private final IUserService IUserService;
 
     private final UserRegistrationService registrationService;
 
 
     @Inject
-    public AccountService(ConversionService conversionService, UserService userService, UserRegistrationService registrationService) {
+    public AccountService(ConversionService conversionService, IUserService IUserService, UserRegistrationService registrationService) {
         this.conversionService = conversionService;
-        this.userService = userService;
+        this.IUserService = IUserService;
         this.registrationService = registrationService;
     }
 
+    @Override
     public Mono<NewUserInfo> createAccount(CreateAccountRequest account) {
         User user = conversionService.convert(account, User.class);
         String regKey = UserUtil.generateRegKey();
         Mono<UserRegistration> registration = registrationService.createRegistration(user.getLogin(), regKey);
-        return userService.createUser(user, registration);
+
+        return IUserService.createUser(user, registration);
     }
 
+
+    @Override
     public Mono<ActivateAccountRequiredInfo> activateAccount(RegisterAccountRequest registerAccount) {
         Mono<ActivateAccountRequiredInfo> registrationInformation = findRequiredRegistrationInformation(registerAccount);
         return registrationInformation.doOnSuccess((info -> {
-            userService.activateUser(info.getUser(), registrationService.encodePassword(info.getPlainPassword()))
+            IUserService.activateUser(info.getUser(), registrationService.encodePassword(info.getPlainPassword()))
                     .delayUntil(user -> {
                         UserRegistration registration = info.getUserRegistration();
                         return registrationService.delete(registration.getLogin(), registration.getRegKey());
@@ -50,7 +54,7 @@ public class AccountService {
 
     private Mono<ActivateAccountRequiredInfo> findRequiredRegistrationInformation(RegisterAccountRequest request) {
         Mono<UserRegistration> findRegistrationOperation = registrationService.findRegistrationOrThrow(request.getLogin(), request.getRegKey());
-        Mono<User> findUserOperation = userService.findUserOrThrow(request.getLogin());
+        Mono<User> findUserOperation = IUserService.findUserOrThrow(request.getLogin());
         return Mono.zip(findRegistrationOperation, findUserOperation, (reg, user) -> new ActivateAccountRequiredInfo(user, reg, request.getPassword()));
     }
 }

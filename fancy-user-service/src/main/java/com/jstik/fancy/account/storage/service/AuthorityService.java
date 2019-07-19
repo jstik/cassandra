@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static com.jstik.site.cassandra.statements.DMLStatementProducerBuilder.insertProducer;
 
-public class AuthorityService {
+public class AuthorityService implements IAuthorityService {
 
     private final AuthorityRepository authorityRepository;
 
@@ -25,6 +25,7 @@ public class AuthorityService {
         this.authorityRepository = authorityRepository;
     }
 
+    @Override
     public Mono<Boolean> addAuthorities(String identifier, Collection<AuthorityDTO> authorities, AuthorityType type) {
         if (authorities == null || authorities.isEmpty())
             return Mono.just(true);
@@ -45,6 +46,7 @@ public class AuthorityService {
         return authorityRepository.executeBatch(batchStatement);
     }
 
+    @Override
     public Mono<Boolean> deleteAuthorities(String client, String identifier, Collection<String> authorities, AuthorityType type) {
         if (authorities == null || authorities.isEmpty())
             return Mono.just(true);
@@ -57,6 +59,7 @@ public class AuthorityService {
         return authorityRepository.deleteAuthoritiesForClient(client, identifier, authorities, type);
     }
 
+    @Override
     public Flux<Authority> findAuthorities(String client, String identifier, AuthorityType type) {
         if (client == null)
             return Flux.error(new IllegalStateException("Client should be provided!"));
@@ -67,6 +70,7 @@ public class AuthorityService {
         return authorityRepository.findAllByKeyClientAndKeyIdAndKeyType(client, identifier, type);
     }
 
+    @Override
     public Flux<Authority> findAuthorities(String client, Collection<String> ids, AuthorityType type) {
         if (ids == null || ids.isEmpty())
             return Flux.empty();
@@ -77,6 +81,7 @@ public class AuthorityService {
         return authorityRepository.findAllByKeyClientAndKeyTypeAndKeyIdIn(client, type, ids);
     }
 
+    @Override
     public Optional<EntityAwareBatchStatement> insertAuthority(Collection<Authority> authorities) {
         if (authorities == null)
             return Optional.empty();

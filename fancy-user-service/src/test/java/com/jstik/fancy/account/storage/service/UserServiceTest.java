@@ -93,7 +93,11 @@ public class UserServiceTest {
         String regKey = UserUtil.generateRegKey();
         log.debug("test create user with no tags, clients  userService.createUser ");
         Mono<UserRegistration> registration = userRegistrationRepository.save(new UserRegistration(user.getLogin(), regKey));
-        create(userService.createUser(user, registration)).assertNext(Assert::assertNotNull).verifyComplete();
+        create(userService.createUser(user, registration))
+                .assertNext(
+                        Assert::assertNotNull
+                )
+                .verifyComplete();
         log.debug("test create user with no tags, clients userRepository.findByPrimaryKeyLogin ");
         create(userRepository.findByPrimaryKeyLogin(user.getLogin())).assertNext(Assert::assertNotNull).verifyComplete();
         log.debug("test create user with no tags, clients userRegistrationRepository.findById ");

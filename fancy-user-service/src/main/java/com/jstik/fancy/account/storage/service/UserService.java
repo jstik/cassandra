@@ -16,12 +16,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static reactor.core.publisher.Mono.error;
 
-public class UserService {
+public class UserService implements IUserService {
 
     private final UserRepository userRepository;
     private ClientService clientService;
@@ -44,16 +45,14 @@ public class UserService {
         this.dmlHandlers = dmlHandlers;
     }
 
+    @Override
     public Mono<NewUserInfo> createUser(User user, Mono<UserRegistration> registration) {
-        Mono<NewUserInfo> result = Mono.just(new NewUserInfo());
-
-        result = result.delayUntil(info -> insertUser(user).doOnSuccess(inserted -> info.setUser(user)));
-
-        result = result.delayUntil(info -> registration.handle((reg, silk) -> {
+        Mono<NewUserInfo> result  = Mono.zip(insertUser(user), registration, (inserted, reg)->{
+            NewUserInfo info =  new NewUserInfo();
             info.setRegKey(reg.getRegKey());
-            silk.next(reg);
-        }));
-
+            info.setUser(inserted);
+            return info;
+        });
         return result.doOnSuccess(info -> {
             insertBrandNewUserLinkedInBatch(info.getUser()).subscribe();
             if (info.getUser().getTags() != null && !info.getUser().getTags().isEmpty()) {
@@ -62,6 +61,7 @@ public class UserService {
         });
     }
 
+    @Override
     public Mono<User> addUserTags(Collection<String> tags, User user) {
         if (tags == null)
             return Mono.just(user);
@@ -74,6 +74,7 @@ public class UserService {
         });
     }
 
+    @Override
     public Mono<User> deleteUserTags(Collection<String> tags, User user) {
         if (tags == null)
             return Mono.just(user);
@@ -86,6 +87,7 @@ public class UserService {
         });
     }
 
+    @Override
     public Mono<User> addUserClients(Collection<String> clients, User user) {
         if (clients == null)
             return Mono.just(user);
@@ -98,6 +100,7 @@ public class UserService {
         });
     }
 
+    @Override
     public Mono<User> deleteUserClients(Collection<String> clients, User user) {
         if (clients == null)
             return Mono.just(user);
@@ -111,16 +114,40 @@ public class UserService {
     }
 
 
+    @Override
     public Mono<User> activateUser(User user, String password) {
         user.setActive(true);
         user.setPassword(password);
         return updateUser(user);
     }
 
-    Mono<User> updateUser(User user) {
+    @Override
+    public Mono<User> updateUser(User user) {
         DMLOperationHandler<IUser> composite = chainHandlers();
         Mono<User> userMono = userRepository.save(user);
         return composite.handleUpdate(userMono);
+    }
+
+    @Override
+    public Mono<User> addUserGroups(Collection<String> groups, User user) {
+        if (groups == null)
+            return Mono.just(user);
+        Set<String> filtered = groups.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        if (filtered.isEmpty())
+            return Mono.just(user);
+        user.addGroups(filtered);
+        return updateUser(user);
+    }
+
+    @Override
+    public Mono<User> deleteUserGroups(Collection<String> groups, User user) {
+        if (groups == null)
+            return Mono.just(user);
+        Set<String> filtered = groups.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        if (filtered.isEmpty())
+            return Mono.just(user);
+        user.deleteGroups(filtered);
+        return updateUser(user);
     }
 
     Mono<User> insertUser(User user) {
@@ -144,6 +171,7 @@ public class UserService {
         });
     }
 
+    @Override
     public Mono<User> findUserOrThrow(String login) {
         return userRepository.findByPrimaryKeyLogin(login).switchIfEmpty(error(new UserNotFound()));
     }
