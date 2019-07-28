@@ -11,55 +11,66 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
-@RestController
+@RequestMapping(value = "/user")
 public interface IUserEndpoint {
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "login not found"),
             @ApiResponse(code = 405, message = "Validation exception")})
+    @GetMapping(value = "/{login}/{client}")
+    Mono<User> getUserDetails( @PathVariable String login, @PathVariable String client);
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "login not found"),
+            @ApiResponse(code = 405, message = "Validation exception")})
     @PutMapping(value = "/{login}/tags")
-    Mono<User> addUserTags(@NotNull Collection<String> tags, @PathVariable(name="login") String login);
+    Mono<User> addUserTags(@RequestParam @NotNull Collection<String> tags, @PathVariable(name="login") String login);
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "login not found"),
             @ApiResponse(code = 405, message = "Validation exception")})
     @DeleteMapping(value = "/{login}/tags")
-    Mono<User> deleteUserTags(@NotNull Collection<String> tags, @PathVariable(name="login") String login);
+    Mono<User> deleteUserTags(@RequestParam @NotNull Collection<String> tags, @PathVariable(name="login") String login);
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "login not found"),
             @ApiResponse(code = 405, message = "Validation exception")})
     @PutMapping(value = "/{login}/clients")
-    Mono<User> addUserClients(@NotNull Collection<String> clients, @PathVariable(name="login") String login);
+    Mono<User> addUserClients(@RequestParam  @NotNull Collection<String> clients, @PathVariable(name="login") String login);
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "login not found"),
             @ApiResponse(code = 405, message = "Validation exception")})
     @DeleteMapping(value = "/{login}/clients")
-    Mono<User> deleteUserClients(@NotNull Collection<String> clients, @PathVariable(name="login") String login);
+    Mono<User> deleteUserClients(@RequestParam @NotNull Collection<String> clients, @PathVariable(name="login") String login);
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "login not found"),
             @ApiResponse(code = 405, message = "Validation exception")})
     @PatchMapping(value = "/{login}/userinfo")
-    Mono<User> updateUserInfo(@NotNull @Valid UpdateUserRequest request, @PathVariable(name="login") String login);
+    Mono<User> updateUserInfo(@RequestParam @NotNull @Valid UpdateUserRequest request, @PathVariable(name="login") String login);
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "login not found"),
             @ApiResponse(code = 405, message = "Validation exception")})
     @PutMapping(value = "/{login}/groups")
-    Mono<User> addUserGroups(@NotNull Collection<String> groups, @PathVariable(name="login") String login);
+    Mono<User> addUserGroups(@RequestParam @NotNull Collection<String> groups, @PathVariable(name="login") String login);
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "login not found"),
             @ApiResponse(code = 405, message = "Validation exception")})
     @DeleteMapping(value = "/{login}/groups")
-    Mono<User> deleteUserGroups(@NotNull Collection<String> groups, @PathVariable(name="login") String login);
+    Mono<User> deleteUserGroups(@RequestParam @NotNull Collection<String> groups, @PathVariable(name="login") String login);
+
+
+
+
 }

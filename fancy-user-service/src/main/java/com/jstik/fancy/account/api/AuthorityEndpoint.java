@@ -4,14 +4,14 @@ import com.jstik.fancy.account.model.authority.AuthorityDTO;
 import com.jstik.fancy.account.storage.entity.cassandra.authority.Authority;
 import com.jstik.fancy.account.storage.entity.cassandra.authority.AuthorityType;
 import com.jstik.fancy.account.storage.service.IAuthorityService;
-import com.jstik.fancy.account.storage.service.IUserService;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
+@RestController
 public class AuthorityEndpoint implements IAuthorityEndpoint {
 
     private final IAuthorityService authorityService;

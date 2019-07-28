@@ -4,14 +4,13 @@ import com.jstik.fancy.account.storage.dao.repository.cassandra.authority.Author
 import com.jstik.fancy.account.storage.entity.cassandra.authority.Authority;
 import com.jstik.fancy.account.storage.entity.cassandra.authority.AuthorityType;
 import com.jstik.fancy.account.model.authority.AuthorityDTO;
+import com.jstik.fancy.account.storage.entity.cassandra.user.User;
 import com.jstik.site.cassandra.statements.EntityAwareBatchStatement;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.jstik.site.cassandra.statements.DMLStatementProducerBuilder.insertProducer;
@@ -79,6 +78,18 @@ public class AuthorityService implements IAuthorityService {
         if (type == null)
             return Flux.error(new IllegalStateException("AuthorityType should be provided!"));
         return authorityRepository.findAllByKeyClientAndKeyTypeAndKeyIdIn(client, type, ids);
+    }
+
+    public  Mono<List<Authority>> findUserAuthorities(String client, User user){
+        return findAuthorities(client, user.getLogin(), AuthorityType.USER)
+                .collectList();
+    }
+
+    public Mono<List<Authority>> findGroupsAuthorities(String client, User user){
+        if(user.getGroups() == null || user.getGroups().isEmpty())
+            return Mono.just(Collections.EMPTY_LIST);
+        return  findAuthorities(client, user.getGroups(), AuthorityType.GROUP)
+                .collectList();
     }
 
     @Override

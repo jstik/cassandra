@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-@RestController
+
 public interface IAccountEndpoint {
 
     @PostMapping(value = "/account", produces = {"application/json" , "text/event-stream"}, consumes = {"application/json"})

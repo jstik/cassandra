@@ -16,6 +16,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -53,7 +54,7 @@ public class User implements EntityWithDiscriminator, IUser {
     private LocalDateTime created = LocalDateTime.now(Clock.systemUTC());
 
     @Transient
-    private Collection<Authority> authorities;
+    private Collection<Authority> authorities = new ArrayList<>();
 
     public User(String login, String firstName, String lastName, @Email String email) {
         this.primaryKey = new UserPrimaryKey(login);
@@ -102,6 +103,12 @@ public class User implements EntityWithDiscriminator, IUser {
         if(this.groups == null)
             setGroups(new HashSet<>());
         this.getGroups().addAll(groups);
+    }
+
+    public void addGroup(String group) {
+        if(this.groups == null)
+            setGroups(new HashSet<>());
+        this.getGroups().add(group);
     }
 
     public void deleteGroups(Collection<String> groups) {

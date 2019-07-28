@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class ElasticServiceConfig {
 
     @Bean
-    public UserTypeService userTypeService(UserTypeRepository userTypeRepository){
+    public IUserTypeService userTypeService(UserTypeRepository userTypeRepository){
         return new UserTypeService(userTypeRepository);
     }
 }

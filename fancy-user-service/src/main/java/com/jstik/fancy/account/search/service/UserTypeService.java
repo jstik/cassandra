@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import static org.springframework.data.domain.Sort.Order.desc;
 
-public class UserTypeService {
+public class UserTypeService implements IUserTypeService {
 
     private final UserTypeRepository userTypeRepository;
 
@@ -19,10 +19,12 @@ public class UserTypeService {
         this.userTypeRepository = userTypeRepository;
     }
 
+    @Override
     public void saveUserDocument(UserType userType) {
         userTypeRepository.save(userType);
     }
 
+    @Override
     public Page<UserType> getAllUsers(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(desc("updated"), desc("created")));
         return userTypeRepository.findAll(pageRequest);

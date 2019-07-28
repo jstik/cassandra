@@ -13,7 +13,6 @@ import reactor.core.publisher.Mono;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
-@RestController
 public interface IAuthorityEndpoint {
 
     @ApiResponses(value = {
