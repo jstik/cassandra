@@ -242,12 +242,7 @@ public class UserEndpointTest extends AbstractControllerTest {
         })
                 .when(userService)
                 .addUserGroups(ArgumentMatchers.anyCollection(), ArgumentMatchers.eq(user));
-        mockUserServiceAddCollection(new Consumer<Collection<String>>() {
-            @Override
-            public void accept(Collection<String> strings) {
-                userService.addUserGroups(strings);
-            }
-        });
+        mockUserServiceAddCollection(strings -> userService.addUserGroups(strings, user), user);
 
         Object result = mockMvc.perform(MockMvcRequestBuilders
                 .put("/user/{login}/groups", LOGIN)
@@ -273,7 +268,7 @@ public class UserEndpointTest extends AbstractControllerTest {
 
     private void mockUserServiceAddCollection(Consumer<Collection<String>> userServiceMethod, User user){
         Mockito.doAnswer(invocation -> {
-            userServiceMethod.accept(invocation.getArgument(0));
+          //  userServiceMethod.accept(invocation.getArgument(0));
             return Mono.just(user);
         })
                 .when(userService)
